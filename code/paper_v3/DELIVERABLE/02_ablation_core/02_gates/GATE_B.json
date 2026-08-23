@@ -1,0 +1,13 @@
+{
+  "protocol": "B",
+  "observed_auroc": 0.8225560999095635,
+  "part1c_auroc": 0.8225560999095635,
+  "delta_auroc": 0.0,
+  "observed_ms_deterministic": 86.48530879464086,
+  "part1c_ms_deterministic": 86.48530879464084,
+  "delta_ms": 1.4210854715202004e-14,
+  "observed_ms_end_to_end": 106.14751811030938,
+  "note": "the end-to-end total is not gated: head inference, routing arithmetic and calibration application are wall-clock measurements",
+  "pass": true,
+  "smoke": false
+}

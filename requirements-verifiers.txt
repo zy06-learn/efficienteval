@@ -1,0 +1,21 @@
+# Stages 2 and 4: re-running the verifiers rather than reading the frozen scores.
+# Install on top of requirements.txt. Needs a GPU and, for the served verifiers, vLLM.
+
+-r requirements.txt
+
+torch==2.11.0
+transformers==5.7.0
+huggingface-hub==1.9.1
+openai==2.33.0
+vllm==0.20.0
+
+# Sentence segmentation and lexical scoring used inside the verifier wrappers.
+pysbd==0.3.4
+nltk==3.9.4
+rouge-score==0.1.2
+lettucedetect==0.2.2
+
+# Not on PyPI: `metric` is vendored with FENICE, an optional verifier outside the frozen
+# pool. code/paper_v3/DELIVERABLE/06_verifier_code/REGISTRY.md records the upstream
+# repository and revision of every third-party verifier. Those checkouts are not
+# redistributed here because each carries its own licence.

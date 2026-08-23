@@ -1,0 +1,68 @@
+{
+  "pool": [
+    "factcc",
+    "lettuce_v2",
+    "granite_guardian_3_1_2b"
+  ],
+  "comparison_pool": [
+    "alignscore",
+    "lettuce_v2",
+    "wecheck"
+  ],
+  "secondary_pool": [
+    "alignscore",
+    "lettuce_v2",
+    "wecheck"
+  ],
+  "features": [
+    "structured_source_line_ratio",
+    "bm25_mean3",
+    "entity_coverage",
+    "entity_value_colocation",
+    "year_count",
+    "conflicting_value_rate"
+  ],
+  "target": "regret",
+  "learner": "rf",
+  "hyperparameters": {
+    "n_estimators": 200,
+    "min_samples_leaf": 5,
+    "max_features": 0.5,
+    "max_depth": 10
+  },
+  "hyperparameters_A": {
+    "n_estimators": 800,
+    "min_samples_leaf": 1,
+    "max_features": "sqrt",
+    "max_depth": 10
+  },
+  "hyperparameters_B": {
+    "n_estimators": 200,
+    "min_samples_leaf": 5,
+    "max_features": 0.5,
+    "max_depth": 10
+  },
+  "feature_rule": "TRAIN-only joint A/B pooled AUROC; worst protocol; fewer features",
+  "feature_confirmation": {
+    "joint_auroc": 0.7578708641075556,
+    "worst_protocol_auroc": 0.7543524095202038,
+    "a_auroc": 0.7543524095202038,
+    "a_sd": 0.003772989345412146,
+    "b_auroc": 0.7613893186949072,
+    "b_sd": 0.008215401183312106
+  },
+  "beta_rule": "cheapest beta within 0.005 of best validation AUROC",
+  "beta_grid": [
+    0.0,
+    0.1,
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.2,
+    1.6,
+    2.4,
+    3.2
+  ],
+  "selection_data": "TRAIN only"
+}

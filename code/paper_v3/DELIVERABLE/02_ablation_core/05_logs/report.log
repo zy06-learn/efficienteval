@@ -1,0 +1,63 @@
+[07:59:16 +     0s] ===== report B =====
+[07:59:17 +     1s]   gate B: OURS auroc 0.8225560999 vs part1c 0.8225560999 (d=0.00e+00) | deterministic ms 86.485309 vs 86.485309 (d=1.42e-14) -> PASS
+[07:59:17 +     1s]     end-to-end ms 106.1475 (includes re-measured head, routing and calibration overhead, which is wall clock and not expected to be bit-identical)
+[08:05:55 +   399s]   separable at 95%: 20/25 | under Bonferroni (alpha=0.00200): 17/25
+                                       arm   auroc  d_auroc_vs_ours     ece        ms  mean_calls
+                                 no_stage2 0.82608          0.00353 0.11393 106.14369     1.00000
+                  drop_feature::year_count 0.82359          0.00104 0.03794 106.68406     1.00000
+                                      OURS 0.82256          0.00000 0.03883 106.14752     1.00000
+      drop_feature::conflicting_value_rate 0.82245         -0.00010 0.03811 106.34091     1.00000
+             drop_feature::entity_coverage 0.82203         -0.00053 0.03974 106.95299     1.00000
+     drop_feature::entity_value_colocation 0.82175         -0.00081 0.03934 105.26516     1.00000
+                             target::brier 0.81790         -0.00466 0.04613 109.44435     1.00000
+                      target::prob_quality 0.81431         -0.00825 0.04290 110.97628     1.00000
+                     target::pairwise_rank 0.81160         -0.01095 0.04043 101.19045     1.00000
+                                   no_cost 0.80904         -0.01352 0.05799 142.74088     1.00000
+                  drop_feature::bm25_mean3 0.80767         -0.01489 0.05634 139.61739     1.00000
+                      drop_retrain::factcc 0.80416         -0.01840 0.06202 143.49914     1.00000
+                  drop_retrain::lettuce_v2 0.80000         -0.02255 0.05069 158.94475     1.00000
+                               no_verifier 0.79667         -0.02589 0.04076  27.30443     0.00000
+                     keep_compact16_3_only 0.79618         -0.02638 0.05708 134.47498     1.00000
+drop_feature::structured_source_line_ratio 0.79230         -0.03025 0.06173 134.51696     1.00000
+                           target::is_best 0.78789         -0.03467 0.05522 130.08638     1.00000
+                           keep_base3_only 0.78559         -0.03696 0.06260 134.25554     1.00000
+                                 no_stage1 0.77887         -0.04368 0.05300  72.90597     1.00000
+                      drop_serving::factcc 0.76879         -0.05377 0.09959 117.09495     1.00000
+                       target::correctness 0.76557         -0.05699 0.07101  76.11465     1.00000
+                  drop_serving::lettuce_v2 0.73652         -0.08604 0.09693 100.70212     1.00000
+                      random_routing_refit 0.66231         -0.16025 0.12393 101.58848     1.00000
+     drop_retrain::granite_guardian_3_1_2b 0.65830         -0.16425 0.12022  75.94256     1.00000
+                    random_routing_serving 0.65647         -0.16609 0.12350 100.72992     1.00000
+     drop_serving::granite_guardian_3_1_2b 0.64626         -0.17629 0.13801  77.06246     1.00000
+[08:05:55 +   399s] ===== report A =====
+[08:05:56 +   401s]   gate A: OURS auroc 0.7933003647 vs part1c 0.7933003647 (d=0.00e+00) | deterministic ms 88.189008 vs 88.189008 (d=0.00e+00) -> PASS
+[08:05:56 +   401s]     end-to-end ms 112.5427 (includes re-measured head, routing and calibration overhead, which is wall clock and not expected to be bit-identical)
+[08:17:33 +  1097s]   separable at 95%: 19/25 | under Bonferroni (alpha=0.00200): 18/25
+                                       arm   auroc  d_auroc_vs_ours     ece        ms  mean_calls
+                     target::pairwise_rank 0.79436          0.00106 0.02210 114.76143     1.00000
+      drop_feature::conflicting_value_rate 0.79393          0.00063 0.02062 113.26557     1.00000
+                                      OURS 0.79330          0.00000 0.02161 112.54271     1.00000
+                  drop_feature::year_count 0.79288         -0.00042 0.02147 112.06579     1.00000
+                      target::prob_quality 0.79252         -0.00078 0.02395 113.52913     1.00000
+     drop_feature::entity_value_colocation 0.79216         -0.00114 0.02177 114.62909     1.00000
+                                 no_stage2 0.79082         -0.00248 0.10196 112.54142     1.00000
+                             target::brier 0.79044         -0.00286 0.02340 108.05389     1.00000
+             drop_feature::entity_coverage 0.78805         -0.00525 0.02167 110.43037     1.00000
+drop_feature::structured_source_line_ratio 0.77943         -0.01387 0.02376 120.01334     1.00000
+                           target::is_best 0.77805         -0.01525 0.02362 124.08078     1.00000
+                  drop_feature::bm25_mean3 0.76714         -0.02616 0.02269 160.35076     1.00000
+                     keep_compact16_3_only 0.76587         -0.02743 0.02136 159.83072     1.00000
+                           keep_base3_only 0.76468         -0.02862 0.02459 126.98437     1.00000
+                       target::correctness 0.76212         -0.03118 0.02383  96.36878     1.00000
+                                 no_stage1 0.76098         -0.03232 0.02162  90.73484     1.00000
+                                   no_cost 0.75742         -0.03588 0.02195 189.59141     1.00000
+                      drop_retrain::factcc 0.75487         -0.03843 0.02046 189.58123     1.00000
+                               no_verifier 0.74925         -0.04405 0.02016  33.37474     0.00000
+                  drop_retrain::lettuce_v2 0.74300         -0.05030 0.02266 189.60510     1.00000
+                      drop_serving::factcc 0.72627         -0.06703 0.08488 129.83124     1.00000
+                  drop_serving::lettuce_v2 0.69764         -0.09566 0.11411 125.00213     1.00000
+     drop_retrain::granite_guardian_3_1_2b 0.69437         -0.09893 0.02085  88.88502     1.00000
+     drop_serving::granite_guardian_3_1_2b 0.69086         -0.10244 0.06676  90.85465     1.00000
+                      random_routing_refit 0.65005         -0.14325 0.02638 131.67830     1.00000
+                    random_routing_serving 0.64351         -0.14979 0.12599 126.26139     1.00000
+[08:17:33 +  1097s] ===== report done in 1097s =====

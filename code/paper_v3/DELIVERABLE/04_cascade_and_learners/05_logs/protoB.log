@@ -1,0 +1,13 @@
+[16:36:24 +     0s] ===== Part 4, Protocol B: 14 arms =====
+[16:36:31 +     6s]   seed 17: reference 0.8260603 @ 103.6385 ms  (6s)
+[16:36:36 +    12s]   seed 29: reference 0.8247315 @ 107.4540 ms  (6s)
+[16:36:42 +    18s]   seed 43: reference 0.8205086 @ 108.2141 ms  (5s)
+[16:36:47 +    23s]   seed 7: reference 0.8274862 @ 105.2579 ms  (5s)
+[16:36:53 +    28s]   seed 11: reference 0.8237414 @ 107.0358 ms  (6s)
+[16:36:58 +    34s]   seed 23: reference 0.8126391 @ 107.0559 ms  (5s)
+[16:37:04 +    40s]   seed 31: reference 0.8253571 @ 103.5694 ms  (6s)
+[16:37:10 +    45s]   seed 37: reference 0.8175142 @ 106.3311 ms  (6s)
+[16:37:15 +    51s]   seed 53: reference 0.8283955 @ 106.3092 ms  (6s)
+[16:37:21 +    57s]   seed 61: reference 0.8191270 @ 106.6082 ms  (6s)
+[16:37:21 +    57s] stored 14 arms x 10 seeds x 3236 rows
+[16:37:21 +    57s] ===== protoB done in 57s =====

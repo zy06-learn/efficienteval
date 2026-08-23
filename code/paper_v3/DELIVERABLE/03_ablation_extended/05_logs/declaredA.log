@@ -1,0 +1,13 @@
+[16:16:47 +     0s] ===== E4/E5: declared contrasts, Protocol A =====
+[16:18:22 +    96s]   seed 17: reference 0.7916942 @ 112.2712 ms  (95s)
+[16:19:57 +   190s]   seed 29: reference 0.7916163 @ 112.7909 ms  (94s)
+[16:21:32 +   285s]   seed 43: reference 0.7943011 @ 112.1555 ms  (95s)
+[16:23:08 +   381s]   seed 7: reference 0.7895631 @ 109.8063 ms  (96s)
+[16:24:43 +   476s]   seed 11: reference 0.7945413 @ 113.2740 ms  (95s)
+[16:26:17 +   571s]   seed 23: reference 0.7953401 @ 115.0460 ms  (94s)
+[16:27:52 +   666s]   seed 31: reference 0.7940228 @ 114.0402 ms  (95s)
+[16:29:26 +   759s]   seed 37: reference 0.7931058 @ 111.8862 ms  (94s)
+[16:31:01 +   855s]   seed 53: reference 0.7937197 @ 111.8965 ms  (95s)
+[16:32:36 +   949s]   seed 61: reference 0.7950993 @ 112.2538 ms  (95s)
+[16:32:36 +   949s] stored 6 declared arms x 10 seeds x 8512 rows
+[16:32:36 +   949s] ===== declaredA done in 949s =====

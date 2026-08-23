@@ -1,0 +1,40 @@
+[03:33:49 +     0s] ===== hyperparameter selection (TRAIN only, minimum validation head loss) =====
+[03:33:49 +     0s] 16 candidates (16 random draws deduplicated, plus part1's two values as reference points)
+[03:36:02 +   133s]   1/16 {'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': 'log2', 'max_depth': 10} | A loss=0.013555 auroc=0.75293 | B loss=0.013351 auroc=0.76309  (133s)
+[03:36:40 +   171s]   2/16 {'n_estimators': 200, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': 6} | A loss=0.013578 auroc=0.75011 | B loss=0.013379 auroc=0.75717  (38s)
+[03:37:17 +   209s]   3/16 {'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 'log2', 'max_depth': 24} | A loss=0.013638 auroc=0.74722 | B loss=0.013447 auroc=0.75547  (38s)
+[03:38:26 +   277s]   4/16 {'n_estimators': 400, 'min_samples_leaf': 5, 'max_features': '0.5', 'max_depth': 16} | A loss=0.013786 auroc=0.74192 | B loss=0.013600 auroc=0.74997  (69s)
+[03:39:36 +   348s]   5/16 {'n_estimators': 400, 'min_samples_leaf': 5, 'max_features': 'log2', 'max_depth': 24} | A loss=0.013716 auroc=0.74729 | B loss=0.013518 auroc=0.75575  (70s)
+[03:40:13 +   384s]   6/16 {'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': '0.5', 'max_depth': 6} | A loss=0.013516 auroc=0.75207 | B loss=0.013285 auroc=0.75930  (37s)
+[03:41:21 +   453s]   7/16 {'n_estimators': 400, 'min_samples_leaf': 10, 'max_features': 'log2', 'max_depth': 6} | A loss=0.013631 auroc=0.75210 | B loss=0.013394 auroc=0.75862  (68s)
+[03:43:29 +   581s]   8/16 {'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': '0.5', 'max_depth': 6} | A loss=0.013508 auroc=0.75366 | B loss=0.013290 auroc=0.76070  (128s)
+[03:44:07 +   619s]   9/16 {'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 'sqrt', 'max_depth': 12} | A loss=0.013619 auroc=0.75090 | B loss=0.013407 auroc=0.76227  (38s)
+[03:44:45 +   657s]   10/16 {'n_estimators': 200, 'min_samples_leaf': 2, 'max_features': 'log2', 'max_depth': 12} | A loss=0.013793 auroc=0.74768 | B loss=0.013630 auroc=0.76215  (38s)
+[03:45:54 +   725s]   11/16 {'n_estimators': 400, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': 6} | A loss=0.013576 auroc=0.75040 | B loss=0.013383 auroc=0.75823  (69s)
+[03:46:32 +   764s]   12/16 {'n_estimators': 200, 'min_samples_leaf': 5, 'max_features': 'log2', 'max_depth': 16} | A loss=0.013687 auroc=0.74700 | B loss=0.013499 auroc=0.75408  (38s)
+[03:47:10 +   801s]   13/16 {'n_estimators': 200, 'min_samples_leaf': 5, 'max_features': '0.5', 'max_depth': 10} | A loss=0.013601 auroc=0.75079 | B loss=0.013407 auroc=0.76169  (38s)
+[03:48:19 +   871s]   14/16 {'n_estimators': 400, 'min_samples_leaf': 10, 'max_features': '0.5', 'max_depth': 24} | A loss=0.013642 auroc=0.74395 | B loss=0.013460 auroc=0.75127  (69s)
+[03:50:29 +  1000s]   15/16 {'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': '0.5', 'max_depth': 10} | A loss=0.013593 auroc=0.75149 | B loss=0.013394 auroc=0.76266  (130s)
+[03:52:44 +  1135s]   16/16 {'n_estimators': 800, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': 10} | A loss=0.013736 auroc=0.75418 | B loss=0.013597 auroc=0.76181  (135s)
+[03:52:44 +  1135s] selected HP_A = {'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': 0.5, 'max_depth': 6}
+[03:52:44 +  1135s] selected HP_B = {'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6}
+[03:52:44 +  1135s] Spearman(loss, auroc): A -0.541  B -0.312
+[03:52:44 +  1135s] AUROC forgone by selecting on loss instead of AUROC: A +0.00052  B +0.00379
+ n_estimators  min_samples_leaf max_features  max_depth part1_value  a_val_loss  a_val_auroc     a_sd  b_val_loss  b_val_auroc     b_sd  rank_a_by_loss  rank_a_by_auroc  rank_b_by_loss  rank_b_by_auroc
+          200                10          0.5          6                0.013516     0.752074 0.004518    0.013285     0.759301 0.003335               2                5               1                8
+          800                 5          0.5          6                0.013508     0.753657 0.003108    0.013290     0.760695 0.005168               1                2               2                7
+          800                 5         log2         10                0.013555     0.752932 0.002107    0.013351     0.763093 0.005965               3                3               3                1
+          200                 1         sqrt          6                0.013578     0.750109 0.003511    0.013379     0.757168 0.004454               5               10               4               11
+          400                 1         sqrt          6                0.013576     0.750398 0.004404    0.013383     0.758230 0.004595               4                9               5               10
+          800                 5          0.5         10                0.013593     0.751487 0.001166    0.013394     0.762659 0.003368               6                6               6                2
+          400                10         log2          6                0.013631     0.752096 0.003282    0.013394     0.758619 0.003244               9                4               7                9
+          200                 5          0.5         10    legacy_B    0.013601     0.750787 0.002155    0.013407     0.761691 0.003046               7                8               8                6
+          200                10         sqrt         12                0.013619     0.750896 0.003897    0.013407     0.762275 0.002619               8                7               9                3
+          200                10         log2         24                0.013638     0.747217 0.003721    0.013447     0.755466 0.007210              10               13              10               13
+          400                10          0.5         24                0.013642     0.743949 0.002534    0.013460     0.751272 0.006791              11               15              11               15
+          200                 5         log2         16                0.013687     0.747004 0.002999    0.013499     0.754076 0.007407              12               14              12               14
+          400                 5         log2         24                0.013716     0.747289 0.002330    0.013518     0.755749 0.008355              13               12              13               12
+          800                 1         sqrt         10    legacy_A    0.013736     0.754181 0.002442    0.013597     0.761809 0.007542              14                1              14                5
+          400                 5          0.5         16                0.013786     0.741925 0.003272    0.013600     0.749973 0.005942              15               16              15               16
+          200                 2         log2         12                0.013793     0.747682 0.003869    0.013630     0.762147 0.004624              16               11              16                4
+[03:52:44 +  1135s] ===== hpselect done in 1135s =====

@@ -1,0 +1,8 @@
+launcher_pid=270188
+run_dir=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/runs/part1c_main_full_v1
+smoke=0
+script=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/part1c_main_full_v1.py
+script_sha256=88ffa46c930287865b0ef2b263c2e8ffb201e1990516c991b9787dfe16a6585f
+launcher_sha256=3636eb39cceeaad9a9b2c46731e1043551c1949b153afa86771e4c0b57d16489
+started=2026-08-17T03:33:46-04:00
+host=CSC-GW-Spark1  nproc=8

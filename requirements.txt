@@ -1,0 +1,18 @@
+# Stage 3: everything needed to reproduce every table and ablation in the paper by reading
+# the frozen scores in code/paper_v3/DELIVERABLE/00_inputs. CPU only, no model downloads.
+#
+# Versions are pinned, not floated. The release gate in tests/test_reproduction.py requires
+# the reference arm to reproduce the frozen AUROC bit-for-bit, and the random forest's
+# bootstrap and node-level feature subsampling are the only randomness in the pipeline, so a
+# different scikit-learn build can move the last digits.
+#
+# Recorded environment: dgxspark, NVIDIA GB10, CUDA 13.0, driver 580.142, Python 3.12.
+
+numpy==2.3.5
+pandas==3.0.2
+scikit-learn==1.8.0
+scipy==1.17.1
+pyarrow==23.0.1
+
+# Test runner for `./reproduce.sh verify`.
+pytest==9.0.1

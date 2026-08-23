@@ -1,0 +1,14 @@
+{
+  "protocol": "A",
+  "system": "OURS_legacy_hp",
+  "observed_auroc": 0.7899055001708337,
+  "part1_auroc": 0.7899055001708337,
+  "delta_auroc": 0.0,
+  "observed_ms_part1_basis": 87.8865191652918,
+  "part1_ms": 87.8865191652918,
+  "delta_ms": 0.0,
+  "tolerance_auroc": 1e-09,
+  "tolerance_ms": 1e-06,
+  "pass": true,
+  "smoke": false
+}

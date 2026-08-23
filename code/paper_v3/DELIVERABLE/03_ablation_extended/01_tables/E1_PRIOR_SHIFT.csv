@@ -1,0 +1,5 @@
+corpus,train_split,test_split,train_rows,train_groups,train_pos_rate,train_minority_count,test_rows,test_groups,test_pos_rate,prior_shift_pp
+cogensumm,cogensumm_val,cogensumm_test,535,107,0.4934579439252336,264,400,100,0.78,28.65420560747664
+ragtruth,ragtruth_train,ragtruth_test,2983,499,0.7103586992960107,864,900,150,0.7822222222222223,7.186352292621157
+unisumeval,unisumeval_train,unisumeval_dev,1089,135,0.7658402203856749,255,367,45,0.7465940054495913,-1.9246214936083583
+frank,frank_valid,frank_test,669,149,0.15844544095665172,106,1569,350,0.16379859783301465,0.5353156876362924

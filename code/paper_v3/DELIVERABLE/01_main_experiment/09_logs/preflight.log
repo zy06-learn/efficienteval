@@ -1,0 +1,15 @@
+[03:33:47 +     0s] ===== preflight =====
+[03:33:47 +     0s] inherited contract ok: pool=['factcc', 'lettuce_v2', 'granite_guardian_3_1_2b'] features=6 target=regret learner=rf
+[03:33:47 +     0s] stale-default audit: paper_v1 carries 9 features (7 not in ours) and hp {'n_estimators': 800, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': 10}; every call site in this file passes features/hp/target/actions explicitly, so none of it is reachable
+[03:33:47 +     0s] note: inherited contract still lists comparison_pool ['alignscore', 'lettuce_v2', 'wecheck'] and secondary_pool ['alignscore', 'lettuce_v2', 'wecheck']; both are ignored by this run
+[03:33:47 +     0s] verifier set ok: 15 verifiers, pool members all present
+[03:33:47 +     0s] declared contamination flags (out of pool, reported in table notes): [('factkb', 'frank_valid'), ('hhem', 'ragtruth_train')]
+[03:33:47 +     0s]   train rows: 5276
+[03:33:47 +     0s]   train groups: 890
+[03:33:47 +     0s]   test rows: 3236
+[03:33:47 +     0s]   test groups: 645
+[03:33:47 +     0s]   all rows: 8512
+[03:33:47 +     0s]   all groups: 1535
+[03:33:47 +     0s]   features, latency columns, additivity, availability and key uniqueness: ok
+[03:33:47 +     0s] preflight ok
+[03:33:47 +     0s] ===== preflight done in 0s =====

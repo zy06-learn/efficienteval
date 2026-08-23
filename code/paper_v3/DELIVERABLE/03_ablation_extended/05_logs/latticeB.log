@@ -1,0 +1,35 @@
+[10:50:28 +     0s] ===== E2: subset lattices, Protocol B =====
+[10:50:28 +     0s] 72 arms: 64 feature subsets + 8 pool subsets | hp={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6}
+[10:51:41 +    73s]   10/72  1.2 min  eta 7.5 min
+[10:52:54 +   147s]   20/72  2.4 min  eta 6.3 min
+[10:54:07 +   220s]   30/72  3.7 min  eta 5.1 min
+[10:55:20 +   293s]   40/72  4.9 min  eta 3.9 min
+[10:56:33 +   365s]   50/72  6.1 min  eta 2.7 min
+[10:57:46 +   438s]   60/72  7.3 min  eta 1.5 min
+[10:58:36 +   489s]   70/72  8.1 min  eta 0.2 min
+[10:58:48 +   501s]   72/72  8.3 min  eta 0.0 min
+[10:58:48 +   501s]   Shapley over feat: sum 0.026722 vs full-minus-empty 0.026722 (efficiency residual +0.00e+00)
+[10:58:48 +   501s]   Shapley over pool: sum 0.025939 vs full-minus-empty 0.025939 (efficiency residual +0.00e+00)
+kind                         item  shapley_auroc  solo_auroc  leave_one_out_auroc  shapley_share
+feat structured_source_line_ratio        0.01694     0.78785              0.79230        0.63379
+feat              entity_coverage        0.00267     0.79382              0.82203        0.09978
+feat                   bm25_mean3        0.00266     0.76856              0.80767        0.09947
+feat       conflicting_value_rate        0.00258     0.79587              0.82245        0.09651
+feat      entity_value_colocation        0.00114     0.78763              0.82175        0.04263
+feat                   year_count        0.00074     0.79465              0.82359        0.02782
+pool      granite_guardian_3_1_2b        0.12678     0.79583              0.65830        4.88772
+pool                   lettuce_v2       -0.04223     0.59951              0.80000       -1.62797
+pool                       factcc       -0.05862     0.57089              0.80416       -2.25975
+kind  size  n_subsets                                                                                                       best_subset  best_auroc   best_ms  mean_auroc  worst_auroc
+feat     0          1                                                                                                           (empty)     0.79583 159.13721     0.79583      0.79583
+feat     1          6                                                                                            conflicting_value_rate     0.79587 157.08281     0.78806      0.76856
+feat     2         15                                                                           structured_source_line_ratio|bm25_mean3     0.81280 112.74069     0.79385      0.76385
+feat     3         20                                                   structured_source_line_ratio|bm25_mean3|entity_value_colocation     0.82116 106.59384     0.80007      0.78407
+feat     4         15                                   structured_source_line_ratio|bm25_mean3|entity_coverage|entity_value_colocation     0.82317 105.24819     0.80639      0.78927
+feat     5          6            structured_source_line_ratio|bm25_mean3|entity_coverage|entity_value_colocation|conflicting_value_rate     0.82359 106.68413     0.81497      0.79230
+feat     6          1 structured_source_line_ratio|bm25_mean3|entity_coverage|entity_value_colocation|year_count|conflicting_value_rate     0.82256 106.14862     0.82256      0.82256
+pool     0          1                                                                                                           (empty)     0.79662  27.30356     0.79662      0.79662
+pool     1          3                                                                                           granite_guardian_3_1_2b     0.79583 159.11622     0.65541      0.57089
+pool     2          3                                                                                lettuce_v2+granite_guardian_3_1_2b     0.80416 143.49828     0.75416      0.65830
+pool     3          1                                                                         factcc+lettuce_v2+granite_guardian_3_1_2b     0.82256 106.14687     0.82256      0.82256
+[10:58:48 +   501s] ===== latticeB done in 501s =====

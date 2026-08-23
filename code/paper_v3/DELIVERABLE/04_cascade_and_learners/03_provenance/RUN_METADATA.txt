@@ -1,0 +1,10 @@
+command=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/part4_cascade_v1.py reportA
+started=2026-08-17 16:57:05-0400
+git=1040b1da0da4250cd20ddf64b76c685ac8104224
+python=3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]
+platform=Linux-6.17.0-1014-nvidia-aarch64-with-glibc2.39
+nproc=20
+smoke=False
+seeds=[17, 29, 43, 7, 11, 23, 31, 37, 53, 61]
+arms=['reference', 'cascade::confidence', 'cascade::disagreement', 'cascade::learned_deferral', 'second::verifier_confidence', 'second::raw_margin', 'second::discounted_margin', 'learner::extra_trees', 'learner::hgb', 'learner::gbr', 'learner::ridge', 'learner::tree', 'learner::knn', 'learner::mlp']
+latency_ceiling=1.5

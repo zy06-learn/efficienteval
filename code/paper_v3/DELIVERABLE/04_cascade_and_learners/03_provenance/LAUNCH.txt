@@ -1,0 +1,5 @@
+chain_pid=1395421
+run_dir=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/runs/part4_cascade_v1
+script_sha256=bac4845262cf285012785a405f32d4c55dbe79c0efa2898f1d20b6ec5bac08d4
+chain_sha256=1d5ef60b697f4fb8dbcbce0e01c1814fbadd8734e20853a47770fa499c8481d4
+started=2026-08-17T16:36:23-04:00  host=CSC-GW-Spark1  nproc=8

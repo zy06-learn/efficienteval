@@ -1,0 +1,58 @@
+name: reproduction gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: manifest + bit-for-bit reference arm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install stage-3 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # The gate this repository exists to hold: the release tree must re-fit the Protocol B
+      # router from the frozen inputs and land on the published AUROC exactly. Tolerance is
+      # zero, so a drifted dependency or a missing module fails the build rather than
+      # silently reporting a different system.
+      - name: Reproduction gate
+        run: ./reproduce.sh verify
+
+  static:
+    name: syntax and style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Byte-compile every Python file
+        run: python -m compileall -q code tests
+
+      - name: Parse every shell script
+        run: |
+          status=0
+          while IFS= read -r script; do
+            bash -n "$script" || status=1
+          done < <(find . -name '*.sh' -not -path './.git/*')
+          exit $status
+
+      - name: Lint
+        run: |
+          pip install ruff==0.15.1
+          ruff check --select E9,F63,F7,F82 code tests

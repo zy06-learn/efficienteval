@@ -1,0 +1,13 @@
+[16:40:54 +     0s] ===== Part 4, Protocol A: 14 arms =====
+[16:42:34 +    99s]   seed 17: reference 0.7916942 @ 112.2698 ms  (99s)
+[16:44:12 +   197s]   seed 29: reference 0.7916163 @ 112.8096 ms  (98s)
+[16:45:48 +   294s]   seed 43: reference 0.7943011 @ 112.1899 ms  (96s)
+[16:47:23 +   389s]   seed 7: reference 0.7895631 @ 109.8237 ms  (95s)
+[16:48:59 +   485s]   seed 11: reference 0.7945413 @ 113.2745 ms  (96s)
+[16:50:36 +   582s]   seed 23: reference 0.7953401 @ 115.0500 ms  (97s)
+[16:52:13 +   679s]   seed 31: reference 0.7940228 @ 114.0309 ms  (97s)
+[16:53:51 +   777s]   seed 37: reference 0.7931058 @ 111.8834 ms  (98s)
+[16:55:27 +   873s]   seed 53: reference 0.7937197 @ 111.8840 ms  (96s)
+[16:57:02 +   968s]   seed 61: reference 0.7950993 @ 112.2685 ms  (96s)
+[16:57:03 +   969s] stored 14 arms x 10 seeds x 8512 rows
+[16:57:03 +   969s] ===== protoA done in 969s =====

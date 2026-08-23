@@ -1,0 +1,20 @@
+# Reproduction output. Every stage writes under runs/; nothing here is an input.
+runs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+
+# Local model and dataset caches, which are never redistributed from this repository
+.cache/
+*.safetensors
+*.bin

@@ -1,0 +1,15 @@
+[10:49:48 +     0s] ===== E1: per-corpus training and evaluation =====
+[10:49:48 +     0s]   cogensumm: train 535/107 -> test 400/100
+[10:49:57 +     9s]     OURS 0.68983 (sd 0.03988) | best fixed 0.79248 (fixed::factcg) | pooled-trained on this corpus 0.68488 | in-domain minus pooled +0.00495
+[10:49:57 +     9s]   frank: train 669/149 -> test 1569/350
+[10:50:06 +    19s]     OURS 0.81495 (sd 0.01168) | best fixed 0.86422 (fixed::factkb) | pooled-trained on this corpus 0.82532 | in-domain minus pooled -0.01037
+[10:50:06 +    19s]   ragtruth: train 2983/499 -> test 900/150
+[10:50:17 +    29s]     OURS 0.62143 (sd 0.01646) | best fixed 0.79984 (fixed::alignscore) | pooled-trained on this corpus 0.63772 | in-domain minus pooled -0.01628
+[10:50:17 +    29s]   unisumeval: train 1089/135 -> test 367/45
+[10:50:26 +    38s]     OURS 0.63796 (sd 0.02812) | best fixed 0.72416 (fixed::qwen30_judge) | pooled-trained on this corpus 0.59070 | in-domain minus pooled +0.04727
+    corpus  test_groups  seeds_used  val_fraction_used  in_domain_ours  in_domain_ours_sd  in_domain_best_fixed in_domain_best_fixed_name  pooled_trained_ours  in_domain_minus_pooled
+ cogensumm          100          10            0.20000         0.68983            0.03988               0.79248             fixed::factcg              0.68488                 0.00495
+     frank          350          10            0.20000         0.81495            0.01168               0.86422             fixed::factkb              0.82532                -0.01037
+  ragtruth          150          10            0.20000         0.62143            0.01646               0.79984         fixed::alignscore              0.63772                -0.01628
+unisumeval           45          10            0.20000         0.63796            0.02812               0.72416       fixed::qwen30_judge              0.59070                 0.04727
+[10:50:26 +    38s] ===== percorpus done in 38s =====

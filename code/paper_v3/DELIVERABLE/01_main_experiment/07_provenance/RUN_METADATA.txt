@@ -1,0 +1,7 @@
+cwd=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3
+command=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/part1c_main_full_v1.py preflight
+started=2026-08-17 03:33:47-0400
+python=3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]
+platform=Linux-6.17.0-1014-nvidia-aarch64-with-glibc2.39
+nproc=20
+smoke=False

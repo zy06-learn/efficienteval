@@ -1,0 +1,14 @@
+[03:52:45 +     0s] ===== Protocol B =====
+[03:52:45 +     0s] primary HP_B = {'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6} | legacy HP_B = {'n_estimators': 200, 'min_samples_leaf': 5, 'max_features': 0.5, 'max_depth': 10}
+[03:52:47 +     2s]   seed 17: OURS 0.8260603 @ 103.6371 ms end-to-end | legacy_hp 0.8189004 @ 85.3620 ms part1-basis (2s)
+[03:52:49 +     4s]   seed 29: OURS 0.8247315 @ 107.4492 ms end-to-end | legacy_hp 0.8191035 @ 86.0003 ms part1-basis (2s)
+[03:52:51 +     6s]   seed 43: OURS 0.8205086 @ 108.2062 ms end-to-end | legacy_hp 0.8156494 @ 89.3508 ms part1-basis (2s)
+[03:52:53 +     8s]   seed 7: OURS 0.8274862 @ 105.2553 ms end-to-end | legacy_hp 0.8208835 @ 84.6909 ms part1-basis (2s)
+[03:52:55 +    10s]   seed 11: OURS 0.8237414 @ 107.0345 ms end-to-end | legacy_hp 0.8176026 @ 87.5549 ms part1-basis (2s)
+[03:52:57 +    12s]   seed 23: OURS 0.8126391 @ 107.0428 ms end-to-end | legacy_hp 0.8153915 @ 80.9478 ms part1-basis (2s)
+[03:52:59 +    14s]   seed 31: OURS 0.8253571 @ 103.5658 ms end-to-end | legacy_hp 0.8087959 @ 81.0498 ms part1-basis (2s)
+[03:53:01 +    16s]   seed 37: OURS 0.8175142 @ 106.3261 ms end-to-end | legacy_hp 0.8185041 @ 85.8342 ms part1-basis (2s)
+[03:53:03 +    18s]   seed 53: OURS 0.8283955 @ 106.3057 ms end-to-end | legacy_hp 0.8208232 @ 87.0171 ms part1-basis (2s)
+[03:53:05 +    20s]   seed 61: OURS 0.8191270 @ 106.6141 ms end-to-end | legacy_hp 0.8107971 @ 86.6395 ms part1-basis (2s)
+[03:53:05 +    20s] Protocol B stored: 3236 rows x 10 seeds x 17 systems
+[03:53:05 +    20s] ===== protoB done in 20s =====

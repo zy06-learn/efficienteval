@@ -1,0 +1,86 @@
+{
+  "objective": "fixed legacy pool with one A/B feature set",
+  "pool": [
+    "factcc",
+    "lettuce_v2",
+    "granite_guardian_3_1_2b"
+  ],
+  "comparison_pool": [
+    "alignscore",
+    "lettuce_v2",
+    "wecheck"
+  ],
+  "target": "regret",
+  "learner": "rf",
+  "hp_a": {
+    "n_estimators": 800,
+    "min_samples_leaf": 1,
+    "max_features": "sqrt",
+    "max_depth": 10
+  },
+  "hp_b": {
+    "n_estimators": 200,
+    "min_samples_leaf": 5,
+    "max_features": 0.5,
+    "max_depth": 10
+  },
+  "screen_hp_a": {
+    "n_estimators": 800,
+    "min_samples_leaf": 1,
+    "max_features": "sqrt",
+    "max_depth": 10
+  },
+  "screen_hp_b": {
+    "n_estimators": 200,
+    "min_samples_leaf": 5,
+    "max_features": 0.5,
+    "max_depth": 10
+  },
+  "screen_a_rotations_per_seed": 10,
+  "screen_seeds": [
+    17,
+    29,
+    43
+  ],
+  "confirm_seeds": [
+    17,
+    29,
+    43,
+    7,
+    11,
+    23,
+    31,
+    37,
+    53,
+    61
+  ],
+  "beta_grid": [
+    0.0,
+    0.1,
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.2,
+    1.6,
+    2.4,
+    3.2
+  ],
+  "quality_tolerance": 0.005,
+  "selection_data": "TRAIN only",
+  "selection_metric": "mean pooled AUROC across TRAIN-only A-style and B-style CV",
+  "smoke": false,
+  "python": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+  "platform": "Linux-6.17.0-1014-nvidia-aarch64-with-glibc2.39",
+  "started_unix": 1786692960.920827,
+  "features": [
+    "structured_source_line_ratio",
+    "bm25_mean3",
+    "entity_coverage",
+    "entity_value_colocation",
+    "year_count",
+    "conflicting_value_rate"
+  ],
+  "finished_unix": 1786731982.7537684,
+  "elapsed_seconds": 39021.83294177055
+}

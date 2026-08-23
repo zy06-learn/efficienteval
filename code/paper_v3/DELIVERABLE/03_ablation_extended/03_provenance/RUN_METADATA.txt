@@ -1,0 +1,9 @@
+command=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/part3_extended_v1.py prep
+started=2026-08-17 10:49:46-0400
+python=3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]
+platform=Linux-6.17.0-1014-nvidia-aarch64-with-glibc2.39
+nproc=20
+smoke=False
+seeds=[17, 29, 43, 7, 11, 23, 31, 37, 53, 61]
+hp_A={'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': 0.5, 'max_depth': 6}
+hp_B={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6}

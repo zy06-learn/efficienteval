@@ -1,0 +1,863 @@
+% Compiles with pdfLaTeX. No CJK packages needed.
+% Rewritten 2026-08-17 against the part1c / part2 / part3 archives.
+% Every number here was read from those archives during the rewrite. Nothing was carried
+% over from the previous notes without re-verification; the places where the previous notes
+% were wrong are marked explicitly so the two versions can be diffed.
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,array,multirow,graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+\usepackage{titlesec}
+
+\setlist{nosep,leftmargin=1.7em}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.85em}{0.35em}
+\renewcommand{\arraystretch}{1.15}
+\newcommand{\ours}{\textsuperscript{$\dagger$}}
+\newcommand{\fix}[1]{\textcolor{red!65!black}{#1}}
+
+\title{\textbf{EfficientEval Experiment Notes, v4}\\[3pt]
+\large One routing method, two evaluation protocols, rewritten against the frozen archives}
+\author{}\date{2026-08-17}
+
+\begin{document}
+\maketitle
+\vspace{-2.2em}
+\hrule
+
+\section*{Status of this document}
+
+This replaces the previous notes. The previous version described a configuration that no longer
+exists: nine cheap features for Protocol A and five for Protocol B, a 6{,}850-row Protocol~A
+frame, $p\ge0.5$ as the decision rule, and result tables produced under all of
+those. The routing algorithm is unchanged. Everything downstream of it was re-selected, re-run,
+or re-derived, so no table from the previous version survives.
+
+Provenance for every number below:
+\begin{itemize}
+\item main results --- \texttt{artifacts/part1c\_main\_full\_v1}
+\item core ablation --- \texttt{artifacts/part2\_ablation\_v1}
+\item extended ablation --- \texttt{artifacts/part3\_extended\_v1}
+\item pool provenance --- \texttt{runs/pool\_rescreen\_v1}
+\item verifier cost structure --- \texttt{DELIVERABLE/05\_verifier\_code/COMPLEXITY.md}
+\end{itemize}
+
+Two result groups were still computing when this was written and are marked
+\textbf{[pending]}: the Protocol~A replication of the extended ablation, and the cascade,
+second-call and learner families. Their Protocol~B counterparts are complete and reported.
+
+Corrections to the previous notes are marked \fix{in this colour}.
+
+%==================================================================
+\section{Task and data}
+
+An instance is a source document $D_i$, a candidate summary $S_i$, and a human factuality label
+$y_i\in\{0,1\}$. The router sees only features of $(D_i,S_i)$, chooses one of $k=3$ verifiers,
+calls it, and emits a calibrated probability plus a binary decision.
+
+\subsection{The two protocols}
+
+\begin{center}\small
+\begin{tabular}{p{3.2cm}p{5.5cm}p{5.5cm}}
+\toprule
+ & \textbf{Protocol A: pooled rotation} & \textbf{Protocol B: official TRAIN$\to$TEST} \\
+\midrule
+Frame & \fix{8{,}512 rows / 1{,}535 groups} (TRAIN $\cup$ TEST) &
+  TRAIN 5{,}276 / 890; TEST 3{,}236 / 645 \\
+Positive rate & \fix{0.5721} & TRAIN 0.6298; TEST 0.4781 \\
+Source words & median 453, p90 1{,}218, max 8{,}847 &
+  TRAIN 462 / 1{,}402 / 8{,}635; TEST 439 / 991 / 8{,}847 \\
+Summary words & median 71, p90 151, \fix{max 2{,}099} &
+  TRAIN 82 / 159 / 1{,}428; TEST 57 / 124 / 2{,}099 \\
+Fitting & 8 folds fit, 1 validates & each seed splits TRAIN by group into fit and validation \\
+Evaluation & the remaining fold; ten rotations concatenate out-of-fold & the frozen model on TEST \\
+Repetitions & 10 rotations $\times$ 10 seeds & 10 seeds \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\fix{Three corrections.} The previous notes gave Protocol~A as 6{,}850 rows / 1{,}241 groups with
+a 52.3\% positive rate and a maximum summary length of 1{,}444 words, and stated that the
+longest summary in Protocol~B's TEST side (2{,}155 tokens) exceeded anything Protocol~A
+contained. Protocol~A is the union of TRAIN and TEST, so it contains that summary; the two
+frames cannot differ in their maximum. The current figures are above.
+
+\fix{A fourth correction.} The previous notes described TEST access as ``labels are read once''.
+That is not the contract. The contract is that TEST never participates in any choice --- not in
+features, pool, target, learner, hyperparameters, the beta rule, calibration, or thresholds.
+How many times a frozen evaluation script reads the labels is not a constraint and was never
+enforced as one.
+
+Both protocols enforce group separation on \texttt{content\_doc\_key}:
+\[
+G_{\mathrm{fit}}\cap G_{\mathrm{val}}=\varnothing,\quad
+G_{\mathrm{fit}}\cap G_{\mathrm{eval}}=\varnothing,\quad
+G_{\mathrm{val}}\cap G_{\mathrm{eval}}=\varnothing,
+\]
+asserted at run time rather than by convention, because one source document carries several
+candidate summaries and row-level splitting would leak it. TRAIN and TEST share no document.
+Five RAGTruth TRAIN rows carrying a CNN/DailyMail article that also appears in CogenSumm TEST are
+excluded by a content-hash rule declared before either file existed.
+
+\subsection{Protocol A is not a held-out confirmation}
+
+Protocol~A's configuration was selected on the TRAIN subset of its own pooled frame, so A is a
+cross-validated estimate. Protocol~B is the confirmatory result. This is stated here because the
+distinction is easy to lose: both protocols report the same metrics on frames that overlap.
+
+%==================================================================
+\section{Method}
+
+\subsection{Offline training, then one call at inference}
+
+\begin{center}\small
+\begin{tabular}{llp{7.6cm}}
+\toprule
+Step & Partition & What it does \\
+\midrule
+T1 & --- & read frozen scores $s_{ij}$, availability, and measured latency $c_j$ \\
+T2 & fit & fit Platt $(a_j,b_j)$ per verifier, giving calibrated $C_{ij}$ \\
+T3 & fit & build the supervision target $T_{ij}$ from $C_{ij}$ and $y_i$ \\
+T4 & fit & fit three random-forest regression heads on the six features \\
+T5 & validation & sweep the beta grid; select $\beta^{*}$ \\
+T6 & validation & fit the stage-2 isotonic layer under $\beta^{*}$ \\
+\fix{T7} & \fix{validation} & \fix{select the decision threshold} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\fix{Correction.} The previous notes listed four training artifacts
+$\{(a_j,b_j)\},\{f_j\},\beta^{*},\mathrm{Iso}$ and gave the decision rule as $p\ge0.5$. The
+deployed object also contains a threshold selected on validation, and the primary rule is the
+validation MCC-optimal cut, not $0.5$. Section~\ref{sec:thr} reports all four threshold rules
+that were computed, and one of them is $0.5$.
+
+At inference the router computes the six features, evaluates three heads, forms
+$U_j=\hat T_j\exp(-\beta^{*}c_j/c_{\max})$, calls $\arg\max_j U_j$ and nothing else, applies that
+verifier's Platt map, applies the isotonic layer, and thresholds. Exactly one verifier call per
+instance; \texttt{mean\_calls} is $1.000$ for every primary row in every table.
+
+\subsection{Unified cheap features}
+
+\fix{The largest change.} The previous notes described protocol-specific feature sets, nine for A
+and five for B, selected separately. There is now one set of six, selected on TRAIN alone by
+jointly optimising A-style and B-style pooled AUROC:
+
+\begin{center}\small
+\begin{tabular}{p{4.6cm}p{10.4cm}}
+\toprule
+Feature & Definition \\
+\midrule
+\texttt{structured\_source\_line\_ratio} & structured lines as a fraction of non-empty source
+  lines; a line is structured if it matches a bullet or numbering pattern, or has $\le8$ tokens
+  and either ends in a colon or is all-uppercase \\
+\texttt{bm25\_mean3} & mean BM25 score of the summary against its three best-matching source
+  passages \\
+\texttt{entity\_coverage} & fraction of summary entities present in the source; $1$ when the
+  summary has no entities \\
+\texttt{entity\_value\_colocation} & rate at which an entity and a numeric value that co-occur in
+  a summary sentence also co-occur in some source sentence \\
+\texttt{year\_count} & count of four-digit year mentions in the summary \\
+\texttt{conflicting\_value\_rate} & rate of summary numeric values that appear in the source with
+  a different associated entity \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Section~\ref{sec:unify} reports the head-to-head against both superseded sets. The unified set is
+separably better than each of them, so unification was not a simplification bought with quality.
+
+\fix{One caveat the previous notes did not carry.} Feature selection scored candidates on
+pre-stage-2 routed AUROC. It did not fit an isotonic layer per candidate, so the search did not
+execute the full two-stage pipeline it was selecting for.
+
+\subsection{Supervision target}
+
+With $Q_{ij}$ the probability mass verifier $j$ placed on the true label,
+\[
+Q_{ij}=\begin{cases}C_{ij}&y_i=1\\ 1-C_{ij}&y_i=0\end{cases}
+\qquad
+T_{ij}=1+\bigl(Q_{ij}-\max_k Q_{ik}\bigr).
+\]
+The best verifier on a row gets exactly $1$; the others decay by their regret. Absolute quality
+conflates instance difficulty with verifier differences, and the row-wise maximum cancels the
+shared difficulty term while preserving both the ordering and the magnitude of the gaps.
+
+The five alternatives measured in Section~\ref{sec:abl} are \texttt{prob\_quality} $=Q_{ij}$;
+\texttt{brier} $=1-(C_{ij}-y_i)^2$; \texttt{pairwise\_rank}, the fraction of other actions
+verifier $j$ beats on that row; \texttt{is\_best}, the indicator of attaining the row maximum;
+and \texttt{correctness}, the indicator that the hard decision matches the label.
+
+\fix{Note on \texttt{correctness}.} It needs per-verifier hard-decision correctness, which the
+frozen matrix does not carry as a column. It is derived from the recorded \texttt{decision\_\_}
+columns against the label. It is the only ablation arm whose inputs are computed rather than read.
+
+\subsection{Random-forest heads and how their hyperparameters were chosen}
+
+One independent regression head per verifier, $f_j:\mathbb{R}^{6}\to[0,1]$, each fitted only on
+the fit rows where that verifier is available, predictions clipped to $[0,1]$, split criterion
+squared error.
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+ & Protocol A & Protocol B \\
+\midrule
+\texttt{n\_estimators} & 800 & 200 \\
+\texttt{min\_samples\_leaf} & 5 & 10 \\
+\texttt{max\_features} & 0.5 & 0.5 \\
+\texttt{max\_depth} & 6 & 6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\fix{Correction, and the reason this section exists.} The previous notes stated that each protocol
+chose hyperparameters ``on validation by minimising head loss over the declared 16-point search''.
+No such search had been run for the feature set in use: Protocol~A's values were a hard-coded
+default inherited from an earlier codebase, and Protocol~B's came from a search over a different,
+five-feature set. Both have now actually been selected, on TRAIN only, by minimum validation head
+loss over sixteen randomly initialised candidates drawn from
+$\texttt{n\_estimators}\in\{200,400,800\}$, $\texttt{min\_samples\_leaf}\in\{1,2,5,10\}$,
+$\texttt{max\_features}\in\{\texttt{sqrt},\texttt{log2},0.5\}$,
+$\texttt{max\_depth}\in\{6,10,12,16,24\}$, with the two previous values forced in as reference
+points. The full ranking is archived.
+
+\fix{The cost of that rule is recorded rather than hidden.} Head loss and routed AUROC are
+positively rank-correlated across the candidate set, so the minimum-loss region is the
+shallow-forest region: both protocols select \texttt{max\_depth}$=6$. Selecting on validation
+AUROC instead would have gained a small amount of validation AUROC. Head loss was kept because it
+is disjoint from the metric the paper reports, and the forgone amount is archived alongside.
+
+Section~\ref{sec:conv} shows the forests are past convergence at these sizes.
+
+\subsection{Cost-aware selection}
+
+$c_j$ is verifier $j$'s mean latency on the fit partition and $c_{\max}$ the largest of them.
+On TRAIN the three are \fix{$49.4$, $81.1$ and $205.3$\,ms}, giving:
+
+\begin{center}\small
+\begin{tabular}{lrrrl}
+\toprule
+$\beta$ & FactCC & Lettuce-v2 & Granite-3.1-2b & Interpretation \\
+\midrule
+0.0 & 1.000 & 1.000 & 1.000 & cost ignored \\
+0.1 & 0.976 & 0.961 & 0.905 & selected in both protocols \\
+0.2 & 0.953 & 0.924 & 0.819 & Granite must predict ${\sim}16\%$ better to win \\
+0.4 & 0.908 & 0.854 & 0.670 & ${\sim}36\%$ better \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$\beta^{*}$ is the lowest-latency value whose validation AUROC is within $\varepsilon=0.005$ of
+the best over the grid $\{0,0.1,0.2,0.4,0.6,0.8,1.2,1.6,2.4,3.2\}$. Mode $0.1$ in both
+protocols: 8 of 10 seeds in B, 51 of 100 rotations in A with $0.2$ taking the other 49.
+
+\fix{Do not confuse two statistics.} The previous notes reported a Protocol~A beta selection rate
+of 72\%. That was measured during the TRAIN-only selection stage, over a different set of fits,
+and is not comparable to the 51\% over the 100 final rotations.
+
+\subsection{Two calibration stages, applied to every system}
+
+Stage 1 is a per-verifier Platt map fitted on the fit partition. Stage 2 is one isotonic layer
+fitted on the validation partition, on the router's own output.
+
+\fix{The correction that matters most for reading the tables.} In the previous work only the
+router received stage 2; the fifteen fixed verifiers received stage 1 alone. That made ECE, MCE,
+Brier and every threshold-dependent column incomparable between the router and its baselines, and
+it produced the claim that the router attains the lowest calibration error in the table. Under
+symmetric calibration that claim does not survive: in Protocol~A three fixed verifiers have lower
+ECE than the router, and in Protocol~B one does. All sixteen systems now go through the identical
+two-stage pipeline.
+
+Isotonic regression is monotone but \emph{not} order-preserving. PAVA pools the score regions
+where the empirical label rate runs backwards, and every pair inside a pooled block becomes a tie
+worth exactly $0.5$, so a block that was contributing less than $0.5$ gains. Stage 2 therefore
+moves AUROC in either direction, and moves it most for the weakest verifiers.
+Section~\ref{sec:abl} quantifies this for every system.
+
+\subsection{Latency accounting}
+\label{sec:lat}
+
+\fix{Corrected and now complete.} Reported latency is end to end: base feature extraction, the
+second feature extractor, random-forest head inference, the routing arithmetic, both calibration
+stages, and the verifier call. The previous accounting charged only the verifier call plus base
+feature extraction, understating the router by 23\% in Protocol~B and 28\% in Protocol~A.
+
+A fixed verifier computes no features and runs no heads, so its end-to-end cost is its call plus
+the calibration applied to it. That asymmetry is correct accounting, not a handicap, and it is
+what the tables report. Measured components, per row:
+
+\begin{center}\small
+\begin{tabular}{lrr}
+\toprule
+Component & Protocol B & Protocol A \\
+\midrule
+base feature extraction & 7.665 & 9.334 \\
+second feature extractor & 19.628 & 23.888 \\
+head inference (three forests) & 0.034 & 0.483 \\
+routing arithmetic & 0.00005 & 0.00005 \\
+calibration application & ${\approx}0$ & ${\approx}0$ \\
+selected verifier call & 77.78 & 78.55 \\
+\midrule
+total & \textbf{106.14} & \textbf{112.54} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The breakdown reconciles with the reported mean to $10^{-13}$\,ms, asserted at run time.
+
+\fix{One measurement caveat that the previous notes did not contain.} Granite-3.1-2b's recorded
+latency differs by 1.5 to 1.7$\times$ between two scoring campaigns covering different corpora,
+and it carries 30.9\% of Protocol~B traffic. A matched-token-bin comparison on the one corpus
+family present in both campaigns gives a ratio of 1.003, which rules out input length and split
+composition as the explanation. The tables report the as-measured figure, which is the
+conservative end; normalising every row to the slower campaign widens the router's advantage over
+the strongest pool member from 1.24$\times$ to 1.51$\times$. No system dominates the router under
+either accounting.
+
+%==================================================================
+\section{Verifier cost structure}
+
+The symbolic derivations in the previous notes --- forward-pass counts, per-pass cost, the
+parameter-substituted expansion, and the model-structure table --- depend only on model
+architecture and the executed code path. That code path was re-audited line by line for this
+rewrite and the derivations stand, with two corrections. They are not reproduced here; they live
+with the code, in \texttt{DELIVERABLE/05\_verifier\_code/COMPLEXITY.md}, together with the
+dispatch table and the file map.
+
+\fix{Correction 1.} HHEM and AlignScore are not \texttt{PairWindowScorer}s. They are
+\texttt{MetadataScorer}s wrapping scorers built by \texttt{build\_primary\_scorer}, and HHEM's
+windowing is a separate implementation, \texttt{build\_hhem\_token\_windows}, in a different
+file. The previous notes described HHEM's windowing correctly but filed it under the wrong
+wrapper, so a reader following the dispatch would not find it.
+
+\fix{Correction 2.} The closed form
+$C=\lceil (m-o)/(T_{\max}-E(b)-o)\rceil$ is a lower bound, not an exact count. After slicing
+\texttt{budget} token ids, the packer re-encodes the \emph{decoded} chunk as a pair and shrinks
+the window while that length exceeds $T_{\max}$. Decoding and re-encoding is not
+length-preserving, so the true count can exceed the closed form. The recorded
+\texttt{source\_window\_count} is the ground truth.
+
+Two facts from that document are load-bearing for any complexity claim. First, three columns
+describe forward work and they disagree by design: \texttt{model\_forward\_calls} is always $1$
+for both MiniCheck variants because their windows are packed into one batch, and
+\texttt{forward\_items} degenerates to $1$ for Lettuce-v2 because its wrapped scorer never writes
+\texttt{n\_chunks}. The correct column depends on the verifier group. Second, every scorer
+asserts batch size one, so per-instance latency is measurable but nothing here is
+batch-throughput-optimal.
+
+All \emph{measured} quantities in the previous notes' cost tables --- forward-count quantiles,
+median latencies, generation-length distributions, and the latency-versus-length correlation
+table --- were taken from the superseded 6{,}850-row matrix and do not transfer. They can be
+recomputed from the frozen scoring parquets without re-running any verifier.
+
+%==================================================================
+\section{Metrics}
+
+AUROC is primary and the only basis for ranking. AUPRC is reported with unsupported as the
+positive class. ECE and MCE use 15 equal-width bins. AURC is the area under the risk--coverage
+curve, with coverage ordered by $|p-0.5|$. Latency is reported as mean, p50, p95 and p99. Macro
+AUROC, the unweighted mean over the four corpora, is a diagnostic column throughout and never a
+ranking key.
+
+\fix{The composite metric is gone.} An earlier quality--cost composite used fixed normalisation
+anchors that the observed quality range later exceeded, which broke the geometry it was built on.
+It is removed from every table, ranking and conclusion. Quality and cost are reported separately.
+
+\fix{Multiplicity is now reported.} Each main table makes fifteen comparisons against the router
+and each ablation table makes twenty-five or more. Every paired interval is reported at the
+nominal 95\% level and at the Bonferroni-corrected level for its family, both from one cluster
+bootstrap resampled by \texttt{content\_doc\_key} with 2{,}000 draws. Claims cite the corrected
+level.
+
+%==================================================================
+\section{Main results}
+
+\subsection{Protocol A}
+
+\begin{center}\scriptsize
+\setlength{\tabcolsep}{2.6pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrrr}
+\toprule
+System & AUROC$\uparrow$ & SD$\downarrow$ & AUPRC-U$\uparrow$ & Acc$\uparrow$ & BAcc$\uparrow$ & MCC$\uparrow$ & F1-U$\uparrow$ & Rec-U$\uparrow$ & ECE$\downarrow$ & Brier$\downarrow$ & Mean$\downarrow$ & P95$\downarrow$ & P99$\downarrow$ \\
+\midrule
+\textbf{Ours} & \textbf{.79330} & .00173 & \textbf{.78383} & .73793 & .71951 & .45888 & \textbf{.65862} & \textbf{.59176} & .02161 & \textbf{.17262} & \textbf{112.54} & 313.00 & 1014.45 \\
+AlignScore & .78113 & .00131 & .76517 & .71236 & .68446 & .40741 & .59303 & .49110 & .02154 & .18128 & 677.29 & 2195.91 & 5275.71 \\
+Qwen30-fast & .76893 & .00319 & .77657 & .74934 & .71863 & .49619 & .63315 & .50574 & .01440 & .17332 & 273.35 & 506.33 & 1334.30 \\
+Qwen30-judge & .76390 & .00206 & .75124 & \textbf{.75145} & .71899 & \textbf{.50524} & .62963 & .49401 & .02029 & .17310 & 642.74 & 1394.52 & 1777.29 \\
+FactCG & .75500 & .00224 & .75869 & .73033 & .69847 & .45352 & .60232 & .47757 & .02079 & .18411 & 429.94 & 1562.36 & 4053.75 \\
+Granite-3.1-2b\ours & .74024 & .00129 & .72905 & .70638 & .67233 & .39997 & .55968 & .43630 & .02113 & .19460 & 177.34 & 325.18 & 912.45 \\
+WeCheck & .73337 & .00189 & .72338 & .69851 & .66035 & .38843 & .52868 & .39585 & .02147 & .19581 & 359.32 & 1296.06 & 3240.79 \\
+MiniCheck-FT5 & .70117 & .00182 & .66240 & .68440 & .65724 & .34345 & .55968 & .46897 & .02393 & .21020 & 451.01 & 1750.79 & 4330.68 \\
+FactKB & .67432 & .00255 & .69030 & .69974 & .65272 & .42093 & .48222 & .32680 & .02501 & .19999 & 44.46 & 150.52 & 385.34 \\
+Granite-3.2-8b & .67028 & .00547 & .68705 & .70320 & .65685 & .42766 & .49176 & .33561 & \textbf{.01762} & .19798 & 1011.32 & 1649.83 & 3125.17 \\
+Granite-3.2-3b & .66372 & .00202 & .64482 & .66350 & .61813 & .31240 & .43568 & .30365 & .02103 & .21520 & 243.92 & 465.30 & 785.93 \\
+MiniCheck-DBTA & .63642 & .00191 & .59806 & .61658 & .56662 & .19325 & .32609 & .22037 & .02407 & .22554 & 473.33 & 2046.78 & 4200.11 \\
+HHEM & .62453 & .00225 & .60837 & .63696 & .58399 & .25540 & .33807 & .21686 & .01739 & .22438 & 149.64 & 542.78 & 1676.51 \\
+Granite-4.1-3b & .61887 & .00177 & .54875 & .58610 & .57546 & .15185 & .50862 & .50167 & .02195 & .23446 & 448.81 & 657.21 & 1449.36 \\
+Lettuce-v2\ours & .61216 & .00488 & .55749 & .65578 & .61229 & .28777 & .43590 & .31085 & .01403 & .22607 & 73.68 & 233.09 & 722.36 \\
+FactCC\ours & .53237 & .00287 & .45330 & .51523 & .51612 & .03225 & .47738 & .52230 & .01972 & .24544 & 44.86 & 149.36 & 374.19 \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent\footnotesize Latencies in milliseconds, end to end for Ours and call-plus-calibration
+for the fixed rows (\S\ref{sec:lat}). \ours\,pool member.\normalsize
+
+Ours is first of sixteen by AUROC and first by AURC ($.14905$ against $.15431$ for AlignScore).
+It is separable from fourteen of the fifteen fixed verifiers. \fix{The exception is AlignScore:}
+$+.01217$, nominally $[.00038,.02426]$, but the table makes fifteen comparisons and the
+Bonferroni-corrected interval $[-.00721,.02964]$ contains zero. \fix{An earlier draft of these
+notes claimed separability from all fifteen; that was wrong.} The honest statement is that Ours
+holds the highest absolute AUROC and is indistinguishable from the strongest fixed verifier under
+multiplicity correction, at 6.02$\times$ lower latency.
+
+The three pool members individually reach $.53237$, $.61216$ and $.74024$; routing among them
+reaches $.79330$.
+
+\subsection{Protocol B}
+
+\begin{center}\scriptsize
+\setlength{\tabcolsep}{2.6pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrrr}
+\toprule
+System & AUROC$\uparrow$ & SD$\downarrow$ & AUPRC-U$\uparrow$ & Acc$\uparrow$ & BAcc$\uparrow$ & MCC$\uparrow$ & F1-U$\uparrow$ & Rec-U$\uparrow$ & ECE$\downarrow$ & Brier$\downarrow$ & Mean$\downarrow$ & P95$\downarrow$ & P99$\downarrow$ \\
+\midrule
+Qwen30-fast & \textbf{.83384} & .00066 & \textbf{.85299} & \textbf{.76681} & \textbf{.77251} & \textbf{.56311} & \textbf{.74098} & .64269 & \textbf{.02506} & \textbf{.15688} & 211.65 & 284.51 & 402.61 \\
+\textbf{Ours} & .82256 & .00474 & .83522 & .73646 & .74153 & .50613 & .70888 & .62605 & .03883 & .16855 & \textbf{106.14} & 225.16 & 757.63 \\
+Qwen30-judge & .81500 & .00158 & .81237 & .75034 & .75918 & .55993 & .69986 & .55767 & .05597 & .16377 & 600.87 & 1354.61 & 1426.40 \\
+AlignScore & .81167 & .00108 & .83801 & .72951 & .73058 & .46608 & .73008 & \textbf{.70628} & .04345 & .17279 & 561.65 & 1747.54 & 5274.19 \\
+Granite-3.1-2b\ours & .79583 & .00316 & .81944 & .72151 & .72866 & .48515 & .67718 & .56566 & .05570 & .18276 & 131.81 & 205.00 & 278.04 \\
+FactCG & .77998 & .00080 & .82291 & .72886 & .73699 & .50752 & .67882 & .55169 & .09607 & .18862 & 427.50 & 1073.47 & 7859.26 \\
+WeCheck & .76912 & .00098 & .80861 & .69385 & .70300 & .44893 & .62333 & .49449 & .09246 & .19609 & 496.01 & 1436.41 & 4536.65 \\
+FactKB & .76282 & .00526 & .80264 & .70547 & .71733 & .50983 & .61214 & .44695 & .05945 & .18287 & \textbf{37.01} & \textbf{94.85} & 333.70 \\
+Granite-3.2-3b & .75501 & .00792 & .75989 & .63276 & .64634 & .36790 & .48766 & .33683 & .14207 & .22169 & 263.87 & 456.21 & 549.55 \\
+MiniCheck-FT5 & .73907 & .00279 & .76218 & .68847 & .69632 & .41990 & .63219 & .51741 & .12191 & .21586 & 364.03 & 1681.60 & 4196.31 \\
+MiniCheck-DBTA & .67740 & .00135 & .69006 & .55732 & .57525 & .25710 & .28131 & .16679 & .12963 & .24017 & 480.64 & 2035.34 & 4264.31 \\
+HHEM & .66521 & .01751 & .69026 & .60250 & .61900 & .35367 & .38750 & .24304 & .12600 & .23292 & 223.30 & 700.32 & 2428.56 \\
+Granite-3.2-8b & .63386 & .00582 & .74705 & .53993 & .53511 & .06292 & .59823 & .64494 & .28108 & .26553 & 690.01 & 1176.09 & 1331.46 \\
+Lettuce-v2\ours & .59951 & .00056 & .59493 & .58616 & .59992 & .25416 & .41920 & .28615 & .15271 & .25747 & 61.61 & 126.89 & 713.54 \\
+FactCC\ours & .57089 & .00778 & .56859 & .53198 & .53392 & .09288 & .45340 & .48988 & .16127 & .27165 & 37.60 & 94.00 & 329.31 \\
+Granite-4.1-3b & .47487 & .00179 & .53075 & .46378 & .46108 & $-$.07875 & .50382 & .52274 & .27710 & .33312 & 376.76 & 478.42 & 573.43 \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+Ours is second of sixteen. Paired intervals for Ours minus the arm, cluster bootstrap by source
+group, 2{,}000 draws:
+
+\begin{center}\small
+\begin{tabular}{lrlll}
+\toprule
+Arm & $\Delta$ AUROC & 95\% CI & Bonferroni & Latency \\
+\midrule
+Granite-3.1-2b, strongest pool member & $+.02672$ & $[.00916,.04315]$ & \textbf{separable} & 1.24$\times$ faster \\
+AlignScore & $+.01089$ & $[-.00625,.02753]$ & indistinguishable & 5.29$\times$ faster \\
+Qwen30-judge & $+.00755$ & $[-.01044,.02477]$ & indistinguishable & 5.66$\times$ faster \\
+Qwen30-fast & $-.01128$ & $[-.02875,.00552]$ & indistinguishable & 1.99$\times$ slower \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Twelve of the fifteen comparisons survive correction. The three that do not were already reported
+as indistinguishable at the nominal level, so no conclusion reverses. In neither protocol is any
+fixed verifier both more accurate and cheaper than Ours: under end-to-end accounting the only
+cheaper verifiers are FactKB, FactCC and Lettuce-v2, all separably worse. The operating point is
+not dominated. Universal superiority over every fixed verifier is not claimed and Qwen30-fast is
+genuinely higher in Protocol~B.
+
+\subsection{Routing behaviour}
+
+\begin{center}\small
+\begin{tabular}{lrrrr}
+\toprule
+Protocol & FactCC & Lettuce-v2 & Granite-3.1-2b & Mean ms \\
+\midrule
+A & 29.77\% & 51.32\% & 18.91\% & 112.54 \\
+B & 34.50\% & 35.59\% & 29.91\% & 106.14 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Every member carries at least 18.9\% of traffic in both protocols, so no pool slot is dead. The
+per-corpus split is extreme --- in Protocol~B CogenSumm sends 88.7\% to FactCC, RAGTruth sends
+98.9\% to Lettuce-v2, FRANK sends 55.0\% to Granite --- and is reported as a description of
+fitted behaviour. It is not evidence of domain-invariant routing, and the cheap features carry a
+strong corpus fingerprint.
+
+\subsection{Pool provenance}
+\label{sec:pool}
+
+\fix{This subsection is new and it reports a negative result.} The pool was selected in the
+earliest codebase on a matrix that shares 54.4\% of Protocol~B's TEST document groups. Features
+and hyperparameters were later re-selected on TRAIN alone; the pool never was. Re-running the
+selection on TRAIN only, over all 455 three-verifier subsets under the current features and
+hyperparameters, and applying the project's own pre-declared eligibility rule ($k=3$, not
+dominated by any single verifier, every member receiving at least 5\% of routed traffic):
+
+\begin{center}\small
+\begin{tabular}{lr}
+\toprule
+Validation AUROC & $.75930$ at $89.92$\,ms \\
+Minimum member share & 13.6\%, eligible \\
+Rank by validation AUROC alone & \fix{109 of 455} \\
+Quality--cost Pareto frontier & \textbf{on it} (12 frontier pools of 455; 7 of the 90 eligible) \\
+Seed SD among frontier pools & lowest \\
+Cheapest pool with higher AUROC & 2.80$\times$ the cost \\
+Best AUROC among cheaper pools & $.052$ lower \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The pool's rank-one status does not survive re-selection on clean data; its frontier position
+does, with a wide margin on both axes. \fix{The previous claim of ``first of 540'' was measured on
+the contaminated matrix and must not be quoted.}
+
+%==================================================================
+\section{Ablations}
+\label{sec:abl}
+
+Twenty-five single-factor arms, both protocols, ten seeds, each sharing the reference system's
+splits and differing from it in exactly one respect. The reference arm reproduces the main
+experiment at $\Delta=0$ to machine precision in both protocols, which is what licenses
+attributing each delta to the change that produced it.
+
+\subsection{What the method needs}
+
+\begin{center}\small
+\begin{tabular}{lrrl}
+\toprule
+Arm & B & A & \\
+\midrule
+Random routing, serving only & $-.16609$ & $-.14979$ & Bonferroni \\
+Random routing, everything refitted on it & $-.16025$ & $-.14325$ & Bonferroni \\
+Remove Granite at serving / retrained & $-.17629$ / $-.16425$ & $-.10244$ / $-.09893$ & Bonferroni \\
+Remove Lettuce-v2 at serving / retrained & $-.08604$ / $-.02255$ & $-.09566$ / $-.05030$ & Bonferroni / 95\% \\
+Remove FactCC at serving / retrained & $-.05377$ / $-.01840$ & $-.06703$ / $-.03843$ & Bonferroni \\
+No verifier at all & $-.02589$ & $-.04405$ & Bonferroni \\
+No stage-1 Platt & $-.04368$ & $-.03232$ & Bonferroni \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The routing decision is the dominant effect. The two random-routing variants matter jointly:
+the serving-only version leaves beta, isotonic and the threshold fitted on real routing, so it
+cannot separate the loss from a calibration mismatch; the refit version refits all three on
+randomised routing and recovers only $.006$. The effect is the assignment of instances to
+verifiers.
+
+The two removal semantics answer different questions and are reported separately. Serving-time
+masking is the production question of a verifier going down; retraining on the remainder is the
+design question of whether a member earns its slot. Refitting recovers most of the loss for
+FactCC and Lettuce-v2 --- they are partly substitutable --- and almost none for Granite.
+
+\subsection{Three negative results}
+
+\textbf{Stage-2 isotonic costs Protocol~B ranking quality.} Removing it \emph{improves} B's AUROC
+by $+.00353$, separably under Bonferroni, while tripling its calibration error from $.03883$ to
+$.11393$. In Protocol~A, where the stage also has to place ten rotations on a common scale, it
+helps by $.00248$ at the 95\% level only. Stage 2 is a calibration component that costs a small,
+measurable amount of ranking quality; it is not a component that improves the system.
+
+\textbf{Individual feature attribution is weak.} Under Bonferroni only
+\texttt{structured\_source\_line\_ratio} survives single-feature removal in Protocol~B
+($-.03025$). Three of the six are not separable in either protocol, and two are nominally
+positive when removed from B. The group arms keep the set defensible: dropping either
+extractor's contribution is separable in both protocols, $-.03696$ and $-.02638$ in B. Section
+\ref{sec:shap} resolves the attribution properly.
+
+\textbf{The cost term's quality contribution is protocol-dependent.} Pinning $\beta=0$ costs
+$-.03588$ in A, separable under Bonferroni, and $-.01352$ in B, separable at 95\% but not under
+correction. It is a large latency regression in both, $+68\%$ and $+34\%$. The cost term is
+primarily a budget control that also regularises over-selection of the expensive action.
+
+\subsection{Supervision target}
+
+\begin{center}\small
+\begin{tabular}{lrrl}
+\toprule
+Target & B & A & \\
+\midrule
+\texttt{regret} (locked) & 0 & 0 & \\
+\texttt{brier} & $-.00466$ & $-.00286$ & neither separable \\
+\texttt{prob\_quality} & $-.00825$ & $-.00078$ & B Bonferroni; A not \\
+\texttt{pairwise\_rank} & $-.01095$ & $+.00106$ & B Bonferroni; A not \\
+\texttt{is\_best} & $-.03467$ & $-.01525$ & Bonferroni \\
+\texttt{correctness} & $-.05699$ & $-.03118$ & Bonferroni \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Continuous relative-quality supervision beats binary supervision by $.015$ to $.057$, separably in
+both protocols, which is the claim the target design supports. \fix{Optimality of \texttt{regret}
+within the continuous family is not established:} it is separably best only in Protocol~B, and in
+Protocol~A \texttt{pairwise\_rank} is nominally higher.
+
+%==================================================================
+\section{Extended ablation}
+
+\subsection{Per-corpus training, and why the corpora are pooled}
+
+Each corpus has its own official train and evaluation split. Training and evaluating entirely
+inside one corpus, ten seeds, with the validation share raised until both classes and at least
+five of the minority are present:
+
+\begin{center}\small
+\begin{tabular}{lrrrrr}
+\toprule
+Corpus & Train pos & Test pos & \textbf{Shift} & In-domain router & Pooled router, same rows \\
+\midrule
+CogenSumm & .4935 & .7800 & \textbf{$+28.65$ pp} & .68983 (sd .0399) & .68488 \\
+RAGTruth & .7104 & .7822 & $+7.19$ pp & .62143 (sd .0165) & .63772 \\
+UniSumEval & .7658 & .7466 & $-1.92$ pp & .63796 (sd .0281) & .59070 \\
+FRANK & .1584 & .1638 & $+0.54$ pp & .81495 (sd .0117) & .82532 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+CogenSumm's own training and evaluation splits disagree on the label prior by 28.65 percentage
+points. A model fitted inside that corpus cannot calibrate a threshold against itself. Pooling
+reduces the worst-case shift a single fitted model must absorb to 15.17 points, and it is the
+reason the four corpora are trained jointly rather than separately.
+
+Single-corpus data buys nothing: the in-domain minus pooled differences are $+.005$, $-.016$,
+$+.047$ and $-.010$, both signs, no systematic advantage, and the pooled router's seed SD is
+$.0047$ against $.012$ to $.040$ in domain.
+
+\subsubsection{A negative result that bounds the claim}
+
+\fix{The deployable single-verifier competitor beats in-domain routing on every corpus.} Selecting
+one fixed verifier on the same validation split, never touching test labels:
+
+\begin{center}\small
+\begin{tabular}{lrrrrr}
+\toprule
+Corpus & In-domain router & Selected from the 3 pool members & $\Delta$ & Selected from all 15 & $\Delta$ \\
+\midrule
+CogenSumm & .68983 & \textbf{.74948} Granite & $-.05965$ & .77583 WeCheck & $-.08600$ \\
+FRANK & .81495 & \textbf{.82667} Granite & $-.01172$ & .83863 FactKB & $-.02367$ \\
+RAGTruth & .62143 & \textbf{.63676} Lettuce & $-.01532$ & .78181 FactCG & $-.16038$ \\
+UniSumEval & .63796 & \textbf{.66421} Granite & $-.02624$ & .66564 WeCheck & $-.02768$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Even restricted to the router's own three actions, fixing one verifier per corpus wins on all
+four, and the selection is stable --- three of the four corpora choose the same verifier on all
+ten seeds. Pooled, the ordering reverses: the router beats the strongest pool member by $+.02672$,
+separably under Bonferroni, at 1.24$\times$ lower latency.
+
+Two measurable conditions explain the reversal. Heterogeneity: four different verifiers win on
+the four corpora when the choice is unrestricted (FactCG, FactKB, AlignScore, Qwen30-judge), so no
+verifier is universally best across the mixture, which is what creates the arbitrage. Data: the
+learning curve below is still rising at the full pooled training set of 890 groups, and a single
+corpus has 107 to 499.
+
+The defensible claim is therefore conditional. \textbf{Per-instance routing pays off on a
+heterogeneous mixture, not within a single corpus. With one corpus and labels, fixing one verifier
+for it is the stronger choice.}
+
+\subsection{Feature attribution over the full subset lattice}
+\label{sec:shap}
+
+All 64 subsets of the six features and all 8 subsets of the pool were evaluated. With no features
+the forest receives a single constant column, so each head predicts the training mean of its
+action's target and routing reduces to the cost-discounted marginal ranking; that is the value of
+the empty set which exact attribution requires.
+
+\fix{Why this replaces per-subset significance testing.} Sixty-four comparisons would require a
+Bonferroni threshold of $\alpha=.00078$ and would return ``not separable'' almost everywhere,
+which is a property of the design rather than a finding, because the features are redundant. The
+average marginal contribution over all subsets containing a feature is the quantity that answers
+what a feature is worth under redundancy. It is exact at $n=6$, and the efficiency identity ---
+the values sum to full-set minus empty-set --- holds to $0$ and is asserted at run time.
+
+\begin{center}\small
+\begin{tabular}{lrrrr}
+\toprule
+Feature & Shapley & Share & Alone & Leave-one-out \\
+\midrule
+\texttt{structured\_source\_line\_ratio} & \textbf{.01694} & \textbf{63.4\%} & .78785 & .79230 \\
+\texttt{entity\_coverage} & .00267 & 10.0\% & .79382 & .82203 \\
+\texttt{bm25\_mean3} & .00266 & 9.9\% & .76856 & .80767 \\
+\texttt{conflicting\_value\_rate} & .00258 & 9.7\% & \textbf{.79587} & .82245 \\
+\texttt{entity\_value\_colocation} & .00114 & 4.3\% & .78763 & .82175 \\
+\texttt{year\_count} & .00074 & 2.8\% & .79465 & .82359 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All six contributions are positive. The three that single-feature removal could not separate from
+noise are small but not zero.
+
+\textbf{Both simpler diagnostics mis-rank the features.} \texttt{conflicting\_value\_rate} is the
+best single feature in isolation yet fourth by marginal contribution;
+\texttt{structured\_source\_line\_ratio} is fifth in isolation yet accounts for 63.4\% of the
+total. Under redundancy, neither solo performance nor leave-one-out recovers the ordering.
+
+\begin{center}\small
+\begin{tabular}{rrlrr}
+\toprule
+$k$ & Subsets & Best subset at that size & AUROC & Mean ms \\
+\midrule
+0 & 1 & no features & .79583 & 159.14 \\
+1 & 6 & \texttt{conflicting\_value\_rate} & .79587 & 157.08 \\
+2 & 15 & \texttt{structured\ldots} + \texttt{bm25\_mean3} & .81280 & 112.74 \\
+3 & 20 & + \texttt{entity\_value\_colocation} & .82116 & 106.59 \\
+4 & 15 & + \texttt{entity\_coverage} & .82317 & 105.25 \\
+\textbf{5} & 6 & the full set minus \texttt{year\_count} & \textbf{.82359} & 106.68 \\
+6 & 1 & the full set, as deployed & .82256 & 106.15 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\fix{An honest negative result.} The best five-feature subset beats the deployed six-feature set
+by $+.00103$, and the feature it drops is \texttt{year\_count}, matching the single-removal result
+exactly. The forward-addition search that produced the current set overshot by one feature. The
+margin is small and not separable, and the configuration is not changed after TEST was read, but
+the fact is recorded.
+
+The pool lattice gives a complementary observation. Shapley values are $+.12678$ for Granite,
+$-.04223$ for Lettuce-v2 and $-.05862$ for FactCC, because the empty set --- predicting the label
+from features with no verifier call --- already reaches $.79662$, while the best single verifier
+reaches only $.79583$. \textbf{A single weak verifier is worse than no verifier at all, and the
+pool's value is entirely in the combination.} The negative Shapley values and the positive
+leave-one-out values are both correct: these two members are harmful in isolation and necessary in
+the full pool.
+
+\subsection{Convergence}
+\label{sec:conv}
+
+\begin{center}\small
+\begin{tabular}{rrr@{\qquad}rrr}
+\toprule
+Fit groups & Val head loss & Eval AUROC & Trees & Val head loss & Eval AUROC \\
+\midrule
+5\% & .017293 & .790242 & 1 & .014154 & .806669 \\
+10\% & .016430 & .790091 & 5 & .013502 & .816332 \\
+20\% & .014115 & .806848 & 25 & .013341 & .822401 \\
+35\% & .013695 & .808914 & \textbf{50} & \textbf{.013307} & \textbf{.825920} \\
+50\% & .013849 & .813204 & 100 & .013302 & .825952 \\
+75\% & .013117 & .817730 & 200 & .013290 & .826084 \\
+100\% & .013290 & .822556 & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\fix{Annotation volume is still the binding constraint}, contradicting the previous notes: the
+curve is still rising at 100\%, gaining $.0048$ from 75\% to 100\%. The forests, by contrast, have
+converged by about 50 trees; going from 50 to 200 gains $.000164$ AUROC. Protocol~B's 200 trees
+are safely past convergence, and there is a fourfold saving available in head inference at no
+measurable cost. The tree column is measured before stage 2, which is why its endpoint matches the
+\texttt{no\_stage2} ablation rather than the main table.
+
+\subsection{Why the feature sets were unified}
+\label{sec:unify}
+
+\begin{center}\small
+\begin{tabular}{lrrll}
+\toprule
+Configuration & AUROC & $\Delta$ & 95\% CI & Bonferroni \\
+\midrule
+\textbf{unified six (deployed)} & \textbf{.82256} & 0 & --- & --- \\
+superseded five-feature set & .81396 & $-.00860$ & $[.00214,.01489]$ & \textbf{separable} \\
+superseded nine-feature set & .81053 & $-.01203$ & $[.00524,.01862]$ & \textbf{separable} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Both superseded sets are separably worse under correction. Unification was a net gain, not a
+simplification bought with quality.
+
+\subsection{Two tight controls}
+
+\begin{center}\small
+\begin{tabular}{lrrl}
+\toprule
+Arm & AUROC & $\Delta$ & Mean ms \\
+\midrule
+reference & .82256 & 0 & 106.14 \\
+call-proportion-matched random routing & .66074 & $-.16182$ & 102.85 \\
+label oracle heads, $\beta^{*}$ unchanged & .99135 & $+.16880$ & 117.54 \\
+label oracle heads, $\beta=0$ & .99421 & $+.17165$ & 127.78 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The matched control samples actions from the router's own realised call proportions, so its budget
+is the same to within $3.3$\,ms and the only thing destroyed is which instance goes to which
+verifier. It loses $.162$.
+
+The oracle bounds the headroom: with perfect head predictions the existing three verifiers reach
+$.99135$. Of the $.169$ gap from the current system, \textbf{98.3\% is head prediction error and
+1.7\% is the cost discount}. Relaxing the budget can buy back at most $.00285$. Future effort
+belongs in the heads.
+
+\subsection{[pending] Protocol A replication}
+
+The Protocol~A counterparts of the lattice, the convergence curves, the unification contrast and
+the controls were still computing when this was written. The two questions they settle are whether
+the Shapley ordering is protocol-dependent, and whether the five-feature optimum reappears.
+
+%==================================================================
+\section{[pending] Cascades, second calls, and learner sensitivity}
+
+Three families were running when this was written; Protocol~B is complete and its direction is
+already unambiguous, so it is summarised here and will be tabulated when both protocols finish.
+
+All three cascades --- escalate on the cheapest verifier's confidence, escalate when the two
+cheapest disagree, escalate when a learned model predicts the cheapest will err --- are both
+worse and more expensive than routing before calling, losing $.049$ to $.204$ AUROC while making
+$1.53$ to $2.19$ calls per instance. Each enters through the weakest verifier, and a confidently
+wrong first answer does not trigger escalation; the router declines to use that verifier before
+paying for any score.
+
+No second-call trigger produces a Bonferroni-separable gain, and each raises both calls and
+latency, so the primary system keeps one call per instance. Seven alternative learners are all
+separably worse than the random forest.
+
+%==================================================================
+\section{Limits and limitations}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+\item \textbf{Multiplicity.} Each main table makes fifteen comparisons. Under correction
+Protocol~A holds fourteen of fifteen and Protocol~B twelve of fifteen. No conclusion reverses,
+but the corrected level is the one to cite.
+\item \textbf{Pool provenance.} The pool was selected on a matrix sharing 54.4\% of Protocol~B's
+test groups. It is on the Pareto frontier of a clean re-selection but ranks 109 of 455 on
+validation AUROC alone (\S\ref{sec:pool}).
+\item \textbf{Protocol A is cross-validated, not held out.} Its configuration was chosen on the
+TRAIN subset of its own frame.
+\item \textbf{Routing is not universally preferable.} Within a single corpus with labels, fixing
+one verifier beats in-domain routing on all four corpora. The method's case is the heterogeneous
+mixture.
+\item \textbf{No transfer claim.} Neither protocol establishes transfer to an unseen corpus
+family, and no leave-one-corpus-out experiment was run. The cheap features carry a strong corpus
+fingerprint, so the pooled result must not be read as domain-invariant.
+\item \textbf{Feature selection did not run the full pipeline.} Candidates were scored on
+pre-stage-2 routed AUROC, and features were not re-selected after the hyperparameters changed.
+The exhaustive lattice shows the selected set is one feature larger than the optimum.
+\item \textbf{Two latency regimes.} Granite-3.1-2b's recorded latency differs by 1.5 to
+1.7$\times$ between scoring campaigns. The conservative figure is reported (\S\ref{sec:lat}).
+\item \textbf{Routing is not cheaper everywhere.} On UniSumEval the router averages $278.20$\,ms
+against $147.60$ for always-Granite, because that corpus's long sources make FactCC's window
+count grow.
+\item \textbf{Action hit rate cannot decompose AUROC.} Agreement with the label oracle is a
+row-wise three-class statistic; AUROC is determined by score ordering over pairs. No quality
+decomposition is claimed from it.
+\item \textbf{Per-instance $\beta$ is unproven.} $\beta$ is selected on validation from a finite
+grid under a tolerance rule. That is an operational budget policy, not an optimality result.
+\item \textbf{Macro AUROC is diagnostic only.} It is reported throughout and is never a ranking
+key; the router is consistently weaker on it than several fixed verifiers.
+\end{enumerate}
+
+\end{document}

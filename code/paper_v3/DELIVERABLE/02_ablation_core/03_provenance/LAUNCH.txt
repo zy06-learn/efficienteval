@@ -1,0 +1,5 @@
+launcher_pid=708558
+run_dir=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/runs/part2_ablation_v1  smoke=0
+script_sha256=ba0e043d514f48d3826f6e0e7db16ebc76de10b2b501d6424fdd711b366402f8
+launcher_sha256=f306819ef8354f9abb76a205e7264efa4a80207c4d2d018b10c733bce5ec1b83
+started=2026-08-17T06:21:50-04:00  host=CSC-GW-Spark1  nproc=8

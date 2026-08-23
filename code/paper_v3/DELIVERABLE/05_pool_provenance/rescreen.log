@@ -1,0 +1,104 @@
+[05:01:43 +     0s] TRAIN 5276 rows / 890 docs | 15 verifiers | hp={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6} | features=6
+[05:01:43 +     0s] ===== B-style screen over every k=3 pool, TRAIN only =====
+[05:01:43 +     1s] fixed-verifier TRAIN reference:
+                               verifier  train_auroc   train_ms
+                             alignscore      0.76094  731.51179
+                                 factcg      0.75663  410.85190
+                                wecheck      0.72598  275.47205
+                           qwen30_judge      0.72455  666.41907
+                            qwen30_fast      0.71375  305.80945
+                granite_guardian_3_1_2b      0.70689  201.15887
+                          minicheck_ft5      0.69282  476.02344
+granite_guardian_4_1_3b_factuality_lora      0.67386  486.97389
+     granite_guardian_3_2_8b_factuality      0.67119 1196.52164
+                         minicheck_dbta      0.62159  444.90533
+          granite_guardian_3_2_3b_a800m      0.62097  228.40727
+                             lettuce_v2      0.61947   77.71850
+                                 factkb      0.60691   47.66878
+                                   hhem      0.58694  101.07976
+                                 factcc      0.52091   48.41406
+[05:01:43 +     1s] 455 candidate pools
+[05:02:54 +    71s]   25/455  elapsed 1.2 min  eta 20.2 min
+[05:04:04 +   141s]   50/455  elapsed 2.3 min  eta 19.0 min
+[05:05:16 +   213s]   75/455  elapsed 3.5 min  eta 17.9 min
+[05:06:27 +   284s]   100/455  elapsed 4.7 min  eta 16.8 min
+[05:07:37 +   354s]   125/455  elapsed 5.9 min  eta 15.6 min
+[05:08:49 +   426s]   150/455  elapsed 7.1 min  eta 14.4 min
+[05:10:02 +   499s]   175/455  elapsed 8.3 min  eta 13.3 min
+[05:11:13 +   570s]   200/455  elapsed 9.5 min  eta 12.1 min
+[05:12:25 +   642s]   225/455  elapsed 10.7 min  eta 10.9 min
+[05:13:36 +   713s]   250/455  elapsed 11.9 min  eta 9.7 min
+[05:14:48 +   785s]   275/455  elapsed 13.1 min  eta 8.6 min
+[05:16:00 +   857s]   300/455  elapsed 14.3 min  eta 7.4 min
+[05:17:12 +   929s]   325/455  elapsed 15.5 min  eta 6.2 min
+[05:18:25 +  1002s]   350/455  elapsed 16.7 min  eta 5.0 min
+[05:19:36 +  1073s]   375/455  elapsed 17.9 min  eta 3.8 min
+[05:20:49 +  1146s]   400/455  elapsed 19.1 min  eta 2.6 min
+[05:22:01 +  1218s]   425/455  elapsed 20.3 min  eta 1.4 min
+[05:23:14 +  1291s]   450/455  elapsed 21.5 min  eta 0.2 min
+[05:23:29 +  1306s]   455/455  elapsed 21.8 min  eta 0.0 min
+[05:23:29 +  1306s] 
+[05:23:29 +  1306s] pool in use: factcc+granite_guardian_3_1_2b+lettuce_v2
+[05:23:29 +  1306s]   val AUROC 0.75930 @ 89.9 ms | min_share 13.6% | dominated_by 0 | eligible True
+[05:23:29 +  1306s]   rank 109/455 overall | rank 28/90 among eligible
+[05:23:29 +  1306s] 
+[05:23:29 +  1306s] top 10 eligible pools by validation AUROC:
+                                             pool  val_auroc      sd    val_ms  min_share  rank_among_eligible
+                        alignscore+factcg+wecheck    0.77264 0.01469 390.76064    0.08135              1.00000
+        alignscore+factcg+granite_guardian_3_1_2b    0.77260 0.01502 379.71139    0.12766              2.00000
+                   alignscore+factcg+qwen30_judge    0.77113 0.01296 442.90493    0.07032              3.00000
+                         alignscore+factcg+factkb    0.77097 0.01626 370.34541    0.12602              4.00000
+                alignscore+lettuce_v2+qwen30_fast    0.77012 0.00865 450.84530    0.22799              5.00000
+           factcg+granite_guardian_3_1_2b+wecheck    0.76982 0.01299 384.92116    0.15041              6.00000
+               alignscore+lettuce_v2+qwen30_judge    0.76980 0.01171 582.35057    0.17108              7.00000
+factcg+granite_guardian_3_2_8b_factuality+wecheck    0.76950 0.01476 449.16739    0.05006              8.00000
+  alignscore+factcg+granite_guardian_3_2_3b_a800m    0.76827 0.01956 356.84825    0.08335              9.00000
+      factcg+granite_guardian_3_1_2b+qwen30_judge    0.76806 0.01531 391.68199    0.10598             10.00000
+[05:23:29 +  1306s] ===== bstyle done in 1305s =====
+[05:23:29 +  1306s] ===== A-style confirmation of the top pools, TRAIN only =====
+[05:24:02 +  1339s]   1/21 alignscore+factcg+wecheck | A 0.75413 @ 415.9 ms | B 0.77264  (0.6 min)
+[05:24:36 +  1374s]   2/21 alignscore+factcg+granite_guardian_3_1_2b | A 0.75714 @ 391.0 ms | B 0.77260  (1.1 min)
+[05:25:11 +  1408s]   3/21 alignscore+factcg+qwen30_judge | A 0.75424 @ 464.6 ms | B 0.77113  (1.7 min)
+[05:25:45 +  1442s]   4/21 alignscore+factcg+factkb | A 0.76042 @ 366.6 ms | B 0.77097  (2.3 min)
+[05:26:19 +  1476s]   5/21 alignscore+lettuce_v2+qwen30_fast | A 0.75923 @ 446.2 ms | B 0.77012  (2.8 min)
+[05:26:53 +  1510s]   6/21 factcg+granite_guardian_3_1_2b+wecheck | A 0.75026 @ 398.1 ms | B 0.76982  (3.4 min)
+[05:27:28 +  1545s]   7/21 alignscore+lettuce_v2+qwen30_judge | A 0.76460 @ 552.3 ms | B 0.76980  (4.0 min)
+[05:28:02 +  1579s]   8/21 factcg+granite_guardian_3_2_8b_factuality+wecheck | A 0.74977 @ 421.1 ms | B 0.76950  (4.6 min)
+[05:28:36 +  1614s]   9/21 alignscore+factcg+granite_guardian_3_2_3b_a800m | A 0.75556 @ 389.7 ms | B 0.76827  (5.1 min)
+[05:29:11 +  1648s]   10/21 factcg+granite_guardian_3_1_2b+qwen30_judge | A 0.75502 @ 451.8 ms | B 0.76806  (5.7 min)
+[05:29:45 +  1682s]   11/21 factcg+granite_guardian_3_2_8b_factuality+qwen30_judge | A 0.74892 @ 510.2 ms | B 0.76680  (6.3 min)
+[05:30:20 +  1717s]   12/21 factcg+qwen30_fast+wecheck | A 0.74059 @ 363.3 ms | B 0.76650  (6.8 min)
+[05:30:54 +  1751s]   13/21 alignscore+lettuce_v2+wecheck | A 0.76331 @ 564.7 ms | B 0.76590  (7.4 min)
+[05:31:28 +  1785s]   14/21 factcg+qwen30_judge+wecheck | A 0.75233 @ 441.8 ms | B 0.76540  (8.0 min)
+[05:32:02 +  1820s]   15/21 alignscore+factcg+qwen30_fast | A 0.75121 @ 397.9 ms | B 0.76449  (8.6 min)
+[05:32:37 +  1854s]   16/21 alignscore+factcg+lettuce_v2 | A 0.74983 @ 436.4 ms | B 0.76429  (9.1 min)
+[05:33:12 +  1889s]   17/21 factcg+qwen30_fast+qwen30_judge | A 0.74628 @ 475.8 ms | B 0.76418  (9.7 min)
+[05:33:46 +  1923s]   18/21 factcg+factkb+granite_guardian_3_2_8b_factuality | A 0.75079 @ 430.6 ms | B 0.76302  (10.3 min)
+[05:34:21 +  1958s]   19/21 factcg+lettuce_v2+wecheck | A 0.74780 @ 392.4 ms | B 0.76297  (10.9 min)
+[05:34:55 +  1993s]   20/21 factcc+lettuce_v2+qwen30_judge | A 0.74888 @ 246.9 ms | B 0.76284  (11.4 min)
+[05:35:30 +  2027s]   21/21 factcc+granite_guardian_3_1_2b+lettuce_v2 | A 0.75207 @ 93.3 ms | B 0.75930  (12.0 min)
+[05:35:30 +  2027s] 
+[05:35:30 +  2027s] pool in use among the 21 confirmed candidates: A rank 11/21 | joint rank 18/21
+                                                  pool  b_val_auroc  b_val_ms  min_share  a_val_auroc    a_sd  a_val_ms  joint_auroc  rank_a  rank_joint
+                    alignscore+lettuce_v2+qwen30_judge      0.76980 582.35057    0.17108      0.76460 0.00391 552.32379      0.76720       1           1
+                              alignscore+factcg+factkb      0.77097 370.34541    0.12602      0.76042 0.00192 366.60822      0.76570       3           2
+             alignscore+factcg+granite_guardian_3_1_2b      0.77260 379.71139    0.12766      0.75714 0.00292 390.99586      0.76487       5           3
+                     alignscore+lettuce_v2+qwen30_fast      0.77012 450.84530    0.22799      0.75923 0.00484 446.19452      0.76468       4           4
+                         alignscore+lettuce_v2+wecheck      0.76590 548.64033    0.13932      0.76331 0.00065 564.74145      0.76461       2           5
+                             alignscore+factcg+wecheck      0.77264 390.76064    0.08135      0.75413 0.00294 415.90366      0.76339       9           6
+                        alignscore+factcg+qwen30_judge      0.77113 442.90493    0.07032      0.75424 0.00335 464.58546      0.76268       8           7
+       alignscore+factcg+granite_guardian_3_2_3b_a800m      0.76827 356.84825    0.08335      0.75556 0.00165 389.67104      0.76191       6           8
+           factcg+granite_guardian_3_1_2b+qwen30_judge      0.76806 391.68199    0.10598      0.75502 0.00170 451.75306      0.76154       7           9
+                factcg+granite_guardian_3_1_2b+wecheck      0.76982 384.92116    0.15041      0.75026 0.00185 398.05346      0.76004      14          10
+     factcg+granite_guardian_3_2_8b_factuality+wecheck      0.76950 449.16739    0.05006      0.74977 0.00611 421.10025      0.75963      16          11
+                           factcg+qwen30_judge+wecheck      0.76540 433.52690    0.20212      0.75233 0.00216 441.84381      0.75886      10          12
+factcg+granite_guardian_3_2_8b_factuality+qwen30_judge      0.76680 505.74602    0.05069      0.74892 0.00297 510.17955      0.75786      17          13
+                         alignscore+factcg+qwen30_fast      0.76449 408.75793    0.19276      0.75121 0.00573 397.85365      0.75785      12          14
+                          alignscore+factcg+lettuce_v2      0.76429 439.13231    0.09943      0.74983 0.00538 436.36733      0.75706      15          15
+      factcg+factkb+granite_guardian_3_2_8b_factuality      0.76302 460.09362    0.06800      0.75079 0.00190 430.62780      0.75690      13          16
+                        factcc+lettuce_v2+qwen30_judge      0.76284 251.95317    0.14336      0.74888 0.00234 246.93803      0.75586      18          17
+             factcc+granite_guardian_3_1_2b+lettuce_v2      0.75930  89.92130    0.13645      0.75207 0.00452  93.27302      0.75569      11          18
+                             factcg+lettuce_v2+wecheck      0.76297 389.86595    0.11570      0.74780 0.00268 392.41956      0.75539      19          19
+                       factcg+qwen30_fast+qwen30_judge      0.76418 501.66118    0.17914      0.74628 0.00300 475.84480      0.75523      20          20
+                            factcg+qwen30_fast+wecheck      0.76650 370.99601    0.18626      0.74059 0.00652 363.25499      0.75354      21          21
+[05:35:30 +  2027s] ===== astyle done in 721s =====

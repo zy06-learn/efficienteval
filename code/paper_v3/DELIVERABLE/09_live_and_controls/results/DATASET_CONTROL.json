@@ -1,0 +1,49 @@
+{
+  "a_feature_list": [
+    "structured_source_line_ratio",
+    "bm25_mean3",
+    "entity_coverage",
+    "entity_value_colocation",
+    "year_count",
+    "conflicting_value_rate"
+  ],
+  "a_dataset_like_features": [],
+  "b_corpus_accuracy": 0.8959438968915845,
+  "b_majority_baseline": 0.5653904473085671,
+  "b_chance_uniform": 0.25,
+  "c_baseline_auroc": 0.8225560999095635,
+  "c_baseline_sd": 0.004736921283365409,
+  "c_with_dataset_auroc": 0.8196308828217719,
+  "c_with_dataset_sd": 0.005038309490696044,
+  "c_delta": -0.0029252170877915873,
+  "c_extra_features": [
+    "ds__ragtruth_train",
+    "ds__frank_valid",
+    "ds__unisumeval_train",
+    "ds__cogensumm_val"
+  ],
+  "c_per_seed_baseline": [
+    0.8260603325904757,
+    0.8247315321811195,
+    0.8205086106036894,
+    0.8274861522693515,
+    0.8237414380973048,
+    0.8126391422807681,
+    0.8253570864060886,
+    0.8175142170544951,
+    0.828395492641653,
+    0.8191269949706894
+  ],
+  "c_per_seed_with_dataset": [
+    0.8253622531127494,
+    0.8087070871523907,
+    0.8170520838476121,
+    0.8209141013968095,
+    0.8156151653173909,
+    0.8192023906160361,
+    0.827479646046149,
+    0.8181076228824635,
+    0.8230582846610429,
+    0.8208101931850756
+  ]
+}

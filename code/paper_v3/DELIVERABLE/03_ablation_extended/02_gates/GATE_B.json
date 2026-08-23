@@ -1,0 +1,23 @@
+{
+  "protocol": "B",
+  "part1c_auroc": 0.8225560999095635,
+  "part1c_ms_deterministic": 86.48530879464084,
+  "checks": {
+    "feat": {
+      "auroc": 0.8225560999095635,
+      "delta_auroc": 0.0,
+      "ms_det": 86.48530879464084,
+      "delta_ms": 0.0,
+      "pass": true
+    },
+    "pool": {
+      "auroc": 0.8225560999095635,
+      "delta_auroc": 0.0,
+      "ms_det": 86.48530879464084,
+      "delta_ms": 0.0,
+      "pass": true
+    }
+  },
+  "note": "the lattice's full feature subset and full pool subset are both the reference system; only the deterministic latency is gated because head, routing and calibration timings are wall clock",
+  "smoke": false
+}

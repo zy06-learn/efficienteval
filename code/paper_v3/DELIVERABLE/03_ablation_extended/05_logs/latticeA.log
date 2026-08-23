@@ -1,0 +1,42 @@
+[11:05:35 +     0s] ===== E2: subset lattices, Protocol A =====
+[11:05:35 +     0s] 72 arms: 64 feature subsets + 8 pool subsets | hp={'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': 0.5, 'max_depth': 6}
+[11:26:04 +  1229s]   5/72  20.5 min  eta 274.5 min
+[11:46:41 +  2466s]   10/72  41.1 min  eta 254.8 min
+[12:07:11 +  3696s]   15/72  61.6 min  eta 234.1 min
+[12:27:36 +  4922s]   20/72  82.0 min  eta 213.3 min
+[12:48:17 +  6162s]   25/72  102.7 min  eta 193.1 min
+[13:08:52 +  7397s]   30/72  123.3 min  eta 172.6 min
+[13:29:32 +  8638s]   35/72  144.0 min  eta 152.2 min
+[13:50:11 +  9876s]   40/72  164.6 min  eta 131.7 min
+[14:10:45 + 11110s]   45/72  185.2 min  eta 111.1 min
+[14:31:22 + 12347s]   50/72  205.8 min  eta 90.5 min
+[14:51:53 + 13578s]   55/72  226.3 min  eta 69.9 min
+[15:12:23 + 14808s]   60/72  246.8 min  eta 49.4 min
+[15:30:20 + 15885s]   65/72  264.7 min  eta 28.5 min
+[15:40:16 + 16481s]   70/72  274.7 min  eta 7.8 min
+[15:47:15 + 16900s]   72/72  281.7 min  eta 0.0 min
+[15:47:15 + 16900s]   Shapley over feat: sum 0.053064 vs full-minus-empty 0.053064 (efficiency residual -6.94e-18)
+[15:47:15 + 16900s]   Shapley over pool: sum 0.044049 vs full-minus-empty 0.044049 (efficiency residual -1.39e-17)
+kind                         item  shapley_auroc  solo_auroc  leave_one_out_auroc  shapley_share
+feat structured_source_line_ratio        0.02223     0.76756              0.77943        0.41888
+feat                   bm25_mean3        0.01389     0.73850              0.76714        0.26178
+feat              entity_coverage        0.01250     0.75970              0.78805        0.23559
+feat      entity_value_colocation        0.00305     0.74736              0.79216        0.05746
+feat       conflicting_value_rate        0.00209     0.74848              0.79393        0.03947
+feat                   year_count       -0.00070     0.73685              0.79288       -0.01317
+pool      granite_guardian_3_1_2b        0.08886     0.74024              0.69437        2.01734
+pool                   lettuce_v2        0.00051     0.61216              0.74300        0.01157
+pool                       factcc       -0.04532     0.53237              0.75487       -1.02891
+kind  size  n_subsets                                                                                                       best_subset  best_auroc   best_ms  mean_auroc  worst_auroc
+feat     0          1                                                                                                           (empty)     0.74024 210.97437     0.74024      0.74024
+feat     1          6                                                                                      structured_source_line_ratio     0.76756 148.80330     0.74974      0.73685
+feat     2         15                                                                           structured_source_line_ratio|bm25_mean3     0.78313 106.95210     0.75624      0.73900
+feat     3         20                                                           structured_source_line_ratio|bm25_mean3|entity_coverage     0.78950 112.03306     0.76474      0.73815
+feat     4         15                                   structured_source_line_ratio|bm25_mean3|entity_coverage|entity_value_colocation     0.79293 112.45031     0.77535      0.74145
+feat     5          6                        structured_source_line_ratio|bm25_mean3|entity_coverage|entity_value_colocation|year_count     0.79393 113.27077     0.78560      0.76714
+feat     6          1 structured_source_line_ratio|bm25_mean3|entity_coverage|entity_value_colocation|year_count|conflicting_value_rate     0.79330 112.54024     0.79330      0.79330
+pool     0          1                                                                                                           (empty)     0.74925  33.37553     0.74925      0.74925
+pool     1          3                                                                                           granite_guardian_3_1_2b     0.74024 210.69717     0.62826      0.53237
+pool     2          3                                                                                lettuce_v2+granite_guardian_3_1_2b     0.75487 189.57317     0.73075      0.69437
+pool     3          1                                                                         factcc+lettuce_v2+granite_guardian_3_1_2b     0.79330 112.54306     0.79330      0.79330
+[15:47:15 + 16900s] ===== latticeA done in 16900s =====

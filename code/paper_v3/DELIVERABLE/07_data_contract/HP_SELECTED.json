@@ -1,0 +1,41 @@
+{
+  "rule": "minimum validation head loss (MSE against the regret target), TRAIN only, 16 randomly initialised candidates",
+  "candidate_draw": "numpy default_rng(0) over n_estimators {200,400,800}, min_samples_leaf {1,2,5,10}, max_features {sqrt,log2,0.5}, max_depth {6,10,12,16,24}, deduplicated",
+  "seeds": [
+    17,
+    29,
+    43,
+    7,
+    11
+  ],
+  "hyperparameters_A": {
+    "n_estimators": 800,
+    "min_samples_leaf": 5,
+    "max_features": 0.5,
+    "max_depth": 6
+  },
+  "hyperparameters_B": {
+    "n_estimators": 200,
+    "min_samples_leaf": 10,
+    "max_features": 0.5,
+    "max_depth": 6
+  },
+  "spearman_loss_vs_auroc_A": -0.5411764705882353,
+  "spearman_loss_vs_auroc_B": -0.31176470588235294,
+  "auroc_forgone_by_loss_rule_A": 0.000523805055271942,
+  "auroc_forgone_by_loss_rule_B": 0.003791751389425446,
+  "part1_values": {
+    "A": {
+      "n_estimators": 800,
+      "min_samples_leaf": 1,
+      "max_features": "sqrt",
+      "max_depth": 10
+    },
+    "B": {
+      "n_estimators": 200,
+      "min_samples_leaf": 5,
+      "max_features": 0.5,
+      "max_depth": 10
+    }
+  }
+}

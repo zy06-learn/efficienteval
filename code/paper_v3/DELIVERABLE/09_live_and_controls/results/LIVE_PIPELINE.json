@@ -1,0 +1,16 @@
+{
+  "rows": 240,
+  "live_calls": 240,
+  "auroc_live_stage1": 0.5989157119476269,
+  "auroc_matrix_stage1": 0.6011661211129297,
+  "auroc_live_stage2": 0.5972279050736498,
+  "auroc_matrix_stage2": 0.5973813420621931,
+  "max_abs_diff_p1": 0.030958035661985128,
+  "identical_p1": false,
+  "mean_live_verifier_ms": 100.92232691555789,
+  "shares": {
+    "factcc": 0.39166666666666666,
+    "lettuce_v2": 0.49583333333333335,
+    "granite_guardian_3_1_2b": 0.1125
+  }
+}

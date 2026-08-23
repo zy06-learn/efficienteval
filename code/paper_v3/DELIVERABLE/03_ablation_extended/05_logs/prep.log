@@ -1,0 +1,9 @@
+[10:49:46 +     0s] ===== prep: per-corpus prior shift and feasibility =====
+    corpus      train_split     test_split  train_rows  train_groups  train_pos_rate  train_minority_count  test_rows  test_groups  test_pos_rate  prior_shift_pp
+ cogensumm    cogensumm_val cogensumm_test         535           107          0.4935                   264        400          100         0.7800         28.6542
+  ragtruth   ragtruth_train  ragtruth_test        2983           499          0.7104                   864        900          150         0.7822          7.1864
+unisumeval unisumeval_train unisumeval_dev        1089           135          0.7658                   255        367           45         0.7466         -1.9246
+     frank      frank_valid     frank_test         669           149          0.1584                   106       1569          350         0.1638          0.5353
+[10:49:46 +     0s] pooled TRAIN pos rate 0.6298 | pooled TEST 0.4781 | shift -15.18 pp
+[10:49:46 +     0s] worst single-corpus shift 28.65 pp; pooling reduces the worst-case shift one fitted model must absorb to 15.18 pp
+[10:49:46 +     0s] ===== prep done in 0s =====

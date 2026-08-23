@@ -1,0 +1,17 @@
+[16:32:38 +     0s] ===== report A =====
+[16:32:38 +     0s]   gate A/feat: auroc 0.7933003647 vs 0.7933003647 (d=0.00e+00) | det ms 88.189008 vs 88.189008 (d=0.00e+00) -> PASS
+[16:32:38 +     0s]   gate A/pool: auroc 0.7933003647 vs 0.7933003647 (d=0.00e+00) | det ms 88.189008 vs 88.189008 (d=0.00e+00) -> PASS
+                        arm   auroc  auroc_sd  d_auroc_vs_reference     ece   brier    aurc    bacc     mcc        ms    p95_ms
+                  reference 0.79330   0.00173               0.00000 0.02161 0.17262 0.14905 0.71951 0.45888 112.54206 312.99676
+      featureset::legacy_A9 0.79018   0.00265              -0.00312 0.02137 0.17315 0.15104 0.71610 0.46583 107.64272 299.30338
+      featureset::legacy_B5 0.79217   0.00254              -0.00113 0.02112 0.17264 0.14876 0.71551 0.46981 111.27144 290.96131
+    control::matched_random 0.63222   0.00688              -0.16108 0.13545 0.24664 0.31183 0.59604 0.20386 118.95289 347.09932
+      control::oracle_heads 0.99070   0.00051               0.19740 0.01011 0.02900 0.00581 0.96580 0.92638 148.66289 361.20322
+control::oracle_heads_beta0 0.99313   0.00048               0.19983 0.00914 0.02247 0.00443 0.97743 0.95006 162.29149 381.09889
+                        arm  d_auroc_reference_minus  ci95_lo  ci95_hi  significant_95  bonf_lo  bonf_hi  significant_bonferroni      d_ms  n_comparisons  bonferroni_alpha
+    control::matched_random                  0.16108  0.15042  0.17085            True  0.14770  0.17329                    True  -6.41083              5           0.01000
+      featureset::legacy_A9                  0.00312 -0.00072  0.00686           False -0.00213  0.00801                   False   4.89934              5           0.01000
+      featureset::legacy_B5                  0.00113 -0.00214  0.00436           False -0.00304  0.00520                   False   1.27062              5           0.01000
+      control::oracle_heads                 -0.19740 -0.20834 -0.18674            True -0.21159 -0.18320                    True -36.12083              5           0.01000
+control::oracle_heads_beta0                 -0.19983 -0.21087 -0.18930            True -0.21406 -0.18569                    True -49.74943              5           0.01000
+[16:34:55 +   137s] ===== reportA done in 137s =====

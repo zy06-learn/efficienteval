@@ -1,0 +1,11 @@
+{
+  "protocol": "B",
+  "observed_auroc": 0.8225560999095635,
+  "part1c_auroc": 0.8225560999095635,
+  "delta_auroc": 0.0,
+  "observed_ms_deterministic": 86.48530879464086,
+  "part1c_ms_deterministic": 86.48530879464084,
+  "delta_ms": 1.4210854715202004e-14,
+  "pass": true,
+  "smoke": false
+}

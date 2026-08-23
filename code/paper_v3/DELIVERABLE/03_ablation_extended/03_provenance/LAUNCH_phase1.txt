@@ -1,0 +1,6 @@
+launcher_pid=990057
+run_dir=/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/runs/part3_extended_v1  phase=phase1  smoke=0
+stages=prep percorpus latticeB convergeB declaredB reportB
+script_sha256=327b7397fe0acbbf4b2e8afe52c788a1cc81e0ff569b8873f42f69960aa37b94
+launcher_sha256=fe4f37772d8184392228ca200b41005b9833ca222567bd56250b1b2ecea12ebe
+started=2026-08-17T10:49:45-04:00  host=CSC-GW-Spark1  nproc=8
