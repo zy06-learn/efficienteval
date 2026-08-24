@@ -45,8 +45,9 @@ Protocol B, TRAIN 5,276 / 890 to TEST 3,236 / 645, ten seeds, confirmatory:
 | Granite-3.1-2b | 0.79583 | 0.00316 | 131.81 ms | 0.17090 | 0.73198 |
 
 Second of sixteen. Separably better than the strongest pool member, indistinguishable from
-AlignScore and Qwen30-judge at five to six times lower latency, separably worse than Qwen30-fast
-at half its latency. In neither protocol is any fixed verifier both more accurate and cheaper, so
+AlignScore and Qwen30-judge at five to six times lower latency. Qwen30-fast holds the higher
+point estimate at twice the latency, but that difference is not separable either: the paired
+interval [-0.0283, 0.0062] contains zero. In neither protocol is any fixed verifier both more accurate and cheaper, so
 the operating point is not dominated. Universal superiority is not claimed.
 
 ## What each directory is for

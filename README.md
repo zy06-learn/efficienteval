@@ -61,8 +61,9 @@ corrected for, at a 6.02x latency ratio.
 | Granite-3.1-2b | 0.79583 | 0.00316 | 131.81 ms | 0.17090 | 0.73198 |
 
 Second of sixteen. Separably better than the strongest pool member, indistinguishable from
-AlignScore and Qwen30-judge at five to six times lower latency, and separably worse than
-Qwen30-fast at half its latency. In neither protocol is any fixed verifier both more
+AlignScore and Qwen30-judge at five to six times lower latency. Qwen30-fast holds the higher
+point estimate at twice the latency, but that difference is not separable either: the paired
+interval is [-0.0283, 0.0062] and contains zero. In neither protocol is any fixed verifier both more
 accurate and cheaper, so the operating point is not dominated. **Universal superiority is
 not claimed.**
 
@@ -75,9 +76,9 @@ corrected over the fifteen comparisons. Per-comparison intervals:
 
 | Question | Answer | Evidence |
 |---|---|---|
-| Is the test result read from a pre-computed matrix? | No. Re-running Protocol B with every verifier called live for every (row, seed) pair gives 0.82205 against the frozen 0.82256, a delta of −0.00051 across 32,360 live calls. The residual traces to vLLM prefix-caching non-determinism. | [`LIVE_MAIN_B.json`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/LIVE_MAIN_B.json) |
-| Does the router receive dataset identity? | No. Adding explicit corpus one-hot features *lowers* AUROC by 0.00293. The six features do carry corpus signal (89.6% corpus accuracy against a 56.5% majority baseline), which is expected of document statistics and is not a label leak. | [`DATASET_CONTROL.json`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/DATASET_CONTROL.json) |
-| How many in-corpus examples does a held-out corpus need? | Corpus dependent. RAGTruth moves from 0.543 at k=0 to 0.638 at full pool; UniSumEval from 0.537 to 0.592; FRANK is flat throughout, so its zero-shot transfer is already at pool level. | [`FEWSHOT_CURVE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/FEWSHOT_CURVE.csv) |
+| Is the test result read from a pre-computed matrix? | No. Re-running Protocol B with every verifier called live for every (row, seed) pair gives 0.82205 against the frozen 0.82256, a delta of −0.00051 across 32,360 live calls, with a paired interval of [−0.0015, 0.0005] that contains zero and lies entirely within ±0.0015. The residual traces to vLLM prefix-caching non-determinism. | [`LIVE_MAIN_B.json`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/LIVE_MAIN_B.json) |
+| Does the router receive dataset identity? | No. Four arms differing only in the head's input: constant only 0.79583, corpus one-hot only 0.80845, the six cheap features 0.82256, six features plus corpus one-hot 0.82121. Handing the head the corpus explicitly moves AUROC by −0.00135, an interval of [−0.0040, 0.0065] containing zero (p = 0.59), not separable under Bonferroni over the three comparisons. The six features do carry corpus signal (89.6% corpus accuracy against a 56.5% majority baseline), which is expected of document statistics and is not a label leak. | [`DATASET_ONLY_ARMS.json`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/DATASET_ONLY_ARMS.json), [`CONTROLS_SIGNIFICANCE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/CONTROLS_SIGNIFICANCE.csv) |
+| How many in-corpus examples does a held-out corpus need? | Corpus dependent, and the sweep is over fractions of each corpus's own pool because the pools differ by 5.6x. Three of the four improve separably under Bonferroni over the four corpora: RAGTruth 0.543 → 0.638 (p < 0.001, saturating at 20–30% of its pool), UniSumEval 0.537 → 0.592 (p = 0.010, still rising at 100%), CoGenSumm 0.652 → 0.680 (p = 0.005). FRANK is flat and not separable (p = 0.40): a head fitted on the other three already transfers to it. | [`FEWSHOT_FRACTION_CURVE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/FEWSHOT_FRACTION_CURVE.csv), [`CONTROLS_SIGNIFICANCE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/CONTROLS_SIGNIFICANCE.csv) |
 
 ## The frozen system
 

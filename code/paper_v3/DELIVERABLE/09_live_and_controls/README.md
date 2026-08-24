@@ -62,7 +62,21 @@ one-hot features on top of the six, changes AUROC from **0.82256 to 0.81963**, a
 **-0.00293**. Explicit dataset identity buys nothing; if anything it dilutes the node-level
 feature subsampling. Whatever corpus information matters is already reachable from `x`.
 
-## 3. Few-shot adaptation curve (`code/fewshot.py`, `code/fewshot_k0.py`)
+The paper reports this arm from the four-arm ladder in `code/ds_only.py`, where it lands at
+**0.82121** for a delta of **-0.00135**. The two runs build the same one-hot columns with the
+same values and differ only in the order the columns are listed, which changes which features
+each node of the forest happens to draw. Permuting four identical columns moves this arm by
+0.0016, larger than the effect being measured; the paired interval, [-0.0040, 0.0065] with
+p = 0.59 in `results/CONTROLS_SIGNIFICANCE.csv`, covers both readings and neither is separable.
+Feature order is a randomisation source here in the same way row order is.
+
+## 3. Few-shot adaptation curve (`code/fewshot_frac.py`; superseded: `code/fewshot.py`, `code/fewshot_k0.py`)
+
+The paper's figure uses the fraction grid in `code/fewshot_frac.py`
+(`results/FEWSHOT_FRACTION_CURVE.csv`). The absolute-count sweep below came first and is kept
+for provenance; its x axis is not comparable across corpora, because k = 512 is 96% of
+CoGenSumm's pool and 17% of RAGTruth's, and five of its twelve points sit where adding a handful
+of rows to a base of several thousand cannot move anything.
 
 Leave-one-dataset-out measures a single point, `k = 0`, and cannot say how much in-domain data
 would fix the gap. Here the router is trained on the other three corpora in full plus `k`
