@@ -122,6 +122,59 @@ def test_reference_arm() -> None:
     _contract.check_reference(auroc, tol=0.0, what="release-tree reference arm")
 
 
+def test_bundle_carries_every_column_the_pipeline_needs() -> None:
+    """The trimmed input bundle must satisfy the stage-3 preflight contract.
+
+    Kept in step with `preflight()` in 08_scripts/part1c_main_full_v1.py: the six frozen
+    features, the four latency columns, the identity that base feature latency is query plus
+    document setup, and per-action availability with a finite latency wherever an action is
+    available. The first release shipped without three of the latency columns and every stage-3
+    script refused to start; the reproduction gate above did not notice, because it scores
+    AUROC and never reads a latency.
+    """
+    import json
+
+    import pandas as pd
+
+    inputs = DELIVERABLE / "00_inputs"
+    contract = json.loads(
+        (DELIVERABLE / "01_main_experiment" / "00_contract"
+         / "INHERITED_FROZEN_v3.json").read_text())
+    features = list(contract["features"])
+    pool = list(contract["pool"])
+    latency = ["feature_latency_ms", "feature_query_latency_ms",
+               "feature_document_setup_ms", "compact16_feature_latency_ms"]
+
+    for name in ("TRAIN", "TEST"):
+        frame = pd.read_parquet(inputs / f"{name}.parquet")
+
+        missing = [c for c in features if c not in frame.columns]
+        assert not missing, f"{name} is missing frozen features {missing}"
+
+        missing = [c for c in latency if c not in frame.columns]
+        assert not missing, f"{name} is missing latency columns {missing}"
+
+        residual = (frame["feature_latency_ms"]
+                    - frame["feature_query_latency_ms"]
+                    - frame["feature_document_setup_ms"]).abs().max()
+        assert residual <= 1e-6, f"{name}: base latency is not query + setup ({residual})"
+
+        for action in pool:
+            for column in (f"score__{action}", f"available__{action}",
+                           f"latency_ms__{action}"):
+                assert column in frame.columns, f"{name} is missing {column}"
+            available = frame[f"available__{action}"].to_numpy(bool)
+            latencies = frame[f"latency_ms__{action}"].to_numpy(float)
+            assert not pd.isna(latencies[available]).any(), (
+                f"{name}/{action}: an available row has no latency")
+
+        for column in ("source_document", "candidate_summary"):
+            assert column not in frame.columns, (
+                f"{name} carries {column}; the bundle is meant to be text-free")
+
+    print("bundle satisfies the stage-3 preflight contract")
+
+
 def test_launchers_resolve() -> None:
     """Each stage-3 launcher must point at a script that exists in this checkout."""
     _environment()
