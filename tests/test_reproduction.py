@@ -194,5 +194,41 @@ def test_launchers_resolve() -> None:
         assert Path(target).is_file(), f"{launcher.name} points at a missing {target}"
 
 
+def test_reproduce_sh_matches_the_launchers() -> None:
+    """reproduce.sh must pass arguments the launchers accept, and write where they look.
+
+    Three things the earlier existence check could not catch, each of which broke a documented
+    command: a stage passing a placeholder where the launcher demands a named phase, a run
+    directory that the cascade stage does not watch, and a controls list that omits the scripts
+    whose outputs the paper reports.
+    """
+    reproduce = (REPO / "reproduce.sh").read_text()
+    part3 = (DELIVERABLE / "08_scripts" / "run_part3_v1.sh").read_text()
+    chain4 = (DELIVERABLE / "08_scripts" / "chain_part4.sh").read_text()
+
+    # 1. Part 3 demands a phase, so reproduce.sh must require one too.
+    assert 'PHASE="${2:?' in part3, "run_part3_v1.sh no longer demands a phase; revisit this test"
+    assert "phase1|phase2" in reproduce, (
+        "reproduce.sh does not validate the phase argument run_part3_v1.sh requires")
+
+    # 2. cascade waits on Part 3's marker under AFR_ROOT/paper_v3/runs, so runs must go there.
+    assert "BASE=${AFR_ROOT" in chain4 and "$BASE/runs/part3_extended_v1" in chain4
+    assert 'RUNS="$AFR_ROOT/paper_v3/runs"' in reproduce, (
+        "reproduce.sh writes runs where chain_part4.sh does not look for them")
+
+    # 3. controls must run what the paper reports, and each named script must exist.
+    controls = DELIVERABLE / "09_live_and_controls" / "code"
+    for name in ("fewshot_frac", "sig_controls", "sig_main", "dataset_control", "ds_only"):
+        assert f" {name} " in reproduce or f" {name};" in reproduce, (
+            f"reproduce.sh controls does not run {name}.py")
+        assert (controls / f"{name}.py").is_file(), f"missing {name}.py"
+
+    # Scripts that read a mandatory variable must have it exported by the entry point.
+    if "os.environ[\"SIG_OUT\"]" in (controls / "sig_controls.py").read_text():
+        assert "SIG_OUT=" in reproduce, "sig_controls.py needs SIG_OUT and reproduce.sh omits it"
+
+    print("reproduce.sh honours the launcher contracts")
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-v", "-s"]))

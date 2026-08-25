@@ -28,9 +28,12 @@ T_ij = 1 + (Q_ij − max_k Q_ik)                regret supervision
 - **One call per instance.** Not a cascade, not an ensemble. Reported latency is
   end-to-end and includes feature extraction, head inference, routing arithmetic, both
   calibration stages, and the verifier call itself.
-- **Two protocols, one configuration.** Every choice (pool, features, target, learner,
-  hyperparameters, β rule, calibration) is made on the TRAIN partition alone. Protocol B
-  reads TEST once and is the confirmatory result.
+- **Two protocols, one configuration.** Features, target, learner, hyperparameters, the β
+  rule and both calibration stages are chosen on the TRAIN partition alone. The verifier
+  pool is the exception: it was screened in an earlier round on a matrix that shares 54.4%
+  of Protocol B's test document groups, and was not reselected afterwards. A TRAIN-only
+  rescreen of all 455 three-verifier subsets is included as an audit and does not feed back
+  into the frozen configuration. Protocol B reads TEST once and is the confirmatory result.
 - **Text-free reproduction bundle.** `code/paper_v3/DELIVERABLE/00_inputs/` (6.3 MB) carries
   the frozen features and verifier scores with all source and summary text removed. It
   reproduces every published table without redistributing the corpora.
@@ -126,6 +129,7 @@ needs no GPU, no model downloads, and no corpus access.
 
 ```
 .
+├── figures/                    the paper's three figures and the script that draws them
 ├── docs/
 │   ├── reproducibility.md      what runs what, and what each stage costs
 │   ├── pipeline.md             the four stages end to end
@@ -165,7 +169,7 @@ stages 1 and 2 are shipped frozen in `00_inputs/`.
 | Stage | What it does | Needs |
 |---|---|---|
 | 1. Ingest | Builds the TRAIN/TEST split from the four corpora | corpus access |
-| 2. Verifier scoring | Runs all sixteen verifiers, producing the score matrix | GPU, model weights, vLLM |
+| 2. Verifier scoring | Runs all fifteen verifiers, producing the score matrix | GPU, model weights, vLLM |
 | 3. Routing | Fits the heads, routes, calibrates, evaluates | CPU only |
 | 4. Live and controls | Re-runs Protocol B with live verifier calls; the three controls | GPU for the live arm |
 

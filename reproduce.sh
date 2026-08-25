@@ -5,9 +5,10 @@
 #   ./reproduce.sh verify     manifest check + the bit-for-bit reference gate   (CPU, <1 min)
 #   ./reproduce.sh main       stage 3, main experiment, both protocols          (CPU, hours)
 #   ./reproduce.sh ablation   stage 3, core ablations
-#   ./reproduce.sh extended   stage 3, extended ablations and per-corpus tables
+#   ./reproduce.sh extended <phase1|phase2> [smoke]
+#                             stage 3, extended ablations and per-corpus tables
 #   ./reproduce.sh cascade    stage 3, cascade and alternative learners
-#   ./reproduce.sh controls   stage 4, dataset control, few-shot curve, significance
+#   ./reproduce.sh controls   stage 4, dataset control, few-shot curve, control intervals
 #
 # Stages 1 and 2 (corpus ingest and verifier scoring) need the corpora, GPU model weights,
 # and a running vLLM server. They are documented in docs/reproducibility.md rather than
@@ -20,7 +21,10 @@ export AFR_INPUTS="$AFR_ROOT/paper_v3/DELIVERABLE/00_inputs"
 export AFR_PYTHON="${AFR_PYTHON:-$(command -v python3)}"
 SCRIPTS="$AFR_ROOT/paper_v3/DELIVERABLE/08_scripts"
 CONTROLS="$AFR_ROOT/paper_v3/DELIVERABLE/09_live_and_controls/code"
-RUNS="$REPO/runs"
+# chain_part4.sh looks for Part 3 under $AFR_ROOT/paper_v3/runs, so every stage writes there;
+# a run directory below the repository root would leave cascade waiting for a marker that
+# never appears.
+RUNS="$AFR_ROOT/paper_v3/runs"
 
 usage() { sed -n '2,16p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 1; }
 [ $# -ge 1 ] || usage
@@ -36,7 +40,12 @@ case "$1" in
     exec bash "$SCRIPTS/run_part2_ablation_v1.sh" "$RUNS/part2_ablation_v1" "${2:-0}"
     ;;
   extended)
-    exec bash "$SCRIPTS/run_part3_v1.sh" "$RUNS/part3_extended_v1" "${2:-0}"
+    # run_part3_v1.sh takes <run_dir> <phase1|phase2> [smoke]; there is no default phase.
+    case "${2:-}" in
+      phase1|phase2) ;;
+      *) echo "usage: ./reproduce.sh extended <phase1|phase2> [smoke]" >&2; exit 1 ;;
+    esac
+    exec bash "$SCRIPTS/run_part3_v1.sh" "$RUNS/part3_extended_v1" "$2" "${3:-0}"
     ;;
   cascade)
     exec bash "$SCRIPTS/chain_part4.sh"
@@ -46,7 +55,11 @@ case "$1" in
     # needs a GPU and a vLLM server; see docs/reproducibility.md for that one.
     mkdir -p "$RUNS/controls"
     export V3_RUN_DIR="$RUNS/controls"
-    for stage in dataset_control ds_only fewshot fewshot_k0 sig_main; do
+    export SIG_OUT="$RUNS/controls" FS_OUT="$RUNS/controls"
+    # sig_main covers the main tables; sig_controls covers the three control experiments.
+    # fewshot_frac is the fraction grid the paper plots; fewshot and fewshot_k0 are the
+    # superseded absolute-count sweep, kept because the archived curve came from them.
+    for stage in dataset_control ds_only fewshot_frac sig_main sig_controls; do
       echo "[reproduce] $stage"
       "$AFR_PYTHON" "$CONTROLS/$stage.py"
     done

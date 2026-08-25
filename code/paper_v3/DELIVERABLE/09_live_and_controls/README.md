@@ -86,8 +86,8 @@ labelled rows from the held-out corpus, and evaluated on that corpus's own test 
 |---|---:|---:|---:|---|
 | FRANK | 0.83328 | 0.82520 | 669 | transfers already; in-domain data does not help |
 | CoGenSumm | 0.65157 | 0.67983 | 535 | slow, noisy gain |
-| UniSumEval | 0.53694 | 0.59231 | 1,089 | needs ~512 rows for most of the gain |
-| RAGTruth | 0.54301 | 0.63796 | 2,983 | never saturates within the available pool |
+| UniSumEval | 0.53694 | 0.59231 | 1,089 | still rising at 100% of its own pool |
+| RAGTruth | 0.54301 | 0.63796 | 2,983 | saturates at 20-30% of its pool and is flat after |
 
 There is no universal knee. FRANK is already covered by the other three corpora, while RAGTruth
 starts near chance at `k = 0` and is still improving when its entire pool is consumed. The

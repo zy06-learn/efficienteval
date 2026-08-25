@@ -138,8 +138,13 @@ def isotonic(p_val: np.ndarray, y_val: np.ndarray, p_test: np.ndarray) -> np.nda
     """Stage 2: monotone recalibration of a system's own output, fit on the validation fold.
 
     Needed because a router emits whichever member it selected, and three separately-calibrated
-    verifiers do not share one probability scale. Monotone, so within a fold the ranking is
-    untouched; the pooled gain comes from putting the ten test folds on a common scale.
+    verifiers do not share one probability scale. The gain comes from putting the ten test
+    folds on a common scale.
+
+    PAVA is only weakly monotone, so this does not leave the ranking alone: its plateaus map
+    distinct stage-1 probabilities onto one value, and the ties that creates move AUROC in
+    either direction. Measured on the frozen runs, +0.00248 under Protocol A and -0.00353
+    under Protocol B; see 01_main_experiment/03_threshold_and_risk/{A,B}_STAGE2_EFFECT.csv.
     Applied identically to every system wherever it is used.
     """
     m = IsotonicRegression(y_min=0.0, y_max=1.0, out_of_bounds="clip")

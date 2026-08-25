@@ -52,13 +52,6 @@ the operating point is not dominated. Universal superiority is not claimed.
 
 ## What each directory is for
 
-### 
-
-The text-free reproduction bundle, 6.3 MB. Keys, labels, the six cheap features and every
-verifier's score / availability / latency, with the third-party source and summary text removed.
-Point  at it and the whole study retrains from scratch; verified to reproduce the
-frozen Protocol B result bit for bit (, delta ). See its README.
-
 ### `00_inputs/`
 
 The text-free reproduction bundle, 6.3 MB. Keys, labels, the six cheap features and every
@@ -96,7 +89,8 @@ separable only in Protocol A.
 ### `03_ablation_extended/`
 
 Per-corpus training, the full subset lattices with Shapley attribution, convergence curves, the
-feature-set unification contrast, and two tight controls. See its `README.md`.
+feature-set unification contrast, and two tight controls. Its tables carry their own headers;
+there is no separate README for this directory.
 
 The methodological point worth carrying into the paper: the six features are redundant, so
 leave-one-out testing under-reports every one of them and exhaustive per-subset significance
