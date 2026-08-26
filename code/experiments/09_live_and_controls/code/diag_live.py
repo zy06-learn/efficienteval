@@ -1,3 +1,4 @@
+import os
 import numpy as np, pandas as pd, sys
 from pathlib import Path
 # AFR_ROOT names the repository code root. The default is derived from this file's own
@@ -7,7 +8,7 @@ _AFR_DEFAULT = os.path.normpath(
 O = Path(os.environ.get("AFR_ROOT", _AFR_DEFAULT) + "/experiments/runs/rerun_check_v1")
 sys.path.insert(0, os.environ.get("AFR_ROOT", _AFR_DEFAULT))
 sys.path.insert(0, os.environ.get("AFR_ROOT", _AFR_DEFAULT) + "/experiments")
-import os; os.environ["V3_RUN_DIR"] = str(O)
+os.environ["V3_RUN_DIR"] = str(O)
 import v3core as V
 POOL = ["factcc", "lettuce_v2", "granite_guardian_3_1_2b"]
 sel = np.load(O / "live_sel.npy")
