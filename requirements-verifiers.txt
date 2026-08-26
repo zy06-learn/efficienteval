@@ -3,19 +3,18 @@
 
 -r requirements.txt
 
-torch==2.11.0
 transformers==5.7.0
 huggingface-hub==1.9.1
 openai==2.33.0
 vllm==0.20.0
 
 # Sentence segmentation and lexical scoring used inside the verifier wrappers.
-pysbd==0.3.4
+# (torch and pysbd come from requirements.txt, which stage 3 already needs.)
 nltk==3.9.4
 rouge-score==0.1.2
 lettucedetect==0.2.2
 
 # Not on PyPI: `metric` is vendored with FENICE, an optional verifier outside the frozen
-# pool. code/paper_v3/DELIVERABLE/06_verifier_code/REGISTRY.md records the upstream
+# pool. code/experiments/06_verifier_registry/REGISTRY.md records the upstream
 # repository and revision of every third-party verifier. Those checkouts are not
 # redistributed here because each carries its own licence.

@@ -34,7 +34,7 @@ T_ij = 1 + (Q_ij − max_k Q_ik)                regret supervision
   of Protocol B's test document groups, and was not reselected afterwards. A TRAIN-only
   rescreen of all 455 three-verifier subsets is included as an audit and does not feed back
   into the frozen configuration. Protocol B reads TEST once and is the confirmatory result.
-- **Text-free reproduction bundle.** `code/paper_v3/DELIVERABLE/00_inputs/` (6.3 MB) carries
+- **Text-free reproduction bundle.** `code/experiments/00_inputs/` (6.3 MB) carries
   the frozen features and verifier scores with all source and summary text removed. It
   reproduces every published table without redistributing the corpora.
 - **Verified release.** The reference arm in this repository reproduces the frozen main
@@ -72,16 +72,16 @@ not claimed.**
 
 Significance is a paired cluster bootstrap over `content_doc_key`, 2,000 draws, Bonferroni
 corrected over the fifteen comparisons. Per-comparison intervals:
-[`A_SIGNIFICANCE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/A_SIGNIFICANCE.csv),
-[`B_SIGNIFICANCE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/B_SIGNIFICANCE.csv).
+[`A_SIGNIFICANCE.csv`](code/experiments/09_live_and_controls/results/A_SIGNIFICANCE.csv),
+[`B_SIGNIFICANCE.csv`](code/experiments/09_live_and_controls/results/B_SIGNIFICANCE.csv).
 
 ### Controls
 
 | Question | Answer | Evidence |
 |---|---|---|
-| Is the test result read from a pre-computed matrix? | No. Re-running Protocol B with every verifier called live for every (row, seed) pair gives 0.82205 against the frozen 0.82256, a delta of −0.00051 across 32,360 live calls, with a paired interval of [−0.0015, 0.0005] that contains zero and lies entirely within ±0.0015. The residual traces to vLLM prefix-caching non-determinism. | [`LIVE_MAIN_B.json`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/LIVE_MAIN_B.json) |
-| Does the router receive dataset identity? | No. Four arms differing only in the head's input: constant only 0.79583, corpus one-hot only 0.80845, the six cheap features 0.82256, six features plus corpus one-hot 0.82121. Handing the head the corpus explicitly moves AUROC by −0.00135, an interval of [−0.0040, 0.0065] containing zero (p = 0.59), not separable under Bonferroni over the three comparisons. The six features do carry corpus signal (89.6% corpus accuracy against a 56.5% majority baseline), which is expected of document statistics and is not a label leak. | [`DATASET_ONLY_ARMS.json`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/DATASET_ONLY_ARMS.json), [`CONTROLS_SIGNIFICANCE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/CONTROLS_SIGNIFICANCE.csv) |
-| How many in-corpus examples does a held-out corpus need? | Corpus dependent, and the sweep is over fractions of each corpus's own pool because the pools differ by 5.6x. Three of the four improve separably under Bonferroni over the four corpora: RAGTruth 0.543 → 0.638 (p < 0.001, saturating at 20–30% of its pool), UniSumEval 0.537 → 0.592 (p = 0.010, still rising at 100%), CoGenSumm 0.652 → 0.680 (p = 0.005). FRANK is flat and not separable (p = 0.40): a head fitted on the other three already transfers to it. | [`FEWSHOT_FRACTION_CURVE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/FEWSHOT_FRACTION_CURVE.csv), [`CONTROLS_SIGNIFICANCE.csv`](code/paper_v3/DELIVERABLE/09_live_and_controls/results/CONTROLS_SIGNIFICANCE.csv) |
+| Is the test result read from a pre-computed matrix? | No. Re-running Protocol B with every verifier called live for every (row, seed) pair gives 0.82205 against the frozen 0.82256, a delta of −0.00051 across 32,360 live calls, with a paired interval of [−0.0015, 0.0005] that contains zero and lies entirely within ±0.0015. The residual traces to vLLM prefix-caching non-determinism. | [`LIVE_MAIN_B.json`](code/experiments/09_live_and_controls/results/LIVE_MAIN_B.json) |
+| Does the router receive dataset identity? | No. Four arms differing only in the head's input: constant only 0.79583, corpus one-hot only 0.80845, the six cheap features 0.82256, six features plus corpus one-hot 0.82121. Handing the head the corpus explicitly moves AUROC by −0.00135, an interval of [−0.0040, 0.0065] containing zero (p = 0.59), not separable under Bonferroni over the three comparisons. The six features do carry corpus signal (89.6% corpus accuracy against a 56.5% majority baseline), which is expected of document statistics and is not a label leak. | [`DATASET_ONLY_ARMS.json`](code/experiments/09_live_and_controls/results/DATASET_ONLY_ARMS.json), [`CONTROLS_SIGNIFICANCE.csv`](code/experiments/09_live_and_controls/results/CONTROLS_SIGNIFICANCE.csv) |
+| How many in-corpus examples does a held-out corpus need? | Corpus dependent, and the sweep is over fractions of each corpus's own pool because the pools differ by 5.6x. Three of the four improve separably under Bonferroni over the four corpora: RAGTruth 0.543 → 0.638 (p < 0.001, saturating at 20–30% of its pool), UniSumEval 0.537 → 0.592 (p = 0.010, still rising at 100%), CoGenSumm 0.652 → 0.680 (p = 0.005). FRANK is flat and not separable (p = 0.40): a head fitted on the other three already transfers to it. | [`FEWSHOT_FRACTION_CURVE.csv`](code/experiments/09_live_and_controls/results/FEWSHOT_FRACTION_CURVE.csv), [`CONTROLS_SIGNIFICANCE.csv`](code/experiments/09_live_and_controls/results/CONTROLS_SIGNIFICANCE.csv) |
 
 ## The frozen system
 
@@ -129,37 +129,61 @@ needs no GPU, no model downloads, and no corpus access.
 
 ```
 .
-├── figures/                    the paper's three figures and the script that draws them
+├── reproduce.sh                single entry point for every stage
+├── tests/test_reproduction.py  manifest check and the bit-for-bit gate
 ├── docs/
-│   ├── reproducibility.md      what runs what, and what each stage costs
 │   ├── pipeline.md             the four stages end to end
+│   ├── reproducibility.md      what runs what, and what each stage costs
 │   └── verifiers.md            the fifteen verifiers, protocols, serving setup
-├── tests/test_reproduction.py  the manifest check and the bit-for-bit gate
-├── reproduce.sh                single entry point
+├── figures/                    the paper's three figures and the script that draws them
 └── code/                       AFR_ROOT
-    ├── afr_v2/                 verifier implementations and scoring wrappers
-    ├── paper_v1/               two shared modules the pipeline still imports
-    ├── paper_v2/               stage 1 (splits) and stage 2 (verifier score matrix)
-    ├── results/                the two sha256-pinned frozen input matrices
-    └── paper_v3/
-        ├── artifacts/          cross-stage frozen contracts
-        └── DELIVERABLE/        stage 3 and 4 code, plus all published evidence
-            ├── 00_inputs/      text-free reproduction bundle
-            ├── 01_…_05_…       main experiment, ablations, cascade, pool provenance
-            ├── 06_verifier_code/  complexity accounting and verifier registry
-            ├── 07_data_contract/
-            ├── 08_scripts/     stage 3: routing experiments
-            └── 09_live_and_controls/  stage 4: live re-run and the three controls
+    ├── ingest_and_scoring/     stage 1 (corpus ingest, TRAIN/TEST split) and the stage-2 driver
+    ├── verifiers/              the fifteen verifier implementations stage 2 calls
+    ├── shared/                 two modules (core.py, config.py) every later stage imports
+    ├── results/                the two sha256-pinned matrices stages 1 and 2 produced
+    └── experiments/            stages 3 and 4: the code and every published result
+        ├── 00_inputs/              text-free reproduction bundle -- start here
+        ├── 01_main_experiment/     protocols A and B, the paper's main tables
+        ├── 02_ablation_core/       the core ablations
+        ├── 03_ablation_extended/   per-corpus tables, Shapley, convergence curves
+        ├── 04_cascade_and_learners/  cascade and alternative-learner comparisons
+        ├── 05_pool_provenance/     how the three-verifier pool was selected, and its TRAIN-only rescreen
+        ├── 06_verifier_registry/   upstream repository and revision of every verifier
+        ├── 07_data_contract/       the split and grouping rules
+        ├── 08_routing_code/        stage 3: the routing experiments themselves
+        ├── 09_live_and_controls/   stage 4: live re-run and the three controls, code and results
+        └── cross_stage_contract/   the frozen configuration every stage reads
 ```
 
-Directory names under `code/` record the round in which each component was frozen, and the
-running code has not been renamed after the fact. `paper_v1/` is not a superseded copy of
-the experiments: it contributes exactly two shared modules (`core.py`, `config.py`) that the
-current pipeline imports. Superseded rounds are not part of this release.
+Every directory carries a `README.md`, which GitHub renders when you open the directory, so
+the tree can be read by browsing rather than by consulting this page.
 
-Every code file in this repository is a single canonical copy. The per-experiment code
-snapshots in the original working tree were byte-identical duplicates and have been removed
-in favour of one copy each.
+**The five experiment directories share one shape.** Learn it once and `01_` through `05_`
+all read the same way:
+
+| Inside `0X_…/` | What it holds |
+|---|---|
+| `00_contract/` | the frozen configuration this run used |
+| `01_…_tables/` | the results, as CSV -- this is where the paper's numbers live |
+| `02_gates/` | the run's own check that it landed on the frozen values |
+| `03_provenance/` | code hashes, git state, launch command, completion marker |
+| `05_logs/` | the console output of the run |
+| `06_row_level/` | per-row, per-seed predictions (`.npz`) |
+| `MANIFEST.sha256` | a digest for every file in the directory |
+| `README.md`, `REPORT_zh.md` | what the experiment is, and its results read out |
+
+That chain is the point: any number in `01_…_tables/` can be traced down to the per-row
+predictions that produced it and back up to the code revision that ran.
+
+**Two things in the tree are deliberately not tidy.** The provenance files under
+`03_provenance/` and `07_provenance/` record absolute paths on the machine the experiments
+ran on (`/home/zeyu/projects/adaptive-faithfulness-router-v2/…`), under that tree's own
+directory names. They are a historical record of what was executed and are left exactly as
+written, so they do not match the layout above. And three modules
+(`summary_router_compact16_direct_v1.py`, `pool_gate_sweep_v1.py`, `tenfold_v1.py`) exist as
+byte-identical copies in both `verifier_wrappers/` and `experiments/08_routing_code/`, because the
+two trees import them under different module names; removing either copy would change which
+module the frozen pipeline loads.
 
 ## Reproduction
 
@@ -188,5 +212,5 @@ the paper exists; until then there is nothing to cite but this repository.
 Apache-2.0. See [LICENSE](LICENSE).
 
 Third-party verifiers are not redistributed here. Each carries its own licence;
-[`code/paper_v3/DELIVERABLE/06_verifier_code/REGISTRY.md`](code/paper_v3/DELIVERABLE/06_verifier_code/REGISTRY.md)
+[`code/experiments/06_verifier_registry/REGISTRY.md`](code/experiments/06_verifier_registry/REGISTRY.md)
 records the upstream repository and revision of every one.

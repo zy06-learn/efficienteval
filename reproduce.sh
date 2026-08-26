@@ -17,14 +17,14 @@ set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export AFR_ROOT="$REPO/code"
-export AFR_INPUTS="$AFR_ROOT/paper_v3/DELIVERABLE/00_inputs"
+export AFR_INPUTS="$AFR_ROOT/experiments/00_inputs"
 export AFR_PYTHON="${AFR_PYTHON:-$(command -v python3)}"
-SCRIPTS="$AFR_ROOT/paper_v3/DELIVERABLE/08_scripts"
-CONTROLS="$AFR_ROOT/paper_v3/DELIVERABLE/09_live_and_controls/code"
-# chain_part4.sh looks for Part 3 under $AFR_ROOT/paper_v3/runs, so every stage writes there;
+SCRIPTS="$AFR_ROOT/experiments/08_routing_code"
+CONTROLS="$AFR_ROOT/experiments/09_live_and_controls/code"
+# chain_part4.sh looks for Part 3 under $AFR_ROOT/experiments/runs, so every stage writes there;
 # a run directory below the repository root would leave cascade waiting for a marker that
 # never appears.
-RUNS="$AFR_ROOT/paper_v3/runs"
+RUNS="$AFR_ROOT/experiments/runs"
 
 usage() { sed -n '2,16p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 1; }
 [ $# -ge 1 ] || usage

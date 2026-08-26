@@ -18,7 +18,7 @@ this release depends on is shipped, so stage 3 runs on its own.
 
 ## Stage 1: ingest
 
-`code/paper_v2/ingest/build_splits_v2.py`
+`code/ingest_and_scoring/ingest/build_splits_v2.py`
 
 Unifies four summary-factuality datasets into one summary-level binary classification task.
 The grouping unit is `content_doc_key`, derived from the normalised source-document content,
@@ -35,13 +35,13 @@ Needs the four corpora. They are not redistributed here.
 
 ## Stage 2: verifier scoring
 
-`code/paper_v2/p1_score_local.sh` (nine local verifiers)
-`code/paper_v2/p1_api.sh` (six vLLM-served verifiers)
-`code/paper_v2/p1_score.py`, `code/paper_v2/ingest/verifier_cli.py` (entry points)
-`code/afr_v2/` (the scorers themselves)
+`code/ingest_and_scoring/p1_score_local.sh` (nine local verifiers)
+`code/ingest_and_scoring/p1_api.sh` (six vLLM-served verifiers)
+`code/ingest_and_scoring/p1_score.py`, `code/ingest_and_scoring/ingest/verifier_cli.py` (entry points)
+`code/verifier_wrappers/` (the scorers themselves)
 
 Every verifier is run once per row under its own declared protocol, recorded in
-`PROTOCOLS` in `code/afr_v2/unified_summary_verifiers_v1.py`. The protocol string fixes the
+`PROTOCOLS` in `code/verifier_wrappers/unified_summary_verifiers_v1.py`. The protocol string fixes the
 source-window size, the overlap, the aggregation rule, and whether the official prompt
 prefix is applied. It is part of the measurement: two verifiers with different window caps
 are not measured under the same context budget, and the string says so.
@@ -57,11 +57,11 @@ Needs a GPU, the model weights, and vLLM. See [`verifiers.md`](verifiers.md).
 
 ## Stage 3: routing
 
-`code/paper_v3/DELIVERABLE/08_scripts/`
+`code/experiments/08_routing_code/`
 
 This is the stage the work is about, and the only stage that runs from this repository
 alone, because stages 1 and 2 are shipped frozen in
-`code/paper_v3/DELIVERABLE/00_inputs/` with all source and summary text removed.
+`code/experiments/00_inputs/` with all source and summary text removed.
 
 | Script | Produces |
 |---|---|
@@ -80,7 +80,7 @@ got wrong, which is why the boundary is enforced in code rather than by conventi
 
 ## Stage 4: live re-run and controls
 
-`code/paper_v3/DELIVERABLE/09_live_and_controls/code/`
+`code/experiments/09_live_and_controls/code/`
 
 | Script | Question it answers |
 |---|---|

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Rebuild publication figures for notes_zh.tex from frozen DELIVERABLE values.
+"""Rebuild publication figures for notes_zh.tex from frozen experiments values.
 
 Sources on DGX:
-  paper_v3/DELIVERABLE/01_main_experiment/01_main_tables/publication/{A,B}_MAIN.csv
-  paper_v3/DELIVERABLE/03_ablation_extended/01_tables/E3_{LEARNING,TREE}_CURVE_{A,B}.csv
+  experiments/01_main_experiment/01_main_tables/publication/{A,B}_MAIN.csv
+  experiments/03_ablation_extended/01_tables/E3_{LEARNING,TREE}_CURVE_{A,B}.csv
 
 This script only visualizes archived numbers; it does not fit or evaluate models.
 """
@@ -309,7 +309,7 @@ def draw_convergence() -> None:
 
 
 # ---------------------------------------------------------------- few-shot adaptation
-# Source: paper_v3/runs/fewshot_frac_v1/FEWSHOT_FRACTION_CURVE.csv
+# Source: experiments/runs/fewshot_frac_v1/FEWSHOT_FRACTION_CURVE.csv
 # Fractions of each corpus's own training pool; ten seeds per point.
 FEWSHOT_FRACS = [0.00, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.70, 0.85, 1.00]
 

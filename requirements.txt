@@ -1,5 +1,5 @@
 # Stage 3: everything needed to reproduce every table and ablation in the paper by reading
-# the frozen scores in code/paper_v3/DELIVERABLE/00_inputs. CPU only, no model downloads.
+# the frozen scores in code/experiments/00_inputs. CPU only, no model downloads.
 #
 # Versions are pinned, not floated. The release gate in tests/test_reproduction.py requires
 # the reference arm to reproduce the frozen AUROC bit-for-bit, and the random forest's
@@ -16,3 +16,12 @@ pyarrow==23.0.1
 
 # Test runner for `./reproduce.sh verify`.
 pytest==9.0.1
+
+# The frozen feature module `summary_router_compact16_direct_v1` is on the import path of
+# every stage-3 entry point, and it defines a torch MLP and a pysbd segmenter at module
+# level. The reference arm uses neither -- its head is the random forest above, and the
+# features are read from `00_inputs` -- but both must import for the module to load, so
+# they are stage-3 requirements in fact and are declared here rather than left to fail at
+# `./reproduce.sh verify`. The CPU wheel is enough; no model weights are downloaded.
+torch==2.11.0
+pysbd==0.3.4

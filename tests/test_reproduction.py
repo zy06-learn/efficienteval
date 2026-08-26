@@ -27,28 +27,28 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / "code"
-DELIVERABLE = ROOT / "paper_v3" / "DELIVERABLE"
-CONTROLS = DELIVERABLE / "09_live_and_controls" / "code"
+EXPERIMENTS = ROOT / "experiments"
+CONTROLS = EXPERIMENTS / "09_live_and_controls" / "code"
 
 
 def _environment() -> None:
     """The two variables the frozen pipeline reads, pointed at this checkout."""
     os.environ["AFR_ROOT"] = str(ROOT)
-    os.environ["AFR_INPUTS"] = str(DELIVERABLE / "00_inputs")
+    os.environ["AFR_INPUTS"] = str(EXPERIMENTS / "00_inputs")
     os.environ.setdefault("V3_RUN_DIR", str(REPO / "runs" / "verify"))
     # The heads are fitted on CPU. Without this, importing the verifier wrappers can try to
     # claim a GPU that the reproduction does not need.
     os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
     Path(os.environ["V3_RUN_DIR"]).mkdir(parents=True, exist_ok=True)
-    for path in (ROOT, ROOT / "paper_v2", ROOT / "paper_v3",
-                 DELIVERABLE / "08_scripts", CONTROLS):
+    for path in (ROOT, ROOT / "ingest_and_scoring", ROOT / "experiments",
+                 EXPERIMENTS / "08_routing_code", CONTROLS):
         if str(path) not in sys.path:
             sys.path.insert(0, str(path))
 
 
 def test_manifest() -> None:
     """Every file the manifest names must still hash to the recorded digest."""
-    manifest = DELIVERABLE / "MANIFEST.sha256"
+    manifest = EXPERIMENTS / "MANIFEST.sha256"
     assert manifest.exists(), f"missing {manifest}"
 
     checked, missing, mismatched = 0, [], []
@@ -56,7 +56,7 @@ def test_manifest() -> None:
         if not line.strip():
             continue
         digest, _, relative = line.partition("  ")
-        target = DELIVERABLE / relative.lstrip("./")
+        target = EXPERIMENTS / relative.lstrip("./")
         if not target.exists():
             missing.append(relative)
             continue
@@ -125,7 +125,7 @@ def test_reference_arm() -> None:
 def test_bundle_carries_every_column_the_pipeline_needs() -> None:
     """The trimmed input bundle must satisfy the stage-3 preflight contract.
 
-    Kept in step with `preflight()` in 08_scripts/part1c_main_full_v1.py: the six frozen
+    Kept in step with `preflight()` in 08_routing_code/part1c_main_full_v1.py: the six frozen
     features, the four latency columns, the identity that base feature latency is query plus
     document setup, and per-action availability with a finite latency wherever an action is
     available. The first release shipped without three of the latency columns and every stage-3
@@ -136,9 +136,9 @@ def test_bundle_carries_every_column_the_pipeline_needs() -> None:
 
     import pandas as pd
 
-    inputs = DELIVERABLE / "00_inputs"
+    inputs = EXPERIMENTS / "00_inputs"
     contract = json.loads(
-        (DELIVERABLE / "01_main_experiment" / "00_contract"
+        (EXPERIMENTS / "01_main_experiment" / "00_contract"
          / "INHERITED_FROZEN_v3.json").read_text())
     features = list(contract["features"])
     pool = list(contract["pool"])
@@ -178,7 +178,7 @@ def test_bundle_carries_every_column_the_pipeline_needs() -> None:
 def test_launchers_resolve() -> None:
     """Each stage-3 launcher must point at a script that exists in this checkout."""
     _environment()
-    scripts = sorted((DELIVERABLE / "08_scripts").glob("*.sh"))
+    scripts = sorted((EXPERIMENTS / "08_routing_code").glob("*.sh"))
     assert scripts, "no launchers found"
     for launcher in scripts:
         probe = (
@@ -203,21 +203,21 @@ def test_reproduce_sh_matches_the_launchers() -> None:
     whose outputs the paper reports.
     """
     reproduce = (REPO / "reproduce.sh").read_text()
-    part3 = (DELIVERABLE / "08_scripts" / "run_part3_v1.sh").read_text()
-    chain4 = (DELIVERABLE / "08_scripts" / "chain_part4.sh").read_text()
+    part3 = (EXPERIMENTS / "08_routing_code" / "run_part3_v1.sh").read_text()
+    chain4 = (EXPERIMENTS / "08_routing_code" / "chain_part4.sh").read_text()
 
     # 1. Part 3 demands a phase, so reproduce.sh must require one too.
     assert 'PHASE="${2:?' in part3, "run_part3_v1.sh no longer demands a phase; revisit this test"
     assert "phase1|phase2" in reproduce, (
         "reproduce.sh does not validate the phase argument run_part3_v1.sh requires")
 
-    # 2. cascade waits on Part 3's marker under AFR_ROOT/paper_v3/runs, so runs must go there.
+    # 2. cascade waits on Part 3's marker under AFR_ROOT/experiments/runs, so runs must go there.
     assert "BASE=${AFR_ROOT" in chain4 and "$BASE/runs/part3_extended_v1" in chain4
-    assert 'RUNS="$AFR_ROOT/paper_v3/runs"' in reproduce, (
+    assert 'RUNS="$AFR_ROOT/experiments/runs"' in reproduce, (
         "reproduce.sh writes runs where chain_part4.sh does not look for them")
 
     # 3. controls must run what the paper reports, and each named script must exist.
-    controls = DELIVERABLE / "09_live_and_controls" / "code"
+    controls = EXPERIMENTS / "09_live_and_controls" / "code"
     for name in ("fewshot_frac", "sig_controls", "sig_main", "dataset_control", "ds_only"):
         assert f" {name} " in reproduce or f" {name};" in reproduce, (
             f"reproduce.sh controls does not run {name}.py")

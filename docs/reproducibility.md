@@ -4,7 +4,7 @@
 
 Stage 3 reproduces every published table and ablation from this repository alone, on
 CPU, with no model downloads and no corpus access. That is possible because stages 1 and 2
-are shipped frozen in `code/paper_v3/DELIVERABLE/00_inputs/`: a 6.3 MB bundle carrying the
+are shipped frozen in `code/experiments/00_inputs/`: a 6.3 MB bundle carrying the
 features and the fifteen verifiers' scores, with `source_document` and `candidate_summary`
 removed and 59 of the original 256 columns kept.
 
@@ -56,9 +56,9 @@ calls across ten seeds, needing a GPU and a running vLLM server.
 
 ```bash
 export AFR_ROOT="$PWD/code" LIVE_OUT="$PWD/runs/live"
-export AFR_INPUTS="$AFR_ROOT/paper_v3/DELIVERABLE/00_inputs"
+export AFR_INPUTS="$AFR_ROOT/experiments/00_inputs"
 for stage in plan local api finish; do
-  LIVE_STAGE=$stage python code/paper_v3/DELIVERABLE/09_live_and_controls/code/live_main.py
+  LIVE_STAGE=$stage python code/experiments/09_live_and_controls/code/live_main.py
 done
 ```
 
@@ -75,14 +75,14 @@ the model weights and a vLLM server.
 export AFR_ROOT="$PWD/code" AFR_PYTHON="$(command -v python)"
 pip install -r requirements-verifiers.txt
 
-python code/paper_v2/ingest/build_splits_v2.py     # stage 1
-bash   code/paper_v2/p1_score_local.sh             # stage 2a, nine local verifiers
-bash   code/paper_v2/p1_api.sh                     # stage 2b, six served verifiers
+python code/ingest_and_scoring/ingest/build_splits_v2.py     # stage 1
+bash   code/ingest_and_scoring/p1_score_local.sh             # stage 2a, nine local verifiers
+bash   code/ingest_and_scoring/p1_api.sh                     # stage 2b, six served verifiers
 ```
 
 `p1_api.sh` brings up one vLLM server at a time and takes down each before the next.
 `HF_HUB` must point at a hub cache that already holds the pinned snapshots; the revisions
-are recorded in `MODEL_REVISIONS` in `code/afr_v2/unified_summary_verifiers_v1.py`.
+are recorded in `MODEL_REVISIONS` in `code/verifier_wrappers/unified_summary_verifiers_v1.py`.
 
 ## Environment
 
@@ -114,19 +114,31 @@ sees movement should know it is expected.
 
 ## Repository layout, and why the directories are named that way
 
-`code/` is `AFR_ROOT`. Its internal layout is the layout the experiments actually ran under,
-and the running code has not been renamed after the fact.
+`code/` is `AFR_ROOT`. Each directory under it is named for what it contains:
 
-- `afr_v2/` holds the verifier implementations and scoring wrappers.
-- `paper_v1/` is **not** a superseded copy of the experiments. It contributes exactly two
-  modules, `core.py` and `config.py`, that the current pipeline still imports.
-- `paper_v2/` is stage 1 and stage 2.
-- `paper_v3/` is stage 3 and stage 4, plus all published evidence under `DELIVERABLE/`.
-- `results/` holds the two sha256-pinned frozen matrices that `core.py` verifies at import.
+- `ingest_and_scoring/` is stage 1 (corpus ingest and the TRAIN/TEST split) and the stage-2
+  driver that runs the verifiers.
+- `verifier_wrappers/` holds the verifier implementations and scoring wrappers stage 2 calls.
+- `shared/` is **not** a superseded copy of anything. It contributes exactly two modules,
+  `core.py` and `config.py`, that every later stage imports.
+- `results/` holds the two sha256-pinned matrices stages 1 and 2 produced. The name is the
+  pipeline's own output convention: stages 1 and 2 wrote them there, and stage 3 reads them
+  as inputs.
+- `experiments/` is stage 3 and stage 4, plus all published evidence.
 
-Superseded rounds are not part of this release. Every code file appears exactly once: the
-per-experiment code snapshots in the original working tree were byte-identical duplicates,
-and one canonical copy is kept in their place.
+In the working tree these directories were named for the round in which each was frozen
+(`paper_v1`, `paper_v2`, `paper_v3`, `afr_v2`, `DELIVERABLE`). Those names carried no meaning
+outside the project, so they were renamed for the release and every path reference was
+updated with them. Two consequences are visible in the tree and are intentional:
+
+- The provenance files under `03_provenance/` and `07_provenance/` still name the original
+  paths, because they record what was executed on the author's machine. Rewriting them would
+  make them claim a layout that never existed at run time.
+- Three modules (`summary_router_compact16_direct_v1.py`, `pool_gate_sweep_v1.py`,
+  `tenfold_v1.py`) appear as byte-identical copies in both `verifier_wrappers/` and
+  `experiments/08_routing_code/`. The two trees import them under different module names, so
+  deleting either copy would change which module the frozen pipeline loads. Every other code
+  file appears exactly once.
 
 The following were changed from the working tree so that the pipeline runs outside the
 author's machine. Nothing else was touched, and the reference gate was rerun after every one
@@ -136,7 +148,7 @@ of them and still reports `delta 0.000e+00`.
    (21 call sites). It previously fell back to an absolute path in the author's home
    directory, so any script run without the variable set failed with a `FileNotFoundError`
    naming a machine the reader does not have.
-2. The four stage-3 launchers point at `08_scripts/` and default to `python3` rather than an
+2. The four stage-3 launchers point at `08_routing_code/` and default to `python3` rather than an
    absolute interpreter path.
 3. `config_v2.py` defaults its interpreter paths to `sys.executable`; `candidate_verifiers.py`
    reads `ALIGNSCORE_PYTHON` and `ALIGNSCORE_CHECKPOINT`; `p1_prepare.py` derives its own
@@ -147,7 +159,7 @@ of them and still reports `delta 0.000e+00`.
    came from an earlier round under a launcher that is not part of this release, so serving it
    was undocumented here.
 5. The stage-2 CLI entry point was renamed from `169_unified_summary_verifiers_v1_reference.py`
-   to `ingest/verifier_cli.py` and now resolves the `afr_v2` package itself rather than relying
+   to `ingest/verifier_cli.py` and now resolves the `verifiers` package itself rather than relying
    on an externally set `PYTHONPATH`.
 6. Byte-identical code snapshots were removed in favour of one canonical copy each, and all
    three manifests were regenerated to match.

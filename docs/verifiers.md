@@ -11,12 +11,12 @@ are the fixed-verifier baselines the router is compared against.
 
 The pool was not chosen by hand. It is rank 1 of the 445 feasible k=3 subsets under an
 exhaustive validation screen, and the terminal point of the quality/cost Pareto frontier.
-The screen is in `code/paper_v3/DELIVERABLE/05_pool_provenance/`.
+The screen is in `code/experiments/05_pool_provenance/`.
 
 ## Protocols
 
 Each verifier runs under a declared protocol string, listed in `PROTOCOLS` in
-`code/afr_v2/unified_summary_verifiers_v1.py`. The string is not a label. It fixes the
+`code/verifier_wrappers/unified_summary_verifiers_v1.py`. The string is not a label. It fixes the
 source-window size, the overlap, the aggregation rule, and whether the official prompt
 prefix is applied, and two verifiers with different window caps are not measured under the
 same context budget.
@@ -53,7 +53,7 @@ time. The flags are part of the measurement:
 the 8B Granite, 0.60 for the smaller Granite models.
 
 Model revisions are pinned in `MODEL_REVISIONS` in
-`code/afr_v2/unified_summary_verifiers_v1.py`. Every entry carries a commit hash, not a tag.
+`code/verifier_wrappers/unified_summary_verifiers_v1.py`. Every entry carries a commit hash, not a tag.
 
 ### Prefix caching is why re-runs differ
 
@@ -77,12 +77,12 @@ prepends `predict: ` to the model input. An earlier adapter omitted it. The curr
 is `predictprefix` and the code rejects parquet files written under the old one. The v1
 artifacts are retained and labelled rather than deleted.
 
-Both are recorded in `code/paper_v3/DELIVERABLE/06_verifier_code/REGISTRY.md`, along with
+Both are recorded in `code/experiments/06_verifier_registry/REGISTRY.md`, along with
 the upstream repository, the audited state, and the principal boundary of every verifier.
 
 ## Complexity accounting
 
-`code/paper_v3/DELIVERABLE/06_verifier_code/COMPLEXITY.md` gives the per-verifier cost model
+`code/experiments/06_verifier_registry/COMPLEXITY.md` gives the per-verifier cost model
 in full: the parameter counts, the attention and feed-forward widths, and for the
 mixture-of-experts models the activated width rather than the total. The complexity table is
 derived from it, written out per architecture rather than as a single substituted formula.
