@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg)](requirements.txt)
-[![Reproduction](https://img.shields.io/badge/main%20result-reproduces%20bit--for--bit-brightgreen.svg)](docs/reproducibility.md)
+[![Reproduction gate](https://img.shields.io/badge/reproduction%20gate-passing-brightgreen.svg)](docs/reproducibility.md)
 
 Code and results for **EfficientEval**, a router that picks *which* factuality verifier to
 call for a given (source, summary) pair before any verifier has run, using six features
@@ -37,8 +37,11 @@ T_ij = 1 + (Q_ij − max_k Q_ik)                regret supervision
 - **Text-free reproduction bundle.** `code/experiments/00_inputs/` (6.3 MB) carries
   the frozen features and verifier scores with all source and summary text removed. It
   reproduces every published table without redistributing the corpora.
-- **Verified release.** The reference arm in this repository reproduces the frozen main
-  table at `delta = 0.000e+00`. See [Reproduction](#reproduction).
+- **Verified release.** The reference arm in this repository refits Protocol B from the
+  frozen inputs and lands on the published AUROC. It is exact on the machine the frozen run
+  executed on, and within `1.1e-05` on other aarch64 hosts, `1.07e-04` on x86_64, against a
+  seed standard deviation of `0.00474` for the same arm. The gate enforces both levels; see
+  [Reproduction](#reproduction).
 
 ## Results
 
@@ -122,7 +125,7 @@ pip install -r requirements.txt
 ```
 
 `reproduce.sh verify` checks the artifact manifest and re-fits the Protocol B router from
-the frozen inputs. It must print `delta 0.000e+00`. It takes under a minute on CPU and
+the frozen inputs. It must print a delta inside the tolerance in force. It takes under a minute on CPU and
 needs no GPU, no model downloads, and no corpus access.
 
 ## Repository layout
@@ -130,7 +133,7 @@ needs no GPU, no model downloads, and no corpus access.
 ```
 .
 ├── reproduce.sh                single entry point for every stage
-├── tests/test_reproduction.py  manifest check and the bit-for-bit gate
+├── tests/test_reproduction.py  manifest check and the reference-arm gate
 ├── docs/
 │   ├── pipeline.md             the four stages end to end
 │   ├── reproducibility.md      what runs what, and what each stage costs

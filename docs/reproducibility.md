@@ -14,19 +14,52 @@ pip install -r requirements.txt
 ./reproduce.sh verify
 ```
 
-Expected output ends with:
+Expected output ends with a delta inside the tolerance in force:
 
 ```
-reference arm = 0.8225560999095635
+reference arm = 0.8226629359217386
 frozen        = 0.8225560999095635
-delta         = 0.000e+00
-  [gate] release-tree reference arm reproduces the frozen main table, delta 0.000e+00
+delta         = 1.068e-04
+  [gate] release-tree reference arm reproduces the frozen main table, delta 1.068e-04
+         (tol 2.000e-04, portable, cross-platform)
 ```
 
-`delta 0.000e+00` is the release gate, not a formality. Tolerance is zero. The only
-randomness in the routing pipeline is the random forest's bootstrap and node-level feature
-subsampling, both seeded, so any nonzero delta means something in the tree differs from what
-produced the published results.
+### The two levels of the gate, and why there are two
+
+The only randomness in the routing pipeline is the random forest's bootstrap and node-level
+feature subsampling, both seeded. That makes the result deterministic *for a given build* --
+but not across builds: the floating-point path through the forest depends on the CPU, the
+libm, and the scikit-learn wheel. The frozen run executed on aarch64, Python 3.12.3,
+GCC 13.3.0 (`code/experiments/01_main_experiment/07_provenance/RUN_METADATA.txt`). Measured
+against this release, from a clean install of `requirements.txt`:
+
+| Host | Reference arm | Delta |
+|---|---|---|
+| aarch64, the machine the frozen run executed on | `0.8225560999095635` | `0` |
+| aarch64, GitHub `ubuntu-24.04-arm` | `0.822567198760909` | `1.110e-05` |
+| x86_64, GitHub `ubuntu-latest` | `0.8226629359217386` | `1.068e-04` |
+
+For scale, the seed standard deviation the main table reports for this same arm is `0.00474`.
+The largest cross-platform delta is 2.3% of noise the paper already publishes, and it moves no
+reported comparison, interval, or ranking. What it does mean is that a zero tolerance is not
+portable, so the gate has two levels:
+
+- **Portable** (the default, and what CI runs). Tolerance `2e-4`, set above the largest
+  measured cross-platform delta with room to spare. A drifted dependency, a missing module, or
+  a genuine change to the pipeline still fails it -- those move the result by far more than
+  1e-4.
+- **Strict** (`AFR_STRICT_GATE=1 ./reproduce.sh verify`). Tolerance zero, bit-for-bit. This is
+  the standard the release was held to on the recorded environment, and it is the one to use
+  when re-running there.
+
+Both tolerances and the measured values live in one place,
+`code/experiments/09_live_and_controls/code/_contract.py`, so neither this document nor the
+gate can drift from the other without the constant changing.
+
+A note on how this was established: the delta is a property of the environment, not of the
+release tree. The restructured tree and the tree before it return the same value to the last
+digit on the same runner (`0.8226629359217386` on x86_64), which is how the restructure was
+checked.
 
 ## Full stage 3
 
@@ -89,9 +122,9 @@ are recorded in `MODEL_REVISIONS` in `code/verifier_wrappers/unified_summary_ver
 Recorded: dgxspark, NVIDIA GB10, CUDA 13.0, driver 580.142, Python 3.12, vLLM 0.20.0 on the
 V1 engine.
 
-Versions in `requirements.txt` are pinned rather than floated. The bit-for-bit gate is
-sensitive to the scikit-learn build, so a floated dependency would turn a reproduction check
-into a reproduction guess.
+Versions in `requirements.txt` are pinned rather than floated. The gate is sensitive to the
+scikit-learn build -- that is exactly what the two tolerance levels above measure -- so a
+floated dependency would turn a reproduction check into a reproduction guess.
 
 ## Determinism, and where it stops
 
@@ -141,8 +174,9 @@ updated with them. Two consequences are visible in the tree and are intentional:
   file appears exactly once.
 
 The following were changed from the working tree so that the pipeline runs outside the
-author's machine. Nothing else was touched, and the reference gate was rerun after every one
-of them and still reports `delta 0.000e+00`.
+author's machine. Nothing else was touched, and the reference gate was rerun on the recorded
+environment after every one of them and still reports `delta 0.000e+00` under the strict
+tolerance.
 
 1. `AFR_ROOT` now defaults to the repository code root, derived from each file's own location
    (21 call sites). It previously fell back to an absolute path in the author's home

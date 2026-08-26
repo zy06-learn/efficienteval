@@ -7,11 +7,14 @@ Two checks, in increasing strength.
 manifest recorded, so a corrupted or silently edited artifact cannot pass unnoticed.
 
 `test_reference_arm` re-fits the Protocol B router from the frozen inputs and requires the
-resulting AUROC to equal `FROZEN_B_AUROC` bit-for-bit. Tolerance is zero on purpose. The
-only randomness in the pipeline is the bootstrap and node-level feature subsampling of the
-random forest, both seeded, so any drift at all means something in the release tree differs
-from what produced the paper: a different module resolved on the path, a different input
-bundle, a different scikit-learn.
+resulting AUROC to land on `FROZEN_B_AUROC` within the tolerance `_contract` puts in force:
+zero on the machine the frozen run executed on (`AFR_STRICT_GATE=1`), and `PORTABLE_TOL`
+elsewhere, because the forest's floating-point path differs with the CPU and the
+scikit-learn build. The randomness in the pipeline -- the bootstrap and the node-level
+feature subsampling -- is seeded either way, so a delta above the tolerance means something
+in the release tree differs from what produced the paper: a different module resolved on the
+path, a different input bundle, a different scikit-learn. `_contract.PORTABLE_TOL` carries
+the measured cross-platform values and how the level was chosen.
 
 Run standalone (`python tests/test_reproduction.py`) or under pytest.
 """
@@ -119,7 +122,7 @@ def test_reference_arm() -> None:
     print(f"reference arm = {auroc!r}")
     print(f"frozen        = {_contract.FROZEN_B_AUROC!r}")
     print(f"delta         = {abs(auroc - _contract.FROZEN_B_AUROC):.3e}")
-    _contract.check_reference(auroc, tol=0.0, what="release-tree reference arm")
+    _contract.check_reference(auroc, what="release-tree reference arm")
 
 
 def test_bundle_carries_every_column_the_pipeline_needs() -> None:

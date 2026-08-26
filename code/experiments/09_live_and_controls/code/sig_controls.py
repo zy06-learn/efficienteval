@@ -175,7 +175,7 @@ for name, feats in ARMS.items():
 
 ref = float(np.mean([roc_auc_score(y_test, Q["six cheap features"][:, j])
                      for j in range(len(SEEDS))]))
-_contract.check_reference(ref, tol=0.0, what="dataset-arms reference (six cheap features)")
+_contract.check_reference(ref, what="dataset-arms reference (six cheap features)")
 
 results["arms"] = [
     bootstrap(y_test, g_test, Q["six cheap features"], Q[n], 3, f"six cheap vs {n}")
