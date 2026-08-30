@@ -3,7 +3,7 @@
 This is the stage the work is about, and the only one that runs from this repository alone:
 stages 1 and 2 are shipped frozen in [`../00_inputs/`](../00_inputs/) with all source and
 summary text removed. Everything in `../01_main_experiment/` through
-`../05_pool_provenance/` was produced by the twelve files here.
+`../05_pool_provenance/` was produced by the thirteen files here.
 
 Read them in this order. The first three are 800 lines together and everything else assumes
 them; the five experiment scripts can then be read in any order, because none of them imports
@@ -79,13 +79,19 @@ script's output and only surfaces when two tables disagree.
 | Thresholds | `conformal_tau`, `group_conformal_tau` | The group version calibrates on one worst-case unsupported score per source group, so the calibration unit is the independent document rather than a correlated summary row. |
 | Intervals | `paired_bootstrap`, `paired_cluster_bootstrap`, `cluster_bootstrap_auroc` | The cluster versions resample `content_doc_key`. Summaries of one source document are not independent, and resampling rows would treat them as if they were, understating the variance. |
 
-### `tenfold_v1.py` — 131 lines
+### `../../verifier_wrappers/tenfold_v1.py` — 131 lines
 
-The 8/1/1 rotation contract as a standalone module: eight folds fit the heads, one fold fits
-the Platt calibrators **and** selects β (never used to fit trees), one fold is evaluated once
-with everything already frozen. Rotating ten times gives every summary exactly one test-fold
-prediction. Imported by the frozen pipeline under this name; see
-[Two duplicated modules](#two-duplicated-modules).
+Not in this directory, but `core.py` imports it and it is worth reading here. The 8/1/1
+rotation contract as a standalone module: eight folds fit the heads, one fold fits the Platt
+calibrators **and** selects β (never used to fit trees), one fold is evaluated once with
+everything already frozen. Rotating ten times gives every summary exactly one test-fold
+prediction.
+
+One caveat when reading it. `fit_calibrators_on_val` is named and documented for that
+standalone protocol, where the calibrators are fitted on the validation fold. In this pipeline
+it is only ever reached through `core.platt`, and all twenty-two call sites pass the **fit**
+partition, which is what the frozen configuration specifies. The function fits whatever frame
+it is given; only its parameter name is left over.
 
 ---
 
@@ -283,13 +289,22 @@ Every script takes an optional `smoke` flag that shortens the run — two rotati
 ten, three features in the lattice instead of six — for checking that a stage runs end to end
 before committing hours to it.
 
-## Two duplicated modules
+## Where the shared modules actually live
 
-`summary_router_compact16_direct_v1.py` (1907 lines, the larger feature extractor and the
-grouped-fold builder), `pool_gate_sweep_v1.py` (433) and `tenfold_v1.py` (131) exist as
-**byte-identical copies** in both this directory and [`../../verifier_wrappers/`](../../verifier_wrappers/).
-The two trees import them under different module names, and the frozen pipeline resolves one
-name from each tree. Removing either copy would change which module loads, so both stay.
+`core.py` reaches three further modules, and it reaches all of them out of
+[`../../verifier_wrappers/`](../../verifier_wrappers/):
+
+```python
+from verifier_wrappers import tenfold_v1 as tenfold                    # folds, Platt, beta grid
+from verifier_wrappers import pool_gate_sweep_v1 as v1                 # pool_costs
+from verifier_wrappers import summary_router_compact16_direct_v1 as base
+```
+
+Byte-identical copies of all three used to sit in this directory too, kept on the belief that
+the two trees imported them under different module names. They did not. Every import of all
+three, in every file in the repository, is `from verifier_wrappers import …`; nothing ever
+imported the bare name, so the copies were never loaded under any module name. They have been
+removed, and the reference arm is bit-identical without them.
 
 ## What every experiment here has in common
 

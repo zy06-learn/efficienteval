@@ -65,7 +65,7 @@ This is the stage the work is about, and the only stage that runs from this repo
 because stages 1 and 2 are shipped frozen in `code/experiments/00_inputs/` with all source and
 summary text removed.
 
-Twelve files: three shared modules and five experiment scripts, plus four launchers.
+Thirteen files: three shared modules and six experiment scripts, plus four launchers.
 
 ### The three shared modules, in reading order
 

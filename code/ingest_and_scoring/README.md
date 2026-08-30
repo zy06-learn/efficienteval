@@ -9,7 +9,7 @@ verifiers over it and writes the score matrix.
 | `ingest/verifier_cli.py` | the command-line front end for scoring one verifier |
 | `p1_prepare.py` | assembles the scoring worklist |
 | `p1_score.py`, `p1_score_local.sh`, `p1_api.sh` | stage 2: local and served scoring runs |
-| `core_v2.py`, `config_v2.py` | the shared helpers and paths for both stages |
+| `config_v2.py` | the frozen protocol inputs and paths for both stages. Stage 1 and 2 share `../shared/core.py` for folds, calibration, head fitting and metrics. |
 
 **Neither stage runs from this repository alone.** Stage 1 needs the four corpora, which are
 not redistributed here; stage 2 needs GPU weights and a vLLM server. Their output is shipped

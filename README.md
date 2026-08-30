@@ -295,15 +295,16 @@ predictions that produced it and back up to the code revision that ran.
 `03_provenance/` and `07_provenance/` record absolute paths on the machine the experiments
 ran on (`/home/zeyu/projects/adaptive-faithfulness-router-v2/…`), under that tree's own
 directory names. They are a historical record of what was executed and are left exactly as
-written, so they do not match the layout above. And three modules
-(`summary_router_compact16_direct_v1.py`, `pool_gate_sweep_v1.py`, `tenfold_v1.py`) exist as
-byte-identical copies in both `verifier_wrappers/` and `experiments/08_routing_code/`, because the
-two trees import them under different module names; removing either copy would change which
-module the frozen pipeline loads.
+written, so they do not match the layout above. Every code file now appears exactly once:
+three modules (`summary_router_compact16_direct_v1.py`, `pool_gate_sweep_v1.py`,
+`tenfold_v1.py`) used to sit as byte-identical copies in `experiments/08_routing_code/` as well,
+on the belief that the two trees imported them under different names. They did not. Every import
+of all three, in every file, is `from verifier_wrappers import …`; the copies were never loaded
+under any module name, and they have been removed.
 
 ## Every file, and what it does
 
-63 source files, 22.9k lines. Grouped by the stage that runs them. The two not in a table
+59 source files, 20.0k lines. Grouped by the stage that runs them. The two not in a table
 below are `reproduce.sh` at the root and `figures/make_figures.py`, which draws the paper's
 three figures from the published CSVs. Anything else in the tree is data, a manifest, or a
 per-directory `README.md`.
@@ -317,7 +318,6 @@ per-directory `README.md`.
 | `ingest/build_splits_v2.py` | 781 | The only program allowed to read official-test gold. Unifies the four corpora into summary-level binary classification, groups by `content_doc_key` (normalised source content), applies the pre-declared content-hash removal of five RAGTruth rows, and emits `TRAIN` / `TEST` / `TEST_SCORING` / `P1_SCORING_COHORT`. `TEST_SCORING` is a fail-closed projection with every gold-derived field stripped — stage 2 reads that one and cannot reach a label. |
 | `ingest/verifier_cli.py` | 119 | Command-line entry for scoring one verifier over one cohort. |
 | `config_v2.py` | 128 | Frozen protocol inputs for stage 1. Selection outputs stay `None` until stage 3, so stage-1 and stage-2 code fails closed if it tries to obtain a test label through the gold-free asset. |
-| `core_v2.py` | 503 | The stage-1/2 sibling of `shared/core.py`: folds, calibration, head fitting, metrics. |
 | `p1_prepare.py` | 65 | Builds the scoring cohort from the sealed test set, and only for rows missing at least one score. FRANK test already carries all fifteen from the frozen run that produced TRAIN; rescoring it would swap frozen numbers for numbers from a different run. |
 | `p1_score.py` | 120 | Scores the test-side cohort, deliberately bypassing the stock entry point — that one validates the presence of `label_supported`, which would mean putting a label column next to test rows during scoring. |
 | `p1_score_local.sh` | 32 | Stage 2a: the nine locally-hosted verifiers. Each writes `status/<name>.done`, so an interrupted run resumes instead of rescoring. |

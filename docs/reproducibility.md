@@ -167,11 +167,12 @@ updated with them. Two consequences are visible in the tree and are intentional:
 - The provenance files under `03_provenance/` and `07_provenance/` still name the original
   paths, because they record what was executed on the author's machine. Rewriting them would
   make them claim a layout that never existed at run time.
-- Three modules (`summary_router_compact16_direct_v1.py`, `pool_gate_sweep_v1.py`,
-  `tenfold_v1.py`) appear as byte-identical copies in both `verifier_wrappers/` and
-  `experiments/08_routing_code/`. The two trees import them under different module names, so
-  deleting either copy would change which module the frozen pipeline loads. Every other code
-  file appears exactly once.
+- Every code file appears exactly once. Three modules
+  (`summary_router_compact16_direct_v1.py`, `pool_gate_sweep_v1.py`, `tenfold_v1.py`) used to
+  appear twice, in `verifier_wrappers/` and again in `experiments/08_routing_code/`. The second
+  copy was kept on the belief that the two trees imported them under different module names.
+  They did not: every import of all three resolves `from verifier_wrappers import …`, the
+  copies were never loaded, and removing them leaves the reference arm bit-identical.
 
 The following were changed from the working tree so that the pipeline runs outside the
 author's machine. Nothing else was touched, and the reference gate was rerun on the recorded
