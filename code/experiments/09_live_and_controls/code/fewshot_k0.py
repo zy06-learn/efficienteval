@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""The k=0 point the main sweep skipped: pure leave-one-dataset-out."""
+"""The k=0 point the main sweep skipped: pure leave-one-dataset-out.
+
+SUPERSEDED with fewshot.py by fewshot_frac.py, whose fraction grid starts at 0.00 and so
+carries this point already. Kept because FEWSHOT_CURVE.csv came from the pair.
+"""
 import os, sys, json
 from pathlib import Path
 import numpy as np, pandas as pd

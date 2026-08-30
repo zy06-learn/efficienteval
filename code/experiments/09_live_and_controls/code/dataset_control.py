@@ -6,7 +6,11 @@
     what the router could infer). Reported honestly: the features are document statistics, so a
     high number here is expected and is not leakage.
 (c) The control that matters: give the router the dataset identity explicitly as extra one-hot
-    features and re-run the whole pipeline. If AUROC does not improve, explicit dataset identity
+    features and re-run the whole pipeline. SUPERSEDED by ds_only.py, which runs this as one
+    of four arms and is the version the paper reports. The two build the corpus one-hot in a
+    different column order, and the routing heads are order-sensitive, so this file's arm (c)
+    and ds_only.py's `cheap + dataset` arm differ by about 0.0016. Parts (a) and (b) below
+    are unique to this file and are still current. If AUROC does not improve, explicit dataset identity
     buys nothing beyond what x already carries.
 """
 import os, sys, json

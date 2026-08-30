@@ -1,3 +1,9 @@
+"""Per-verifier diff of a re-run against the frozen score matrix.
+
+DIAGNOSTIC. Writes no published artifact. Prints, for each verifier, max |delta|,
+whether the scores are exactly equal, their correlation, and old versus new latency.
+Used with rerun_score.py and diag_live.py to trace the live-versus-matrix residual.
+"""
 import os
 import pandas as pd, numpy as np, sys, glob
 # AFR_ROOT names the repository code root. The default is derived from this file's own

@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """End-to-end LIVE run of the deployed pipeline: no pre-computed test matrix.
 
+SUPERSEDED by live_main.py, which runs the same check per (row, seed) over all ten seeds and
+is the source of LIVE_MAIN_B.json, the number the paper reports. This script runs the single
+end-to-end pass and writes LIVE_PIPELINE.json; both are kept so each published artifact has
+the code that produced it.
+
 Training uses the frozen TRAIN scores (that is what training is for). At test time the script
 computes the routing decision from cheap features alone and then calls EXACTLY ONE verifier per
 instance, live. The other two verifiers are never invoked for that row, and their columns in the

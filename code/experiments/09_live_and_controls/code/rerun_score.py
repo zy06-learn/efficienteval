@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Independent re-run of the three pool verifiers on a sample of the frozen scoring cohort.
 
+DIAGNOSTIC. Writes no published artifact. With cmp.py and diag_live.py this is what traced
+the live-versus-matrix residual to vLLM prefix caching rather than to routing, which is the
+conclusion the paper reports; the scripts are kept so that conclusion can be re-derived.
+
 Writes to a fresh output_dir so the harness cache cannot serve stale rows: this is a genuine
 re-execution, not a resume. Nothing under ingest_and_scoring/results is touched.
 """

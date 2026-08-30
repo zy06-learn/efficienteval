@@ -1,3 +1,9 @@
+"""Row-level diff of the live-selected scores against the stored matrix.
+
+DIAGNOSTIC. Writes no published artifact. For each action the router actually chose,
+reports max |delta| against the stored score and the first rows that disagree. This is
+where the vLLM prefix-caching residual is visible per row.
+"""
 import os
 import numpy as np, pandas as pd, sys
 from pathlib import Path

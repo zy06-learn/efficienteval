@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Few-shot adaptation curve, replacing leave-one-dataset-out.
 
+SUPERSEDED by fewshot_frac.py, which sweeps fractions of each corpus's own pool rather than
+absolute counts. The paper plots FEWSHOT_FRACTION_CURVE.csv. This script and its output
+FEWSHOT_CURVE.csv are kept because the archived absolute-count curve came from them, and
+fewshot_frac.py mirrors this file's subset construction exactly, including the row order.
+
 For each held-out corpus c the router is trained on the other three corpora in full plus k
 labelled rows drawn from c, and evaluated on c's own test split. k = 0 is the LODO case; the
 curve shows how many in-domain examples are needed before the held-out corpus stops being
