@@ -367,6 +367,8 @@ under the module names the frozen pipeline resolves.
 ### Stage 3 — routing
 
 `code/experiments/08_routing_code/`. The only stage that runs from this repository alone.
+The table below is the index; **[that directory's README](code/experiments/08_routing_code/README.md) is the walkthrough** — what the code in each
+file actually does, stage by stage, with the gates each one enforces.
 
 | File | Lines | What it produces |
 |---|---:|---|
@@ -407,7 +409,10 @@ under the module names the frozen pipeline resolves.
 ## Reproduction
 
 Four stages, in order. Stage 3 alone reproduces every published table, because
-stages 1 and 2 are shipped frozen in `00_inputs/`.
+stages 1 and 2 are shipped frozen in `00_inputs/`. Read
+[`docs/pipeline.md`](docs/pipeline.md) for the four stages end to end, then
+[`code/experiments/08_routing_code/README.md`](code/experiments/08_routing_code/README.md)
+for what each stage-3 file does.
 
 | Stage | What it does | Needs |
 |---|---|---|

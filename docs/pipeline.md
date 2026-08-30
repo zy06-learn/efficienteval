@@ -57,26 +57,52 @@ Needs a GPU, the model weights, and vLLM. See [`verifiers.md`](verifiers.md).
 
 ## Stage 3: routing
 
-`code/experiments/08_routing_code/`
+`code/experiments/08_routing_code/` — **[read that directory's README for the file-by-file
+walkthrough](../code/experiments/08_routing_code/README.md).** This section is the summary; that
+one explains what the code in each file does.
 
-This is the stage the work is about, and the only stage that runs from this repository
-alone, because stages 1 and 2 are shipped frozen in
-`code/experiments/00_inputs/` with all source and summary text removed.
+This is the stage the work is about, and the only stage that runs from this repository alone,
+because stages 1 and 2 are shipped frozen in `code/experiments/00_inputs/` with all source and
+summary text removed.
 
-| Script | Produces |
-|---|---|
-| `part1c_main_full_v1.py` | the main tables, both protocols, latency, threshold and risk, β evidence, hyperparameter selection, gates |
-| `part2_ablation_v1.py` | core ablations: feature subsets, target, learner, pool |
-| `part3_extended_v1.py` | extended ablations and the feature lattice |
-| `part3_percorpus_selected_v1.py` | per-corpus tables |
-| `part4_cascade_v1.py` | cascade variants and alternative learners |
-| `pool_rescreen_v1.py` | pool provenance: re-screening the k=2 and k=3 subsets |
-| `v3core.py` | the shared layer: data boundary, β selection, routing, one implementation used by every stage above |
+Twelve files: three shared modules and five experiment scripts, plus four launchers.
 
-`v3core.py` is worth reading first. It states the data boundary the whole study rests on:
-every choice is made on TRAIN, Protocol A is a cross-validated estimate over TRAIN and TEST
-pooled, and Protocol B reads TEST once. The docstring also records what the previous round
-got wrong, which is why the boundary is enforced in code rather than by convention.
+### The three shared modules, in reading order
+
+`config.py` locks the configuration — pool, features, target, learner, hyperparameters, the β
+grid and its tolerance, the seeds — in one place. Its docstring records why: in an earlier round
+four scripts called `fit_heads()` without `hp=` and silently fell back to a different forest
+than the paper claimed.
+
+`v3core.py` states and enforces the data boundary. `load(with_test_labels)` is the gate on the
+confirmatory read; `stratified_group_split` and `folds_stratified` are group-disjoint on
+`content_doc_key` and stratified by corpus and majority label; `rotations` is the 8/1/1
+contract; `route` and `choose_beta` are the routing implementation every stage shares.
+
+`core.py` is one implementation of every other step: training-only cost estimation, both
+calibration stages, every supervision target the ablation compares, head fitting, the metrics,
+the threshold rules, and the three bootstraps. Two details matter downstream —
+`make_classifier` raises on an unknown learner name rather than substituting a forest, and
+`make_frame(..., charge_features)` decides who pays for the feature extractors, which is what
+keeps the latency comparison honest.
+
+### The five experiment scripts
+
+| Script | Stages | Produces |
+|---|---|---|
+| `part1c_main_full_v1.py` | `preflight`, `hpselect`, `protoB`, `protoA`, `report` | The main tables. Refuses to run on a drifted contract, selects hyperparameters on TRAIN only by minimum validation head loss, runs both protocols over ten seeds, charges end-to-end latency, applies four threshold rules, stores row-level probabilities. |
+| `part2_ablation_v1.py` | `protoB`, `protoA`, `report` | 25 arms, each changing exactly one thing: β, either calibration stage, the routing signal, a verifier, a feature, the target. |
+| `part3_extended_v1.py` | ten, in two phases | Per-corpus training, the 64-subset feature lattice with exact Shapley, data-size and forest-size convergence curves, and six pre-declared arms with row-level output. |
+| `part3_percorpus_selected_v1.py` | one | The deployable per-corpus competitor: pick one fixed verifier by *validation* AUROC rather than by the oracle maximum over test AUROC. |
+| `part4_cascade_v1.py` | `protoB`, `protoA`, `report` | 13 competitor policies — three cascades, three second-call rules, seven alternative learners — under a 1.5x latency ceiling. |
+| `pool_rescreen_v1.py` | one | Pool provenance: re-screens all three-verifier pools on TRAIN alone, as an audit that does not feed back. |
+
+### What they all share
+
+Every script inherits the frozen contract and asserts it field by field before fitting anything;
+every script carries part1c's `OURS` as an arm and must reproduce it before its own numbers are
+believed; every arm differs from the reference in exactly one respect; and every run writes code
+hashes, git state, the launch command and a completion marker next to its tables.
 
 ## Stage 4: live re-run and controls
 
