@@ -2,11 +2,15 @@
 # Part 3 extended ablation. Usage: run_part3_v1.sh <run_dir> <phase1|phase2> [smoke]
 set -uo pipefail
 
+# AFR_ROOT names the repository code root. The default is derived from this script's own
+# location rather than hard-coded, so a fresh clone runs without any environment set up.
+AFR_ROOT="${AFR_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
 RUN_DIR="${1:?usage: run_part3_v1.sh <run_dir> <phase> [smoke]}"
 PHASE="${2:?phase1 or phase2}"
 SMOKE="${3:-0}"
 PY=${AFR_PYTHON:-python3}
-SCRIPT=${AFR_ROOT:-/home/zeyu/projects/adaptive-faithfulness-router-v2}/experiments/08_routing_code/part3_extended_v1.py
+SCRIPT=${AFR_ROOT}/experiments/08_routing_code/part3_extended_v1.py
 
 case "$PHASE" in
   phase1) STAGES="prep percorpus latticeB convergeB declaredB reportB" ;;

@@ -41,7 +41,7 @@ wanted = sys.argv[1].split(",") if len(sys.argv) > 1 else []
 api_base = sys.argv[2] if len(sys.argv) > 2 else "http://127.0.0.1:8001/v1"
 
 import glob
-_ws = sorted(glob.glob(os.environ.get("HF_HUB", "/home/zeyu/.cache/huggingface/hub")
+_ws = sorted(glob.glob(os.environ.get("HF_HUB", os.path.expanduser("~/.cache/huggingface/hub"))
                        + "/models--nightdessert--WeCheck/snapshots/*"))
 MODEL_PATHS = {"wecheck": Path(_ws[-1])} if _ws else {}
 # vLLM-served verifiers need the tokenizer that matches the served weights; the driver

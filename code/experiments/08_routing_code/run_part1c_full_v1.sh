@@ -3,10 +3,14 @@
 # Usage:  run_part1c_full_v1.sh <run_dir> [smoke]
 set -uo pipefail
 
+# AFR_ROOT names the repository code root. The default is derived from this script's own
+# location rather than hard-coded, so a fresh clone runs without any environment set up.
+AFR_ROOT="${AFR_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
 RUN_DIR="${1:?usage: run_part1c_full_v1.sh <run_dir> [smoke]}"
 SMOKE="${2:-0}"
 PY=${AFR_PYTHON:-python3}
-SRC=${AFR_ROOT:-/home/zeyu/projects/adaptive-faithfulness-router-v2}/experiments
+SRC=${AFR_ROOT}/experiments
 SCRIPT="$SRC/08_routing_code/part1c_main_full_v1.py"
 
 mkdir -p "$RUN_DIR/logs" "$RUN_DIR/results" "$RUN_DIR/04_provenance"

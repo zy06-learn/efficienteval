@@ -2,10 +2,14 @@
 # Part 2 ablation, both protocols. Usage: run_part2_ablation_v1.sh <run_dir> [smoke]
 set -uo pipefail
 
+# AFR_ROOT names the repository code root. The default is derived from this script's own
+# location rather than hard-coded, so a fresh clone runs without any environment set up.
+AFR_ROOT="${AFR_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
 RUN_DIR="${1:?usage: run_part2_ablation_v1.sh <run_dir> [smoke]}"
 SMOKE="${2:-0}"
 PY=${AFR_PYTHON:-python3}
-SCRIPT=${AFR_ROOT:-/home/zeyu/projects/adaptive-faithfulness-router-v2}/experiments/08_routing_code/part2_ablation_v1.py
+SCRIPT=${AFR_ROOT}/experiments/08_routing_code/part2_ablation_v1.py
 
 mkdir -p "$RUN_DIR/logs" "$RUN_DIR/results" "$RUN_DIR/04_provenance"
 export V3_RUN_DIR="$RUN_DIR" V3_SMOKE="$SMOKE" PYTHONUNBUFFERED=1

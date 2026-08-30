@@ -4,7 +4,11 @@
 # reference contract. Usage: chain_part4.sh
 set -uo pipefail
 
-BASE=${AFR_ROOT:-/home/zeyu/projects/adaptive-faithfulness-router-v2}/experiments
+# AFR_ROOT names the repository code root. The default is derived from this script's own
+# location rather than hard-coded, so a fresh clone runs without any environment set up.
+AFR_ROOT="${AFR_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
+BASE=${AFR_ROOT}/experiments
 P3=$BASE/runs/part3_extended_v1
 P4=$BASE/runs/part4_cascade_v1
 PY=${AFR_PYTHON:-python3}

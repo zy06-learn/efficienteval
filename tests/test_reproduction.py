@@ -179,23 +179,45 @@ def test_bundle_carries_every_column_the_pipeline_needs() -> None:
     print("bundle satisfies the stage-3 preflight contract")
 
 
+def _launcher_target(launcher: Path, *, afr_root: str | None) -> str:
+    """The script path a launcher resolves, with AFR_ROOT set or deliberately absent.
+
+    The prologue is replayed rather than the launcher run, because running it would start the
+    experiment. `${BASH_SOURCE[0]}` is substituted with the launcher's real path so that the
+    self-derived default resolves exactly as it would in place.
+    """
+    prologue = "; ".join(
+        line for line in launcher.read_text().splitlines()
+        if line.startswith(("AFR_ROOT=", "SRC=", "BASE=", "SCRIPT="))
+    ).replace("${BASH_SOURCE[0]}", str(launcher))
+    preamble = f'AFR_ROOT="{afr_root}"; ' if afr_root is not None else "unset AFR_ROOT || true; "
+    probe = "set -u; " + preamble + prologue + '; echo "$SCRIPT"'
+    return subprocess.run(["bash", "-c", probe], capture_output=True,
+                          text=True, check=True).stdout.strip()
+
+
 def test_launchers_resolve() -> None:
-    """Each stage-3 launcher must point at a script that exists in this checkout."""
+    """Each stage-3 launcher must point at a script that exists, with or without AFR_ROOT.
+
+    Both directions matter. reproduce.sh exports AFR_ROOT, so the first covers the documented
+    entry point; but each launcher also carries its own usage line and is meant to be runnable
+    directly, and all four once defaulted to an absolute path from the machine the experiments
+    ran on, which exists nowhere else.
+    """
     _environment()
     scripts = sorted((EXPERIMENTS / "08_routing_code").glob("*.sh"))
     assert scripts, "no launchers found"
     for launcher in scripts:
-        probe = (
-            f'set -u; AFR_ROOT="{ROOT}"; '
-            + "; ".join(
-                line for line in launcher.read_text().splitlines()
-                if line.startswith(("SRC=", "BASE=", "SCRIPT="))
-            )
-            + "; echo \"$SCRIPT\""
-        )
-        target = subprocess.run(["bash", "-c", probe], capture_output=True,
-                                text=True, check=True).stdout.strip()
-        assert Path(target).is_file(), f"{launcher.name} points at a missing {target}"
+        with_root = _launcher_target(launcher, afr_root=str(ROOT))
+        assert Path(with_root).is_file(), f"{launcher.name} points at a missing {with_root}"
+
+        standalone = _launcher_target(launcher, afr_root=None)
+        assert Path(standalone).is_file(), (
+            f"{launcher.name} run without AFR_ROOT resolves {standalone}, which does not exist; "
+            f"its default must derive from the script's own location")
+        assert Path(standalone).resolve() == Path(with_root).resolve(), (
+            f"{launcher.name} resolves differently with and without AFR_ROOT: "
+            f"{with_root} vs {standalone}")
 
 
 def test_reproduce_sh_matches_the_launchers() -> None:
