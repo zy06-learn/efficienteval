@@ -29,8 +29,8 @@ _AFR_DEFAULT = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../.."))
 ROOT = Path(os.environ.get("AFR_ROOT", _AFR_DEFAULT))
 for p in (ROOT, ROOT / "ingest_and_scoring", ROOT / "experiments",
-          ROOT / "experiments" / "experiments" / "08_routing_code",
-          ROOT / "experiments" / "experiments" / "09_live_and_controls" / "code"):
+          ROOT / "experiments" / "08_routing_code",
+          ROOT / "experiments" / "09_live_and_controls" / "code"):
     sys.path.insert(0, str(p))
 OUT = Path(os.environ.get("FS_OUT", ROOT / "experiments" / "runs" / "fewshot_frac_v1"))
 OUT.mkdir(parents=True, exist_ok=True)

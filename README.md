@@ -141,7 +141,7 @@ needs no GPU, no model downloads, and no corpus access.
 ├── figures/                    the paper's three figures and the script that draws them
 └── code/                       AFR_ROOT
     ├── ingest_and_scoring/     stage 1 (corpus ingest, TRAIN/TEST split) and the stage-2 driver
-    ├── verifiers/              the fifteen verifier implementations stage 2 calls
+    ├── verifier_wrappers/      the fifteen verifier implementations stage 2 calls
     ├── shared/                 two modules (core.py, config.py) every later stage imports
     ├── results/                the two sha256-pinned matrices stages 1 and 2 produced
     └── experiments/            stages 3 and 4: the code and every published result

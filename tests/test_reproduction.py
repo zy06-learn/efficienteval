@@ -20,6 +20,7 @@ Run standalone (`python tests/test_reproduction.py`) or under pytest.
 """
 from __future__ import annotations
 
+import ast
 import hashlib
 import os
 import subprocess
@@ -231,6 +232,51 @@ def test_reproduce_sh_matches_the_launchers() -> None:
         assert "SIG_OUT=" in reproduce, "sig_controls.py needs SIG_OUT and reproduce.sh omits it"
 
     print("reproduce.sh honours the launcher contracts")
+
+
+def _sys_path_dir(node: ast.expr) -> Path:
+    """One element of a script's sys.path tuple, as a path under this checkout."""
+    if isinstance(node, ast.Name) and node.id == "ROOT":
+        return ROOT
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        return _sys_path_dir(node.left) / ast.literal_eval(node.right)
+    raise AssertionError(f"unexpected path expression: {ast.dump(node)}")
+
+
+def _sys_path_dirs(script: Path) -> list[Path]:
+    """The directories a control script inserts on sys.path.
+
+    Read out of the source rather than by importing, because these scripts do their work at
+    module level: importing one runs the experiment.
+    """
+    for node in ast.walk(ast.parse(script.read_text())):
+        if (isinstance(node, ast.For) and isinstance(node.target, ast.Name)
+                and node.target.id == "p" and isinstance(node.iter, ast.Tuple)):
+            return [_sys_path_dir(el) for el in node.iter.elts]
+    raise AssertionError(f"{script.name} has no `for p in (...)` sys.path block")
+
+
+def test_control_scripts_resolve_their_imports() -> None:
+    """Every directory a stage-4 control script inserts must exist and carry the modules.
+
+    test_launchers_resolve covers the stage-3 shell launchers only, so nothing checked these.
+    Two of them shipped with a doubled `experiments/experiments` segment: `import core` raised
+    ModuleNotFoundError, and `reproduce.sh controls` failed on the two stages that produce the
+    fraction curve and the controls' significance intervals.
+    """
+    checked = 0
+    for script in sorted(CONTROLS.glob("*.py")):
+        if "for p in (" not in script.read_text():
+            continue
+        dirs = _sys_path_dirs(script)
+        missing = [str(d) for d in dirs if not d.is_dir()]
+        assert not missing, f"{script.name} inserts missing {missing}"
+        for module in ("core.py", "v3core.py"):
+            assert any((d / module).is_file() for d in dirs), (
+                f"{script.name} cannot resolve {module} from the paths it inserts")
+        checked += 1
+    assert checked >= 5, f"only {checked} control scripts carry a sys.path block"
+    print(f"{checked} control scripts resolve every path they insert")
 
 
 if __name__ == "__main__":

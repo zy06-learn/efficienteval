@@ -1,8 +1,8 @@
-import os
 #!/usr/bin/env python3
 """Paired cluster bootstrap for the main tables, with Bonferroni correction over the 15
 fixed-verifier comparisons. Resamples content_doc_key, not rows, because summaries of one
 source document are not independent."""
+import os
 import numpy as np, pandas as pd, json
 from pathlib import Path
 from sklearn.metrics import roc_auc_score
