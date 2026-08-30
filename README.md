@@ -43,6 +43,119 @@ T_ij = 1 + (Q_ij − max_k Q_ik)                regret supervision
   seed standard deviation of `0.00474` for the same arm. The gate enforces both levels; see
   [Reproduction](#reproduction).
 
+## How the router works
+
+One pass, in the order the code runs it. Every step names the module that implements it, so
+this section doubles as a reading order.
+
+**1. Read the pair.** A test instance is a source document and one candidate summary. Nothing
+about the corpus it came from is part of the input; `dataset_key` exists in the frames for
+bookkeeping and grouping and is never a feature. The control in
+[`ds_only.py`](code/experiments/09_live_and_controls/code/ds_only.py) is what establishes that
+this is a real constraint rather than an assertion.
+
+**2. Compute six numbers from the text.** No verifier has run. Two extractors produce them,
+which is why the reported latency charges both:
+
+| Feature | What it measures | Computed in |
+|---|---|---|
+| `structured_source_line_ratio` | fraction of source lines that are tables, lists, or short all-caps/colon headers — how much of the document is not prose | `summary_router_compact16_direct_v1.py::_structured_line_ratio` |
+| `entity_value_colocation` | of the (entity, number) pairs in the summary, the fraction whose entity and number both appear in that sentence's top-3 retrieved source sentences. `1.0` when the summary states no such pair | `…direct_v1.py::_row_features` |
+| `conflicting_value_rate` | of the same pairs, the fraction where the evidence sentences carry the entity but a *different* number. `0.0` when there are no pairs | `…direct_v1.py::_row_features` |
+| `bm25_mean3` | mean BM25 of each summary sentence against its three best-matching source sentences — how well the summary is grounded lexically | `router_feature_learnability.py::_retrieval_features` |
+| `entity_coverage` | fraction of the summary's entities that occur in the source's entity set | `router_feature_learnability.py` |
+| `year_count` | number of years stated in the summary | `router_feature_learnability.py` |
+
+They are document statistics, so they carry corpus signal — a classifier reaches 89.6% corpus
+accuracy from them alone. That is expected and is not a leak; see
+[Controls](#controls) for the experiment that separates the two.
+
+**3. Predict each verifier's regret.** One random-forest regression head per action, fitted only
+on rows where that action was available:
+
+```
+T_ij = 1 + (Q_ij − max_k Q_ik)          in [0, 1], 1 iff j is the best action for i
+```
+
+`Q_ij` is the stage-1 calibrated probability verifier `j` assigns to the true class on instance
+`i`. Regret rather than a binary is-best label because the binary throws away *how much* worse
+a runner-up is, and on instances where two verifiers are near-tied it makes the head learn a
+coin flip. `core.py::targets` implements every target the ablation compares; `config.py` records
+why `regret` is the locked one.
+
+**4. Discount by cost, take the argmax.**
+
+```
+U_ij = T̂_ij · exp(−β · c_j / c_max)
+j*_i = argmax_j U_ij                     unavailable actions get −∞
+```
+
+`c_j` is verifier `j`'s mean cost estimated **from training rows only**
+(`core.py::fold_costs`), never from the evaluation side. β is not a Lagrange multiplier solved
+for a budget — it is an operating parameter chosen by a validation rule: *the cheapest value on
+a fixed ten-point grid whose validation AUROC is within 0.005 of the best*
+(`core.py::choose_beta`). The mode is 0.1 in both protocols. That rule has a failure mode the
+paper reports: when the quality gap between actions lands near the 0.005 tolerance the rule is
+bistable between two β values, and on one few-shot arm two seeds in ten flipped to β = 0.2,
+whose discount excludes the only verifier that works on that corpus.
+
+**5. Call exactly one verifier.** Not a cascade, not an ensemble, no second opinion. The other
+two are never invoked for that row. This is a property of the policy class, not a conclusion of
+the derivation.
+
+**6. Put the answer on a common scale.** Two calibration stages, both fitted without touching
+the evaluation rows:
+
+- **Stage 1, per-verifier Platt** (`core.py::platt`), fitted on the fit partition. Three
+  verifiers trained separately do not share a probability scale, and the regret target above is
+  only meaningful once they do.
+- **Stage 2, one isotonic layer** (`core.py::isotonic`), fitted on the validation partition and
+  applied identically to the router *and to all fifteen fixed baselines*. Needed because the
+  router emits whichever member it selected, so its output is a mixture of three scales.
+
+Isotonic is monotone within a fold, but its PAVA solution is only *weakly* monotone: plateaus
+collapse distinct probabilities to one value, creating ties, so pooled AUROC does move. Measured:
+`+0.00248` on Protocol A and `−0.00353` on Protocol B. Every number in this repository is
+post-stage-2.
+
+**7. Decide.** For the metrics that need a hard call, the threshold is the one that maximises
+MCC on the system's *own* validation partition — never 0.5, and never retuned on test. Three
+alternatives (fixed 0.5, Youden, split-conformal) are reported alongside.
+
+### The data boundary
+
+Stated in [`v3core.py`](code/experiments/08_routing_code/v3core.py) and enforced there rather
+than by convention, because the previous round of this project drifted exactly here:
+
+```
+SELECT      = TRAIN only, 5,276 rows / 890 document groups.
+              Features, target, learner, hyperparameters, pool, the beta rule and both
+              calibration stages are chosen on this and nothing else.
+Protocol A  = pooled 8/1/1 rotation over TRAIN + TEST, 8,512 rows / 1,535 groups.
+              A cross-validated estimate; every row gets exactly one out-of-fold prediction.
+Protocol B  = fit on TRAIN, read TEST once. The confirmatory result.
+```
+
+The pool is the one documented exception, disclosed in [Highlights](#highlights).
+
+### What keeps it honest
+
+Three mechanisms, none of them optional:
+
+- **One implementation of each step.** `core.py` is the only place a head is fitted, β is
+  chosen, or a metric is computed. Its docstring records why: in an earlier round four scripts
+  called `fit_heads()` without `hp=`, silently fell back to a different forest than the paper
+  claimed, and two of them also used a β rule already shown to be broken. That class of bug is
+  invisible in any one script's output and only surfaces when two tables disagree.
+- **Inherit and assert.** Every experiment reads the frozen contract and compares it field by
+  field before fitting anything (`part1c_main_full_v1.py::preflight`,
+  `_contract.py::load`). A drifted pool or feature list raises; it does not warn.
+- **Reproduce the reference arm first.** Any arm that is nominally the main system must land on
+  `FROZEN_B_AUROC = 0.8225560999095635` before its own results are believed
+  (`_contract.py::check_reference`). The ablation lattices contain the reference twice on
+  purpose, once as the full feature subset and once as the full pool subset, and both must
+  reproduce it.
+
 ## Results
 
 ### Protocol A: grouped ten-fold rotation, 8,512 rows / 1,535 groups, ten seeds
@@ -187,6 +300,109 @@ written, so they do not match the layout above. And three modules
 byte-identical copies in both `verifier_wrappers/` and `experiments/08_routing_code/`, because the
 two trees import them under different module names; removing either copy would change which
 module the frozen pipeline loads.
+
+## Every file, and what it does
+
+63 source files, 22.9k lines. Grouped by the stage that runs them. The two not in a table
+below are `reproduce.sh` at the root and `figures/make_figures.py`, which draws the paper's
+three figures from the published CSVs. Anything else in the tree is data, a manifest, or a
+per-directory `README.md`.
+
+### Stage 1 — ingest: four corpora to one task
+
+`code/ingest_and_scoring/`
+
+| File | Lines | What it does |
+|---|---:|---|
+| `ingest/build_splits_v2.py` | 781 | The only program allowed to read official-test gold. Unifies the four corpora into summary-level binary classification, groups by `content_doc_key` (normalised source content), applies the pre-declared content-hash removal of five RAGTruth rows, and emits `TRAIN` / `TEST` / `TEST_SCORING` / `P1_SCORING_COHORT`. `TEST_SCORING` is a fail-closed projection with every gold-derived field stripped — stage 2 reads that one and cannot reach a label. |
+| `ingest/verifier_cli.py` | 119 | Command-line entry for scoring one verifier over one cohort. |
+| `config_v2.py` | 128 | Frozen protocol inputs for stage 1. Selection outputs stay `None` until stage 3, so stage-1 and stage-2 code fails closed if it tries to obtain a test label through the gold-free asset. |
+| `core_v2.py` | 503 | The stage-1/2 sibling of `shared/core.py`: folds, calibration, head fitting, metrics. |
+| `p1_prepare.py` | 65 | Builds the scoring cohort from the sealed test set, and only for rows missing at least one score. FRANK test already carries all fifteen from the frozen run that produced TRAIN; rescoring it would swap frozen numbers for numbers from a different run. |
+| `p1_score.py` | 120 | Scores the test-side cohort, deliberately bypassing the stock entry point — that one validates the presence of `label_supported`, which would mean putting a label column next to test rows during scoring. |
+| `p1_score_local.sh` | 32 | Stage 2a: the nine locally-hosted verifiers. Each writes `status/<name>.done`, so an interrupted run resumes instead of rescoring. |
+| `p1_api.sh` | 94 | Stage 2b: the six vLLM-served verifiers, one model loaded at a time (`qwen30_fast` and `qwen30_judge` share weights and are scored back to back). The serving flags are part of the measurement: `--max-num-seqs 1` makes the reported latency strict batch-1, `--max-model-len 16384` fixes the context budget, and `--enable-prefix-caching` is the source of the non-determinism the live control traces. |
+
+### Stage 2 — the fifteen verifiers
+
+`code/verifier_wrappers/`. Each verifier runs once per row under a declared protocol string
+recorded in `PROTOCOLS`; the string fixes window size, overlap, aggregation, and whether the
+official prompt prefix applies. Two verifiers with different window caps are not measured under
+the same context budget, and the protocol says so.
+
+| File | Lines | What it does |
+|---|---:|---|
+| `unified_summary_verifiers_v1.py` | 1342 | The scoring harness: `PROTOCOLS`, input preparation, source windowing that preserves the summary, the scorer factory, per-frame scoring, out-of-fold threshold selection, the canary audit, and result finalisation. |
+| `unified_scoring.py` | 1682 | Gold-free, resumable scoring utilities: validates that no forbidden gold column reached the input, hashes and verifies the file inventory, handles reuse of frozen RAGTruth scores, and records GPU metadata and peak memory alongside every score. |
+| `summary_router_compact16_direct_v1.py` | 1907 | The larger of the two feature extractors: tokenisation, sentence splitting, entity and numeric-value spans, a local BM25/IDF index, and the seventeen compact features — three of which are in the frozen six. Also builds and validates the grouped folds. |
+| `router_feature_learnability.py` | 1028 | The other feature extractor (`bm25_mean3`, `entity_coverage`, `year_count` come from here) plus the learnability diagnostics: ROUGE-L, retrieval features, selective targets, direct and sequential policy evaluation, operating-point selection, and cross-fitted LR/HGB probes. |
+| `primary_scoring.py` | 357 | HHEM's chunked scorer, the primary scorer factory, input-manifest and frame validation, balanced smoke selection, native-column expansion. |
+| `candidate_verifiers.py` | 405 | FactCG, HHEM, AlignScore (through a persistent worker), FENICE. |
+| `additional_verifier_scorers_v1.py` | 449 | WeCheck, Granite-Guardian-3.2 factuality, Granite-Guardian-4.1 groundedness, and the structured judge API, with support probability read from top logprobs. |
+| `extended_scorers.py` | 332 | LettuceDetect-v2, Granite-Guardian-3.2-3b-a800m, AttrScore-Flan-T5, with tokenizer-window splitting and native outputs preserved. |
+| `minicheck_scorers.py` | 179 | Both MiniCheck variants, aligned with the official EMNLP 2024 inference code: newlines preserved, NLTK splitting, 500-word (Flan-T5) or 400-token (DeBERTa) chunks, `eos_token` join, max-aggregation, and the `"predict: "` prefix on the Flan-T5 path. |
+| `native_scorers.py` | 129 | FactKB and FactCG variants that additionally capture native class logits and argmax labels. Scores must match the frozen runs bit-for-bit. |
+| `structured_high_judge.py` | 274 | Response format, numbered source rendering, claim-span grounding, and payload validation for the structured judge. |
+| `cascade_primary_assets.py` | 303 | Materialises the UniSumEval and RAGTruth annotations, builds scoring inputs and features, and audits reference overlap. |
+| `global_gamma_calibration.py` | 316 | RAGTruth span parsing and response segmentation, and the CRC calibration of the global gamma. |
+| `research_freeze.py` | 178 | The freeze validator: dataset ledger, frozen method, and evidence-file digests. |
+| `tenfold_v1.py` | 131 | The 8/1/1 rotation contract: eight folds fit the heads, one fits the Platt calibrators *and* selects β, one is evaluated once with everything frozen. Rotating ten times gives every summary exactly one test-fold prediction. |
+| `pool_gate_sweep_v1.py` | 433 | Earlier-round pool × gate sweep: does the learned router survive a change of action pool? Sweeps β over a grid and reports the whole curve rather than selecting on held-out labels. |
+| `pool_gate_sweep_v2.py` | 149 | Fixes v1's matched-random flaw: v1 drew the budget-matched random policy once per configuration, and a single draw carries sd ≈ 0.02–0.03 AUROC, the same order as the effect. v2 uses an independent control bank. |
+| `summary_router_compact16_targetmix_v1.py` | 870 | Earlier-round target-mix router: pairwise and reward bundles, nested fits, price calibration, reselection. |
+| `summary_router_compact16_targetmix_lodo_v1.py` | 1293 | The leave-one-dataset-out variant of the above, with its own baselines, paired bootstrap, and Pareto frontier. |
+| `scripts/alignscore_persistent_worker.py` | 77 | Keeps AlignScore resident across calls instead of paying its load time per row. |
+
+### The shared layer
+
+`code/shared/` — imported by every later stage. `08_routing_code/` carries byte-identical copies
+under the module names the frozen pipeline resolves.
+
+| File | Lines | What it does |
+|---|---:|---|
+| `core.py` | 508 | **The one place each step happens.** `fold_costs` and `verifier_cost` (training-only cost estimates), `pooled_folds` / `dataset_folds` and their rotations, `platt` / `apply_platt` / `isotonic` (both calibration stages), `targets` (every supervision target the ablation compares), `make_regressor` / `make_classifier` / `fit_heads`, `choose_beta`, `route`, `make_frame`, `ece` / `risk_coverage` / `metrics`, `conformal_tau` and `group_conformal_tau`, and the three bootstraps — `paired_bootstrap`, `paired_cluster_bootstrap`, `cluster_bootstrap_auroc`. Two details worth knowing: `make_classifier` refuses an unsupported learner name instead of silently substituting a forest, and `make_frame` takes `charge_features`, which must be `False` for any arm that does not compute the cheap features — folding the router's 8.6 ms into a fixed verifier's cost would flatter the router. |
+| `config.py` | 116 | The single source of truth for the locked configuration, and the record of why centralising it was necessary. |
+| `08_routing_code/v3core.py` | 203 | The data boundary above, in code: `load(with_test_labels)` gates the confirmatory read, `stratified_group_split` and `folds_stratified` are group-disjoint and stratified by corpus and majority label, `rotations` is the 8/1/1 contract, and `route` / `choose_beta` are the routing implementation every stage shares. |
+
+### Stage 3 — routing
+
+`code/experiments/08_routing_code/`. The only stage that runs from this repository alone.
+
+| File | Lines | What it produces |
+|---|---:|---|
+| `part1c_main_full_v1.py` | 886 | **The main tables.** Asserts the inherited contract field by field, selects hyperparameters on TRAIN from sixteen randomly initialised candidates by minimum validation head loss, runs both protocols across ten seeds, charges end-to-end latency (`_pre_call_feature_ms` + `_verifier_ms` + heads + routing + both calibration stages), applies four threshold rules, and writes the gates and provenance. |
+| `part2_ablation_v1.py` | 478 | Core ablations, both protocols. Each arm changes exactly one thing — feature subset, target, learner, pool — and `OURS` here must reproduce `part1c` exactly. That equality is the gate. |
+| `part3_extended_v1.py` | 772 | Extended ablations: per-corpus training, feature and pool subset lattices, Shapley attribution, best-k, and the data-size and forest-size convergence curves. The lattices contain the reference twice, and both copies must reproduce `part1c` bit for bit. |
+| `part3_percorpus_selected_v1.py` | 166 | The deployable per-corpus competitor. The per-corpus table's "best fixed verifier" is an oracle — it takes the maximum *test* AUROC over fifteen candidates, which no deployable system knows in advance. This adds the honest version: pick one fixed verifier by **validation** AUROC on the same split the router used. It beats within-corpus routing on all four corpora, and the paper reports that. |
+| `part4_cascade_v1.py` | 560 | The competitors the ablation left open: confidence, disagreement and learned-deferral cascades; second calls chosen by confidence, raw margin, or discounted margin; and alternative learners. Runs in its own directory and writes nowhere the other parts write. |
+| `pool_rescreen_v1.py` | 233 | Pool provenance. The pool was screened in an earlier round on a matrix sharing 54.4% of Protocol B's test groups. This re-screens all 455 three-verifier subsets on TRAIN alone and reports where the frozen pool ranks. It is an audit; it does not feed back. |
+| `run_part1c_full_v1.sh` · `run_part2_ablation_v1.sh` · `run_part3_v1.sh` | 49 · 41 · 49 | Stage launchers. `run_part3_v1.sh` demands an explicit `phase1`/`phase2`; there is no default. |
+| `chain_part4.sh` | 63 | Waits for Part 3 phase 2's completion marker under `$AFR_ROOT/experiments/runs`, then starts Part 4. |
+
+### Stage 4 — live re-run and the controls
+
+`code/experiments/09_live_and_controls/code/`
+
+| File | Lines | Question it answers, and how |
+|---|---:|---|
+| `_contract.py` | 87 | The guard everything here inherits. Compares the frozen contract field by field, and `check_reference` requires any nominally-main arm to land on `FROZEN_B_AUROC`. Carries the two-level tolerance and the measured cross-platform deltas that justify it. |
+| `live_main.py` | 140 | *Is the test result read from a pre-computed matrix?* Re-runs Protocol B with the verifier actually called for every (row, seed) pair — 32,360 real calls. Scores are never reused across seeds: a row two seeds both select is called twice. Staged `plan → local → api → finish`. |
+| `live_pipeline.py` | 158 | The end-to-end deployed path for the same question: route from cheap features, call exactly one verifier, and only afterwards read the other two columns to compare against the matrix. |
+| `rerun_score.py` | 70 | Independently re-runs the three pool verifiers on a sample, writing to a fresh directory so the harness cache cannot serve stale rows. This is what isolated the residual to vLLM prefix caching. |
+| `cmp.py` | 25 | Diffs re-run scores against the frozen matrix per verifier: max \|Δ\|, exact-equality flag, correlation, and old-versus-new latency. |
+| `diag_live.py` | 35 | The row-level version: for each live-selected action, max \|Δ\| against the stored score and the first differing rows. |
+| `dataset_control.py` | 96 | *Does the router receive dataset identity?* Three answers in increasing strength: (a) the frozen feature list contains no dataset field; (b) how much corpus signal the six features carry anyway, by grouped 5-fold corpus classification — an upper bound, reported honestly; (c) the control that matters — add the corpus one-hot and re-run the whole pipeline. |
+| `ds_only.py` | 79 | The four-arm version of (c): constant-only, corpus-one-hot-only, the six features, and both. The reading rule is written in the docstring *before* the numbers: if the one-hot arm lands near constant-only, corpus identity buys nothing; if it lands near the six features, the router is a corpus classifier in disguise. |
+| `fewshot_frac.py` | 116 | *How much of its own data does a held-out corpus need?* Fits on the other three corpora and adds a **fraction** of the target's own pool. Fractions, not counts, because the pools differ by 5.6× — `k=512` is 96% of CoGenSumm's pool and 17% of RAGTruth's. Keeps row-level output at the 0% and 100% ends so the endpoints can be tested. |
+| `fewshot.py` · `fewshot_k0.py` | 91 · 57 | The superseded absolute-count sweep and its `k=0` point, kept because the archived curve came from them. |
+| `sig_main.py` | 55 | The main tables' significance. Resamples `content_doc_key`, not rows. Generates all 2,000 index sets **once** and reuses them across the fifteen comparisons — that is what makes the test paired. Inside each draw it takes the per-seed AUROC difference and averages over seeds. |
+| `sig_controls.py` | 250 | The same test for the three controls, whose original runs saved summaries but not row-level probabilities — so every arm is refitted here, which is exactly why `check_reference` runs first. Families: live (1), arms (3), few-shot (4). AUROC is computed from the rank identity with averaged ranks, because isotonic creates ties. |
+
+### The gate
+
+| File | Lines | What it checks |
+|---|---:|---|
+| `tests/test_reproduction.py` | 283 | Six tests. `test_manifest`: every file the manifest names still hashes to the recorded digest. `test_reference_arm`: Protocol B refitted from the frozen inputs lands on `FROZEN_B_AUROC` within the tolerance in force. `test_bundle_carries_every_column_the_pipeline_needs`: the trimmed bundle satisfies the stage-3 preflight contract. `test_launchers_resolve`: every stage-3 launcher points at a script that exists. `test_reproduce_sh_matches_the_launchers`: `reproduce.sh` passes arguments the launchers accept and writes where they look. `test_control_scripts_resolve_their_imports`: every directory a stage-4 script puts on `sys.path` exists and carries the modules it imports. |
 
 ## Reproduction
 

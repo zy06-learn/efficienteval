@@ -86,8 +86,10 @@ got wrong, which is why the boundary is enforced in code rather than by conventi
 |---|---|
 | `live_main.py`, `live_pipeline.py` | Is the reported test result read from a pre-computed matrix? Runs Protocol B with every verifier called for real, per row and per seed. |
 | `dataset_control.py`, `ds_only.py` | Does the router receive dataset identity? Four arms, including one that hands it the corpus explicitly. |
-| `fewshot.py`, `fewshot_k0.py` | How many in-corpus examples does a held-out corpus need before it improves? |
+| `fewshot_frac.py` | How much of its own pool does a held-out corpus need? Sweeps fractions, not counts, because the four pools differ by 5.6x. This is the curve the paper plots. |
+| `fewshot.py`, `fewshot_k0.py` | The superseded absolute-count sweep and its k=0 point, kept because the archived curve came from them. |
 | `sig_main.py` | Paired cluster bootstrap over `content_doc_key`, 2,000 draws, Bonferroni over fifteen comparisons. |
+| `sig_controls.py` | The same test applied to the three controls, with family sizes 1, 3 and 4. Refits every arm, because the original runs saved summaries but not row-level probabilities. |
 | `rerun_score.py`, `cmp.py`, `diag_live.py` | Re-scoring diagnostics used to trace the live-versus-matrix residual. |
 | `_contract.py` | The guard every script here inherits. It refuses to run if the frozen configuration has drifted, and it is what the release gate calls. |
 
