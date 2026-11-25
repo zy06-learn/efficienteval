@@ -1,0 +1,152 @@
+{
+  "screen_seed": 29,
+  "selected_pool": "factcc+lettuce_v2+wecheck",
+  "features": "six_features",
+  "auroc": 0.7491017083835466,
+  "ms": 122.44200284053018,
+  "balance": 0.7977097991495871,
+  "paper_pool_is_budget_pick": false,
+  "same_as_paper_pool": false,
+  "budget_picks": [
+    {
+      "budget_ms": 100,
+      "k": 2,
+      "pool": "factcc+lettuce_v2",
+      "auroc": 0.704691224824606,
+      "ms": 98.09523154545263,
+      "runner_up": "factkb+lettuce_v2",
+      "margin_to_runner_up": 0.0024949077932683306,
+      "tie": false
+    },
+    {
+      "budget_ms": 100,
+      "k": 3,
+      "pool": "factcc+lettuce_v2+minicheck_dbta",
+      "auroc": 0.702646406625516,
+      "ms": 97.7843094575806,
+      "runner_up": "factkb+hhem+lettuce_v2",
+      "margin_to_runner_up": 0.002345982222308418,
+      "tie": false
+    },
+    {
+      "budget_ms": 150,
+      "k": 2,
+      "pool": "factcc+lettuce_v2",
+      "auroc": 0.704691224824606,
+      "ms": 98.09523154545263,
+      "runner_up": "factkb+lettuce_v2",
+      "margin_to_runner_up": 0.0024949077932683306,
+      "tie": false
+    },
+    {
+      "budget_ms": 150,
+      "k": 3,
+      "pool": "factcc+lettuce_v2+wecheck",
+      "auroc": 0.753143115393511,
+      "ms": 126.77404082109904,
+      "runner_up": "factcc+granite_guardian_3_1_2b+lettuce_v2",
+      "margin_to_runner_up": 0.003773217712235266,
+      "tie": false
+    },
+    {
+      "budget_ms": 200,
+      "k": 2,
+      "pool": "granite_guardian_3_1_2b+lettuce_v2",
+      "auroc": 0.7427908235961589,
+      "ms": 174.7897382911871,
+      "runner_up": "granite_guardian_3_2_3b_a800m+lettuce_v2",
+      "margin_to_runner_up": 0.022507561458955938,
+      "tie": false
+    },
+    {
+      "budget_ms": 200,
+      "k": 3,
+      "pool": "factcc+lettuce_v2+wecheck",
+      "auroc": 0.753143115393511,
+      "ms": 126.77404082109904,
+      "runner_up": "granite_guardian_3_1_2b+granite_guardian_3_2_3b_a800m+lettuce_v2",
+      "margin_to_runner_up": 0.003072427751837137,
+      "tie": false
+    },
+    {
+      "budget_ms": 250,
+      "k": 2,
+      "pool": "granite_guardian_3_1_2b+lettuce_v2",
+      "auroc": 0.7427908235961589,
+      "ms": 174.7897382911871,
+      "runner_up": "lettuce_v2+wecheck",
+      "margin_to_runner_up": 0.012598887580685947,
+      "tie": false
+    },
+    {
+      "budget_ms": 250,
+      "k": 3,
+      "pool": "factcc+lettuce_v2+wecheck",
+      "auroc": 0.753143115393511,
+      "ms": 126.77404082109904,
+      "runner_up": "granite_guardian_3_1_2b+granite_guardian_3_2_3b_a800m+lettuce_v2",
+      "margin_to_runner_up": 0.003072427751837137,
+      "tie": false
+    },
+    {
+      "budget_ms": 300,
+      "k": 2,
+      "pool": "granite_guardian_3_1_2b+lettuce_v2",
+      "auroc": 0.7427908235961589,
+      "ms": 174.7897382911871,
+      "runner_up": "lettuce_v2+qwen30_fast",
+      "margin_to_runner_up": 0.007146963574792942,
+      "tie": false
+    },
+    {
+      "budget_ms": 300,
+      "k": 3,
+      "pool": "factcc+lettuce_v2+wecheck",
+      "auroc": 0.753143115393511,
+      "ms": 126.77404082109904,
+      "runner_up": "factcc+lettuce_v2+qwen30_judge",
+      "margin_to_runner_up": 0.0020082994610480798,
+      "tie": false
+    },
+    {
+      "budget_ms": 400,
+      "k": 2,
+      "pool": "granite_guardian_3_1_2b+lettuce_v2",
+      "auroc": 0.7427908235961589,
+      "ms": 174.7897382911871,
+      "runner_up": "factcg+granite_guardian_3_2_3b_a800m",
+      "margin_to_runner_up": 0.006399716232455832,
+      "tie": false
+    },
+    {
+      "budget_ms": 400,
+      "k": 3,
+      "pool": "factcc+lettuce_v2+wecheck",
+      "auroc": 0.753143115393511,
+      "ms": 126.77404082109904,
+      "runner_up": "factcc+lettuce_v2+qwen30_judge",
+      "margin_to_runner_up": 0.0020082994610480798,
+      "tie": false
+    },
+    {
+      "budget_ms": 600,
+      "k": 2,
+      "pool": "alignscore+factcg",
+      "auroc": 0.7458603236854526,
+      "ms": 471.9681480941713,
+      "runner_up": "factcg+wecheck",
+      "margin_to_runner_up": 0.0021871180074514163,
+      "tie": false
+    },
+    {
+      "budget_ms": 600,
+      "k": 3,
+      "pool": "alignscore+granite_guardian_4_1_3b_factuality_lora+lettuce_v2",
+      "auroc": 0.7655781309155154,
+      "ms": 572.1166053011269,
+      "runner_up": "alignscore+granite_guardian_3_2_3b_a800m+lettuce_v2",
+      "margin_to_runner_up": 0.0007320697233620388,
+      "tie": false
+    }
+  ]
+}

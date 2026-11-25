@@ -1,0 +1,43 @@
+02:21:43 15 verifiers in the frozen matrix: ['factcc', 'factkb', 'hhem', 'wecheck', 'factcg', 'minicheck_dbta', 'minicheck_ft5', 'alignscore', 'lettuce_v2', 'granite_guardian_3_1_2b', 'granite_guardian_3_2_3b_a800m', 'granite_guardian_3_2_8b_factuality', 'granite_guardian_4_1_3b_factuality_lora', 'qwen30_fast', 'qwen30_judge']
+02:22:25 cogensumm frac=0.00 k=    0  router 0.6516/  50.4ms  all 0.7692/ 534.6ms  budget 0.5865  pool 0.7996
+02:23:06 cogensumm frac=0.05 k=   27  router 0.6123/  42.6ms  all 0.7994/ 404.3ms  budget 0.6208  pool 0.7483
+02:23:46 cogensumm frac=0.10 k=   54  router 0.6453/  41.2ms  all 0.7689/ 393.8ms  budget 0.6788  pool 0.7192
+02:24:28 cogensumm frac=0.20 k=  107  router 0.6643/  43.2ms  all 0.8029/ 372.5ms  budget 0.6817  pool 0.7996
+02:25:08 cogensumm frac=0.30 k=  160  router 0.6837/  44.7ms  all 0.7636/ 496.9ms  budget 0.6435  pool 0.7996
+02:25:51 cogensumm frac=0.40 k=  214  router 0.6876/  45.2ms  all 0.8125/ 360.7ms  budget 0.7010  pool 0.7996
+02:26:32 cogensumm frac=0.50 k=  268  router 0.6477/  42.7ms  all 0.8002/ 464.3ms  budget 0.6435  pool 0.7996
+02:27:09 cogensumm frac=0.70 k=  374  router 0.6674/  50.1ms  all 0.8037/ 415.2ms  budget 0.7010  pool 0.7996
+02:27:52 cogensumm frac=0.85 k=  455  router 0.6864/  51.7ms  all 0.8037/ 415.2ms  budget 0.7024  pool 0.7996
+02:28:34 cogensumm frac=1.00 k=  535  router 0.6798/  42.6ms  all 0.7818/ 551.3ms  budget 0.7024  pool 0.7996
+02:29:16 frank frac=0.00 k=    0  router 0.8333/ 142.3ms  all 0.8462/ 149.2ms  budget 0.6390  pool 0.8474
+02:30:02 frank frac=0.05 k=   33  router 0.8358/ 144.6ms  all 0.8497/ 178.7ms  budget 0.8035  pool 0.8385
+02:30:43 frank frac=0.10 k=   67  router 0.7907/ 122.6ms  all 0.8355/ 157.6ms  budget 0.8576  pool 0.8296
+02:31:28 frank frac=0.20 k=  134  router 0.8392/ 146.0ms  all 0.8565/  80.2ms  budget 0.8837  pool 0.8474
+02:32:12 frank frac=0.30 k=  201  router 0.8194/ 107.0ms  all 0.8837/  20.9ms  budget 0.8837  pool 0.8474
+02:32:53 frank frac=0.40 k=  268  router 0.8311/ 125.9ms  all 0.8783/  41.8ms  budget 0.8837  pool 0.8474
+02:33:35 frank frac=0.50 k=  334  router 0.8285/ 122.0ms  all 0.8837/  20.9ms  budget 0.8837  pool 0.8474
+02:34:19 frank frac=0.70 k=  468  router 0.8247/ 106.1ms  all 0.8837/  20.9ms  budget 0.8837  pool 0.8474
+02:35:00 frank frac=0.85 k=  569  router 0.8268/ 102.6ms  all 0.8837/  20.9ms  budget 0.8837  pool 0.8474
+02:35:42 frank frac=1.00 k=  669  router 0.8252/  89.9ms  all 0.8837/  20.9ms  budget 0.8837  pool 0.8474
+02:36:16 ragtruth frac=0.00 k=    0  router 0.5430/  83.8ms  all 0.6639/ 183.1ms  budget 0.5686  pool 0.6276
+02:36:52 ragtruth frac=0.05 k=  149  router 0.5979/ 103.1ms  all 0.7806/ 305.5ms  budget 0.6241  pool 0.6371
+02:37:28 ragtruth frac=0.10 k=  298  router 0.6131/ 100.9ms  all 0.7897/ 513.9ms  budget 0.6381  pool 0.6381
+02:38:05 ragtruth frac=0.20 k=  597  router 0.6334/  87.2ms  all 0.7885/ 275.4ms  budget 0.6381  pool 0.6381
+02:38:46 ragtruth frac=0.30 k=  895  router 0.6396/  63.4ms  all 0.7885/ 275.4ms  budget 0.6381  pool 0.6381
+02:39:26 ragtruth frac=0.40 k= 1193  router 0.6381/  55.1ms  all 0.7885/ 275.4ms  budget 0.6305  pool 0.6381
+02:40:04 ragtruth frac=0.50 k= 1492  router 0.6358/  53.4ms  all 0.7867/ 233.7ms  budget 0.6381  pool 0.6381
+02:40:46 ragtruth frac=0.70 k= 2088  router 0.6378/  52.6ms  all 0.7867/ 233.7ms  budget 0.6381  pool 0.6381
+02:41:30 ragtruth frac=0.85 k= 2536  router 0.6377/  52.1ms  all 0.7867/ 233.7ms  budget 0.6381  pool 0.6381
+02:42:15 ragtruth frac=1.00 k= 2983  router 0.6380/  52.0ms  all 0.7867/ 233.7ms  budget 0.6381  pool 0.6381
+02:42:57 unisumeval frac=0.00 k=    0  router 0.5369/ 228.9ms  all 0.6200/1873.1ms  budget 0.5089  pool 0.6773
+02:43:36 unisumeval frac=0.05 k=   54  router 0.5427/ 210.0ms  all 0.6656/ 804.4ms  budget 0.5016  pool 0.6773
+02:44:19 unisumeval frac=0.10 k=  109  router 0.5655/ 206.4ms  all 0.6612/ 852.4ms  budget 0.4861  pool 0.6773
+02:45:02 unisumeval frac=0.20 k=  218  router 0.5571/ 206.9ms  all 0.6783/ 796.8ms  budget 0.4938  pool 0.6773
+02:45:43 unisumeval frac=0.30 k=  327  router 0.5660/ 202.6ms  all 0.6854/ 854.9ms  budget 0.4899  pool 0.6773
+02:46:25 unisumeval frac=0.40 k=  436  router 0.5606/ 200.1ms  all 0.6839/1458.5ms  budget 0.4858  pool 0.6773
+02:47:05 unisumeval frac=0.50 k=  544  router 0.5689/ 202.9ms  all 0.6716/1119.0ms  budget 0.4858  pool 0.6773
+02:47:45 unisumeval frac=0.70 k=  762  router 0.5832/ 196.8ms  all 0.6722/1538.7ms  budget 0.4881  pool 0.6773
+02:48:27 unisumeval frac=0.85 k=  926  router 0.5823/ 199.3ms  all 0.6584/1802.7ms  budget 0.4760  pool 0.6773
+02:49:09 unisumeval frac=1.00 k= 1089  router 0.5923/ 201.2ms  all 0.6563/1986.6ms  budget 0.4721  pool 0.6773
+02:49:09 gate passed on 80 router cells; wrote X1_SUMMARY.csv and X1_PICKS.csv
+EXIT=0

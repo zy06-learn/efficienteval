@@ -1,0 +1,9 @@
+[01:16:31 +    31s]     SENS:compact16 seed 17: val=0.7228 test=0.7070 d=+0.0893 CI[+0.0698,+0.1100] 81ms
+[01:17:02 +    62s]     SENS:compact16 seed 29: val=0.7213 test=0.7115 d=+0.0942 CI[+0.0755,+0.1135] 82ms
+[01:17:33 +    93s]     SENS:compact16 seed 43: val=0.7224 test=0.7210 d=+0.0979 CI[+0.0774,+0.1192] 85ms
+[01:17:48 +   109s]     SENS:dataset_id_only seed 17: val=0.7074 test=0.7064 d=+0.0950 CI[+0.0711,+0.1171] 76ms
+[01:18:05 +   125s]     SENS:dataset_id_only seed 29: val=0.7100 test=0.7072 d=+0.0964 CI[+0.0706,+0.1215] 72ms
+[01:18:21 +   141s]     SENS:dataset_id_only seed 43: val=0.7094 test=0.7079 d=+0.0899 CI[+0.0680,+0.1115] 74ms
+                     pool        features    val  heldout_auroc      ms  balance
+factcc+lettuce_v2+wecheck       compact16 0.7222         0.7132 82.5855   0.7611
+factcc+lettuce_v2+wecheck dataset_id_only 0.7089         0.7072 73.8114   0.7463

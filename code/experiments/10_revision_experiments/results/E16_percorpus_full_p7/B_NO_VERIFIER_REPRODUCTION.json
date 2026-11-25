@@ -1,0 +1,116 @@
+{
+  "action": "arm excluded from every deliverable; not published on a weaker gate",
+  "checks": [
+    {
+      "abs_diff": 0.0007557546620047262,
+      "corpus": "cogensumm",
+      "metric": "auroc",
+      "pass": false,
+      "recomputed": 0.5643265588578088,
+      "reference": 0.5650823135198135,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.0001602564102564097,
+      "corpus": "cogensumm",
+      "metric": "bacc",
+      "pass": false,
+      "recomputed": 0.5394085081585082,
+      "reference": 0.5392482517482518,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.00878325034500449,
+      "corpus": "cogensumm",
+      "metric": "ms",
+      "pass": false,
+      "recomputed": 24.556401127571007,
+      "reference": 24.547617877226003,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.00026187482205564105,
+      "corpus": "frank",
+      "metric": "auroc",
+      "pass": false,
+      "recomputed": 0.7802788685109614,
+      "reference": 0.780540743333017,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 7.621951219505263e-05,
+      "corpus": "frank",
+      "metric": "bacc",
+      "pass": false,
+      "recomputed": 0.7271342946284521,
+      "reference": 0.7272105141406472,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.0006619467398305545,
+      "corpus": "frank",
+      "metric": "ms",
+      "pass": false,
+      "recomputed": 12.016528790951407,
+      "reference": 12.015866844211576,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 3.623608534342182e-07,
+      "corpus": "ragtruth",
+      "metric": "auroc",
+      "pass": false,
+      "recomputed": 0.6089825631957329,
+      "reference": 0.6089822008348794,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "metric": "bacc",
+      "pass": true,
+      "recomputed": 0.5721634392393321,
+      "reference": 0.5721634392393321,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.0034608950178771636,
+      "corpus": "ragtruth",
+      "metric": "ms",
+      "pass": false,
+      "recomputed": 22.942820174153894,
+      "reference": 22.94628106917177,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 2.1583863119012392e-05,
+      "corpus": "unisumeval",
+      "metric": "auroc",
+      "pass": false,
+      "recomputed": 0.5650439525939879,
+      "reference": 0.5650655364571069,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "metric": "bacc",
+      "pass": true,
+      "recomputed": 0.5426928812495095,
+      "reference": 0.5426928812495095,
+      "system": "no_verifier"
+    },
+    {
+      "abs_diff": 0.00018573094340013085,
+      "corpus": "unisumeval",
+      "metric": "ms",
+      "pass": false,
+      "recomputed": 106.596539587519,
+      "reference": 106.5967253184624,
+      "system": "no_verifier"
+    }
+  ],
+  "gate": 1e-09,
+  "pass": false,
+  "reason": "RandomForest output is the score itself, so last-bit prediction differences reorder near-ties; not required by any table in scope"
+}

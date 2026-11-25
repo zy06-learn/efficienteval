@@ -1,0 +1,3 @@
+[01:49:23 +     0s] ===== gate [] | TRAIN 5276 rows | hp={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6} | smoke=False =====
+[01:49:58 +    35s] gate: {'a_val_auroc': 0.752073532405141, 'a_val_ms': 93.27301667111871} vs ref a_val_auroc=0.7520735324 a_val_ms=93.273017 -> PASS
+[01:49:58 +    35s] ===== gate done in 35s =====

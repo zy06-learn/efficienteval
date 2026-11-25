@@ -1,0 +1,13 @@
+{
+  "rule": "the verifier the per-seed validation-AUROC rule selects most often across the seeds",
+  "selected": "factcg",
+  "per_seed_pick_counts": {
+    "factcg": 7,
+    "alignscore": 3
+  },
+  "mean_validation_auroc_top3": {
+    "alignscore": 0.7583551305896272,
+    "factcg": 0.7559478723337405,
+    "wecheck": 0.7230436535821327
+  }
+}

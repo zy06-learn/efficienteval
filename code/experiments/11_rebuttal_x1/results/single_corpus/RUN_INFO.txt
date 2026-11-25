@@ -1,0 +1,6 @@
+# launch time, host, working-tree commit; launch command; sha256 of the script that ran
+Wed Nov 25 02:21:38 AM EST 2026
+CSC-GW-Spark1
+1040b1da0da4250cd20ddf64b76c685ac8104224
+cmd: ./run_x1_bestfixed.sh /home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/runs/x1_bestfixed_full_20261125
+c0df804780b320c520659c904ba63b63a0445abbb93f03feb00dbe2d16c853d3  x1_bestfixed_at_k.py

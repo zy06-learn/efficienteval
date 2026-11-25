@@ -1,0 +1,18 @@
+[02:24:16 +     0s] ===== finals [] | TRAIN 5276 rows | hp={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6} | smoke=False =====
+[02:24:32 +    17s]   final factcc+lettuce_v2 [six_features]: 0.70455 @ 97.6 ms
+[02:24:48 +    33s]   final factcc+lettuce_v2 [corpus_onehot]: 0.67153 @ 95.6 ms
+[02:25:12 +    57s]   final factcc+hhem+lettuce_v2 [six_features]: 0.69855 @ 98.3 ms
+[02:25:36 +    80s]   final factcc+hhem+lettuce_v2 [corpus_onehot]: 0.71826 @ 96.8 ms
+[02:26:00 +   104s]   final factcc+granite_guardian_3_1_2b+lettuce_v2 [six_features]: 0.74952 @ 120.3 ms
+[02:26:24 +   128s]   final factcc+granite_guardian_3_1_2b+lettuce_v2 [corpus_onehot]: 0.74380 @ 161.5 ms
+[02:26:40 +   145s]   final granite_guardian_3_1_2b+lettuce_v2 [six_features]: 0.73731 @ 174.5 ms
+[02:26:57 +   161s]   final granite_guardian_3_1_2b+lettuce_v2 [corpus_onehot]: 0.74784 @ 174.6 ms
+[02:27:13 +   177s]   final factcg+granite_guardian_3_2_3b_a800m [six_features]: 0.73773 @ 391.9 ms
+[02:27:29 +   193s]   final factcg+granite_guardian_3_2_3b_a800m [corpus_onehot]: 0.73851 @ 360.9 ms
+[02:27:53 +   217s]   final factcc+lettuce_v2+qwen30_judge [six_features]: 0.75242 @ 297.4 ms
+[02:28:16 +   241s]   final factcc+lettuce_v2+qwen30_judge [corpus_onehot]: 0.75282 @ 303.5 ms
+[02:28:33 +   257s]   final alignscore+factcg [six_features]: 0.74629 @ 474.6 ms
+[02:28:49 +   273s]   final alignscore+factcg [corpus_onehot]: 0.76041 @ 491.5 ms
+[02:29:13 +   297s]   final alignscore+lettuce_v2+qwen30_judge [six_features]: 0.76396 @ 580.9 ms
+[02:29:36 +   321s]   final alignscore+lettuce_v2+qwen30_judge [corpus_onehot]: 0.75493 @ 722.0 ms
+[02:29:36 +   321s] ===== finals done in 320s =====

@@ -58,6 +58,14 @@ the operating point is not dominated. Universal superiority is not claimed.
 
 ## What each directory is for
 
+### `10_revision_experiments/` and `11_rebuttal_x1/`
+
+Experiments added after the 2026-08-30 release. `10_` holds the revision runs behind the
+per-corpus, transfer, mixture, pool-sensitivity, ADR-v1 and significance tables, with the scripts
+exactly as they ran; `11_` answers a reviewer question about how much target-corpus data the
+router needs before it beats a fixed verifier selected with the same data, and runs from this
+layout. Each has its own `README.md`.
+
 ### `00_inputs/`
 
 The text-free reproduction bundle, 6.3 MB. Keys, labels, the six cheap features and every

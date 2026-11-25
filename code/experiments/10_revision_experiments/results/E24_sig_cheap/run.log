@@ -1,0 +1,13 @@
+A {'protocol': 'A', 'system': 'no_verifier', 'd_auroc': 0.044047311369635765, 'ci95_lo': np.float64(0.03206252240129584), 'ci95_hi': np.float64(0.055474059145465535), 'sig95': True, 'bonf15_lo': np.float64(0.026451051509717407), 'bonf15_hi': np.float64(0.06183323323050263), 'sig_bonf_m15': True, 'bonf16_lo': np.float64(0.02643796562730012), 'bonf16_hi': np.float64(0.06183395348530594), 'sig_bonf_m16': True}
+B {'protocol': 'B', 'system': 'no_verifier', 'd_auroc': 0.025889027560744193, 'ci95_lo': np.float64(0.01004466591335004), 'ci95_hi': np.float64(0.042041457438403006), 'sig95': True, 'bonf15_lo': np.float64(0.0020589929212838807), 'bonf15_hi': np.float64(0.0497508664491593), 'sig_bonf_m15': True, 'bonf16_lo': np.float64(0.0020484585375868296), 'bonf16_hi': np.float64(0.04988316802541028), 'sig_bonf_m16': True}
+{
+  "A": {
+    "max_abs_diff_vs_E03": 9.71445146547012e-17,
+    "pass": true
+  },
+  "B": {
+    "max_abs_diff_vs_E03": 9.71445146547012e-17,
+    "pass": true
+  },
+  "marks_changed_at_m16": []
+}

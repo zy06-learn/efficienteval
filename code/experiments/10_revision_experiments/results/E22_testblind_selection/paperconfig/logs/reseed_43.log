@@ -1,0 +1,16 @@
+[03:40:13 +    21s]   confirmed factcc+lettuce_v2+minicheck_dbta [six_features]
+[03:40:33 +    41s]   confirmed factcc+lettuce_v2+minicheck_dbta [corpus_onehot]
+[03:40:47 +    56s]   confirmed lettuce_v2+qwen30_fast [six_features]
+[03:41:02 +    70s]   confirmed lettuce_v2+qwen30_fast [corpus_onehot]
+[03:41:22 +    91s]   confirmed alignscore+granite_guardian_4_1_3b_factuality_lora+lettuce_v2 [six_features]
+[03:41:43 +   111s]   confirmed alignscore+granite_guardian_4_1_3b_factuality_lora+lettuce_v2 [corpus_onehot]
+                                     pool      features  auroc       ms  n_seeds  balance  k
+factcc+granite_guardian_3_1_2b+lettuce_v2  six_features 0.7495 120.3077        3   0.8017  3
+factcc+granite_guardian_3_1_2b+lettuce_v2 corpus_onehot 0.7438 161.5466        3   0.7344  3
+                        factcc+lettuce_v2  six_features 0.7045  97.5881        3   0.7327  2
+         factcc+lettuce_v2+minicheck_dbta corpus_onehot 0.7088 112.3531        3   0.7288  3
+       granite_guardian_3_1_2b+lettuce_v2 corpus_onehot 0.7478 174.6179        3   0.7192  2
+         factcc+lettuce_v2+minicheck_dbta  six_features 0.7000  97.6350        3   0.7148  3
+       granite_guardian_3_1_2b+lettuce_v2  six_features 0.7373 174.5335        3   0.7120  2
+           factcc+lettuce_v2+qwen30_judge  six_features 0.7524 297.3660        3   0.6022  3
+{"selected_pool": "factcc+granite_guardian_3_1_2b+lettuce_v2", "balance": 0.8016895244075845, "same_as_paper_pool": true}

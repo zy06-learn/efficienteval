@@ -1,0 +1,8 @@
+[11:11:17 +     0s] ===== stage hpselect =====
+[11:11:21 +     4s] hpselect: {'max_iter': 100, 'learning_rate': 0.03, 'max_depth': 3, 'min_samples_leaf': 20}
+ candidate  cv_log_loss  max_iter  learning_rate  max_depth  min_samples_leaf
+         9     0.597257       100           0.03          3                20
+         8     0.597375       100           0.10          2                20
+        10     0.598589       200           0.03          2                10
+        11     0.598614       100           0.10          3                20
+         2     0.599508       100           0.10          3                50

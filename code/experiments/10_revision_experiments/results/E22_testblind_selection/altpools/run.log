@@ -1,0 +1,10 @@
+[05:06:40 +    98s] gates pass: {'hp_loss_max_abs_diff': 1.0234868508263162e-16, 'hp_b_reproduced': {'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6}, 'prob_max_abs_diff': 0.0, 'sel_identical': True}
+[05:08:34 +   211s] factcc+lettuce_v2+factcg: hp={'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': 0.5, 'max_depth': 6} AUROC 0.7823 @ 353.3 ms, macro 0.7201
+[05:10:28 +   325s] factcc+lettuce_v2+qwen30_fast: hp={'n_estimators': 800, 'min_samples_leaf': 5, 'max_features': 0.5, 'max_depth': 6} AUROC 0.8012 @ 179.1 ms, macro 0.6969
+[05:12:05 +   422s] factcc+lettuce_v2+wecheck: hp={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6} AUROC 0.7871 @ 183.1 ms, macro 0.6719
+                                     pool  auroc  auprc_unsup   bacc  f1_unsup       ms     hv  macro_auroc
+factcc+granite_guardian_3_1_2b+lettuce_v2 0.8226       0.8352 0.7415    0.7089 106.1468 0.5766       0.6847
+                 factcc+lettuce_v2+factcg 0.7823       0.8206 0.7276    0.6933 353.3389 0.3651       0.7201
+            factcc+lettuce_v2+qwen30_fast 0.8012       0.8244 0.7397    0.7025 179.0757 0.4945       0.6969
+                factcc+lettuce_v2+wecheck 0.7871       0.8070 0.7195    0.6858 183.0664 0.4690       0.6719
+[05:12:05 +   422s] COMPLETE

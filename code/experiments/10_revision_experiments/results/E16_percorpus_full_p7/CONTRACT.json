@@ -1,0 +1,60 @@
+{
+  "A_split": "V.folds_stratified within corpus, V.rotations 8/1/1, new experiment",
+  "B_split": "original E1/E1b ladder: stratified_group_split at 0.20/0.30/0.40",
+  "GPU": false,
+  "features": [
+    "structured_source_line_ratio",
+    "bm25_mean3",
+    "entity_coverage",
+    "entity_value_colocation",
+    "year_count",
+    "conflicting_value_rate"
+  ],
+  "hp": {
+    "A": {
+      "max_depth": 6,
+      "max_features": 0.5,
+      "min_samples_leaf": 5,
+      "n_estimators": 800
+    },
+    "B": {
+      "max_depth": 6,
+      "max_features": 0.5,
+      "min_samples_leaf": 10,
+      "n_estimators": 200
+    }
+  },
+  "platform": "Linux-6.17.0-1014-nvidia-aarch64-with-glibc2.39",
+  "pool": [
+    "factcc",
+    "lettuce_v2",
+    "granite_guardian_3_1_2b"
+  ],
+  "python": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+  "seeds": [
+    17,
+    29,
+    43,
+    7,
+    11,
+    23,
+    31,
+    37,
+    53,
+    61
+  ],
+  "sha256": {
+    "/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v1/core.py": "1bed1f3ee36608f09aa0c02f5e96764e706c45b0bcb7218e4441bb99be8dba9d",
+    "/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/p7_percorpus_full.py": "83487753cb843244cc25e6f12311534a97beeaac9d7426bd641d5ab990426862",
+    "/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/part3_extended_v1.py": "327b7397fe0acbbf4b2e8afe52c788a1cc81e0ff569b8873f42f69960aa37b94",
+    "/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/part3_percorpus_selected_v1.py": "92c860f8a0fd9c19638ad02703bc25229ed8372485953d535279f6f6ef925f86",
+    "/home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/v3core.py": "aa4106f7a6ad29ddeda84e6ddc18dd87d625382d60bcc8c8d6e1ff50c2efde8f"
+  },
+  "threads": 8,
+  "timing": {
+    "OURS/no_verifier": "features+head+routing+both calibration stages",
+    "fixed::* (A)": "verifier call only",
+    "fixed::* (B)": "verifier call + isotonic apply (original E1)",
+    "sel::* (A,B)": "selected verifier call only (original E1b)"
+  }
+}

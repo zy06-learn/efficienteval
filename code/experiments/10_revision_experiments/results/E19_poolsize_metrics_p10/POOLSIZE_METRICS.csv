@@ -1,0 +1,17 @@
+protocol,arm,k,actions,auroc,auprc_unsup,bacc,f1_unsup,ms
+B,greedy k=1,1,alignscore,0.8116698489752506,0.838013354381663,0.730578158302534,0.7300779079190122,588.9434979019549
+A,greedy k=1,1,alignscore,0.7811302232566216,0.7651712945977078,0.6844635988755419,0.5930279201894986,710.5152338334644
+B,greedy k=2,2,alignscore+lettuce_v2,0.8068812878341663,0.8369659134242724,0.7332441980754592,0.7285310216899784,524.356748514663
+A,greedy k=2,2,alignscore+lettuce_v2,0.7833161118233883,0.7693306896587421,0.6942679801133705,0.6117425640436418,670.6319001648179
+B,greedy k=3,3,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m,0.8070664090202279,0.8367577147830845,0.7346098160537613,0.7294210009349105,421.24301510316474
+A,greedy k=3,3,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m,0.7829331087122968,0.7694152656496898,0.6939989704869156,0.61288319006648,624.1289240119758
+B,greedy k=5,5,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora,0.8054701837012985,0.8364350022882151,0.7335506603242472,0.7322560130524327,394.4539299438295
+A,greedy k=5,5,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora,0.780083550681249,0.7707503548005858,0.6936838188282495,0.5860815045623526,477.69067287838004
+B,greedy k=8,8,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora+factcc+hhem+minicheck_dbta,0.8052791112346018,0.8360813649853617,0.7334874542794301,0.7311357033378714,397.426353831343
+A,greedy k=8,8,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora+factcc+hhem+minicheck_dbta,0.7798488403036894,0.7698651909362181,0.693073513774389,0.5860820507357183,471.29133585381203
+B,greedy k=11,11,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora+factcc+hhem+minicheck_dbta+minicheck_ft5+granite_guardian_3_1_2b+qwen30_fast,0.8167635711204826,0.8430212259467098,0.7427661896839621,0.735912797610072,328.93101752176835
+A,greedy k=11,11,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora+factcc+hhem+minicheck_dbta+minicheck_ft5+granite_guardian_3_1_2b+qwen30_fast,0.7911868718476096,0.7840028401517747,0.706882683995864,0.6114517199965791,235.44950215576213
+B,greedy k=15,15,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora+factcc+hhem+minicheck_dbta+minicheck_ft5+granite_guardian_3_1_2b+qwen30_fast+wecheck+granite_guardian_3_2_8b_factuality+qwen30_judge+factcg,0.8146619462103736,0.8388155966330354,0.7514409944876981,0.7060744232418987,442.6515790635584
+A,greedy k=15,15,alignscore+lettuce_v2+granite_guardian_3_2_3b_a800m+factkb+granite_guardian_4_1_3b_factuality_lora+factcc+hhem+minicheck_dbta+minicheck_ft5+granite_guardian_3_1_2b+qwen30_fast+wecheck+granite_guardian_3_2_8b_factuality+qwen30_judge+factcg,0.7915673631948508,0.7851884769035464,0.710269686195842,0.6189944500289142,248.489892835793
+B,frozen pool (paper),3,factcc+lettuce_v2+granite_guardian_3_1_2b,0.8225560999095635,0.8352164160298908,0.7415322461817081,0.7088808804139185,106.11287292393486
+A,frozen pool (paper),3,factcc+lettuce_v2+granite_guardian_3_1_2b,0.7933003646708998,0.7838260930145542,0.7195056138344909,0.6586226744423391,112.07662592782091

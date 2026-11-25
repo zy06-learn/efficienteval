@@ -1,0 +1,4 @@
+[11:12:40 +     0s] ===== stage gates =====
+[11:12:40 +     0s] G-metric B: OURS and pool rows reproduced; OURS HV 0.5766
+[11:12:40 +     0s] G-metric A: OURS and pool rows reproduced; OURS HV 0.5206
+[11:12:41 +     1s] G1(B) row order ok | G3 TRAIN AUROC {'factcc': 0.5188003702414505, 'lettuce_v2': 0.624541608941636, 'granite_guardian_3_1_2b': 0.6962978474438193} -> order ['factcc', 'lettuce_v2', 'granite_guardian_3_1_2b']

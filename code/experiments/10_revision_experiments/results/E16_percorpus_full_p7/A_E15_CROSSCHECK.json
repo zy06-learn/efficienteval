@@ -1,0 +1,326 @@
+{
+  "checks": [
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.01141234156600035,
+      "corpus": "cogensumm",
+      "gated": false,
+      "metric": "ms",
+      "pass": null,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "cogensumm",
+      "gated": true,
+      "metric": "ms",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.01144198154808862,
+      "corpus": "frank",
+      "gated": false,
+      "metric": "ms",
+      "pass": null,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 1.1102230246251565e-16,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "frank",
+      "gated": true,
+      "metric": "ms",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.00039158183186316364,
+      "corpus": "ragtruth",
+      "gated": false,
+      "metric": "ms",
+      "pass": null,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "ragtruth",
+      "gated": true,
+      "metric": "ms",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 5.551115123125783e-17,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.030847114368839357,
+      "corpus": "unisumeval",
+      "gated": false,
+      "metric": "ms",
+      "pass": null,
+      "system": "OURS"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "auroc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 5.551115123125783e-17,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "auprc_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "bacc",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "f1_unsup",
+      "pass": true,
+      "system": "sel::pool3"
+    },
+    {
+      "abs_diff": 0.0,
+      "corpus": "unisumeval",
+      "gated": true,
+      "metric": "ms",
+      "pass": true,
+      "system": "sel::pool3"
+    }
+  ],
+  "failures": [],
+  "pass": true
+}

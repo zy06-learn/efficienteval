@@ -1,0 +1,145 @@
+[23:00:18 +     0s] matrix 6850 -> 5276 rows; dropped {'frank_train': 1569, 'ragtruth_train': 5}; kept {'ragtruth_train': 2983, 'unisumeval_train': 1089, 'frank_train': 669, 'cogensumm_val': 535}
+[23:00:18 +     0s] screening k=2: 105 pools
+[23:04:16 +   239s]   k=2 100/105
+[23:04:29 +   252s] screening k=3: 455 pools
+[23:10:29 +   612s]   k=3 100/455
+[23:16:22 +   965s]   k=3 200/455
+[23:22:20 +  1323s]   k=3 300/455
+[23:28:19 +  1682s]   k=3 400/455
+[23:31:37 +  1880s] screened pools available: {2: 99, 3: 451}
+[23:31:37 +  1880s] best pool per budget (validation):
+ budget_ms  k                                                          pool  val_auroc  val_ms  cost_spread
+       100  2                                             factkb+lettuce_v2      0.664  67.916        1.654
+       100  3                     factcc+lettuce_v2+granite_guardian_3_1_2b      0.692  85.410        4.163
+       150  2                            lettuce_v2+granite_guardian_3_1_2b      0.708 126.157        2.532
+       150  3                lettuce_v2+granite_guardian_3_1_2b+qwen30_fast      0.721 148.946        3.838
+       200  2                                            lettuce_v2+wecheck      0.710 192.825        3.398
+       200  3                 lettuce_v2+granite_guardian_3_1_2b+alignscore      0.723 151.003        9.229
+       250  2                                            lettuce_v2+wecheck      0.710 192.825        3.398
+       250  3                                 lettuce_v2+wecheck+alignscore      0.732 228.051        9.229
+       300  2                           granite_guardian_3_1_2b+qwen30_fast      0.714 264.740        1.516
+       300  3 lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore      0.738 270.615        9.229
+       400  2                                                wecheck+factcg      0.746 358.426        1.566
+       400  3                                     wecheck+factcg+alignscore      0.748 364.396        2.716
+       600  2                                             factcg+alignscore      0.759 583.610        1.734
+       600  3     factcg+granite_guardian_4_1_3b_factuality_lora+alignscore      0.755 535.555        1.734
+[23:31:59 +  1901s]     TS:compact16:factkb+lettuce_v2 seed 17: val=0.6827 test=0.6865 d=+0.0673 CI[+0.0510,+0.0836] 67ms
+[23:32:21 +  1923s]     TS:compact16:factkb+lettuce_v2 seed 29: val=0.6705 test=0.6719 d=+0.0575 CI[+0.0398,+0.0763] 66ms
+[23:32:43 +  1945s]     TS:compact16:factkb+lettuce_v2 seed 43: val=0.6893 test=0.6828 d=+0.0694 CI[+0.0522,+0.0881] 69ms
+[23:32:55 +  1957s]     TS:dataset_id_only:factkb+lettuce_v2 seed 17: val=0.6822 test=0.6810 d=+0.0624 CI[+0.0428,+0.0825] 68ms
+[23:33:06 +  1969s]     TS:dataset_id_only:factkb+lettuce_v2 seed 29: val=0.6834 test=0.6811 d=+0.0656 CI[+0.0463,+0.0878] 68ms
+[23:33:19 +  1981s]     TS:dataset_id_only:factkb+lettuce_v2 seed 43: val=0.6813 test=0.6792 d=+0.0663 CI[+0.0482,+0.0842] 68ms
+[23:33:50 +  2012s]     TS:compact16:factcc+lettuce_v2+granite_guardian_3_1_2b seed 17: val=0.7321 test=0.7211 d=+0.1107 CI[+0.0903,+0.1303] 77ms
+[23:34:21 +  2043s]     TS:compact16:factcc+lettuce_v2+granite_guardian_3_1_2b seed 29: val=0.7366 test=0.7269 d=+0.1099 CI[+0.0906,+0.1307] 78ms
+[23:34:52 +  2075s]     TS:compact16:factcc+lettuce_v2+granite_guardian_3_1_2b seed 43: val=0.7289 test=0.7238 d=+0.1080 CI[+0.0873,+0.1289] 78ms
+[23:35:08 +  2091s]     TS:dataset_id_only:factcc+lettuce_v2+granite_guardian_3_1_2b seed 17: val=0.7244 test=0.7191 d=+0.0980 CI[+0.0753,+0.1204] 80ms
+[23:35:24 +  2106s]     TS:dataset_id_only:factcc+lettuce_v2+granite_guardian_3_1_2b seed 29: val=0.7233 test=0.7226 d=+0.1065 CI[+0.0855,+0.1288] 78ms
+[23:35:40 +  2123s]     TS:dataset_id_only:factcc+lettuce_v2+granite_guardian_3_1_2b seed 43: val=0.7250 test=0.7194 d=+0.0989 CI[+0.0795,+0.1188] 82ms
+[23:36:02 +  2144s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b seed 17: val=0.7203 test=0.7230 d=+0.0717 CI[+0.0535,+0.0900] 125ms
+[23:36:24 +  2167s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b seed 29: val=0.7180 test=0.7109 d=+0.0652 CI[+0.0485,+0.0821] 121ms
+[23:36:46 +  2189s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b seed 43: val=0.7138 test=0.7131 d=+0.0671 CI[+0.0470,+0.0855] 121ms
+[23:36:58 +  2200s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b seed 17: val=0.7390 test=0.7370 d=+0.0773 CI[+0.0608,+0.0948] 139ms
+[23:37:10 +  2213s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b seed 29: val=0.7280 test=0.7200 d=+0.0682 CI[+0.0494,+0.0869] 131ms
+[23:37:22 +  2225s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b seed 43: val=0.7419 test=0.7425 d=+0.0852 CI[+0.0659,+0.1047] 140ms
+[23:37:53 +  2256s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b+qwen30_fast seed 17: val=0.7342 test=0.7300 d=+0.0768 CI[+0.0582,+0.0953] 139ms
+[23:38:24 +  2287s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b+qwen30_fast seed 29: val=0.7283 test=0.7242 d=+0.0728 CI[+0.0528,+0.0924] 134ms
+[23:38:56 +  2318s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b+qwen30_fast seed 43: val=0.7303 test=0.7252 d=+0.0759 CI[+0.0557,+0.0950] 134ms
+[23:39:12 +  2334s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+qwen30_fast seed 17: val=0.7521 test=0.7503 d=+0.0828 CI[+0.0617,+0.1032] 150ms
+[23:39:28 +  2350s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+qwen30_fast seed 29: val=0.7441 test=0.7502 d=+0.0865 CI[+0.0679,+0.1063] 149ms
+[23:39:44 +  2366s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+qwen30_fast seed 43: val=0.7550 test=0.7467 d=+0.0798 CI[+0.0615,+0.0978] 152ms
+[23:40:06 +  2388s]     TS:compact16:lettuce_v2+wecheck seed 17: val=0.7035 test=0.7096 d=+0.0483 CI[+0.0310,+0.0645] 178ms
+[23:40:28 +  2410s]     TS:compact16:lettuce_v2+wecheck seed 29: val=0.6963 test=0.6858 d=+0.0322 CI[+0.0158,+0.0478] 161ms
+[23:40:50 +  2432s]     TS:compact16:lettuce_v2+wecheck seed 43: val=0.7015 test=0.6953 d=+0.0389 CI[+0.0217,+0.0554] 169ms
+[23:41:01 +  2444s]     TS:dataset_id_only:lettuce_v2+wecheck seed 17: val=0.7103 test=0.7134 d=+0.0435 CI[+0.0263,+0.0615] 187ms
+[23:41:13 +  2456s]     TS:dataset_id_only:lettuce_v2+wecheck seed 29: val=0.6992 test=0.6956 d=+0.0347 CI[+0.0166,+0.0519] 157ms
+[23:41:25 +  2468s]     TS:dataset_id_only:lettuce_v2+wecheck seed 43: val=0.7098 test=0.7076 d=+0.0432 CI[+0.0230,+0.0623] 176ms
+[23:41:57 +  2499s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b+alignscore seed 17: val=0.7424 test=0.7335 d=+0.0692 CI[+0.0498,+0.0870] 171ms
+[23:42:28 +  2531s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b+alignscore seed 29: val=0.7375 test=0.7308 d=+0.0719 CI[+0.0518,+0.0934] 143ms
+[23:43:00 +  2563s]     TS:compact16:lettuce_v2+granite_guardian_3_1_2b+alignscore seed 43: val=0.7401 test=0.7329 d=+0.0723 CI[+0.0548,+0.0901] 159ms
+[23:43:16 +  2579s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+alignscore seed 17: val=0.7571 test=0.7538 d=+0.0861 CI[+0.0687,+0.1035] 151ms
+[23:43:32 +  2594s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+alignscore seed 29: val=0.7507 test=0.7472 d=+0.0810 CI[+0.0635,+0.0992] 151ms
+[23:43:48 +  2610s]     TS:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+alignscore seed 43: val=0.7555 test=0.7488 d=+0.0827 CI[+0.0645,+0.1018] 151ms
+[23:44:19 +  2642s]     TS:compact16:lettuce_v2+wecheck+alignscore seed 17: val=0.7409 test=0.7326 d=+0.0474 CI[+0.0300,+0.0641] 258ms
+[23:44:51 +  2673s]     TS:compact16:lettuce_v2+wecheck+alignscore seed 29: val=0.7391 test=0.7383 d=+0.0535 CI[+0.0354,+0.0710] 255ms
+[23:45:22 +  2705s]     TS:compact16:lettuce_v2+wecheck+alignscore seed 43: val=0.7389 test=0.7387 d=+0.0595 CI[+0.0403,+0.0794] 235ms
+[23:45:38 +  2721s]     TS:dataset_id_only:lettuce_v2+wecheck+alignscore seed 17: val=0.7552 test=0.7497 d=+0.0666 CI[+0.0471,+0.0858] 229ms
+[23:45:54 +  2737s]     TS:dataset_id_only:lettuce_v2+wecheck+alignscore seed 29: val=0.7387 test=0.7451 d=+0.0656 CI[+0.0450,+0.0898] 216ms
+[23:46:10 +  2753s]     TS:dataset_id_only:lettuce_v2+wecheck+alignscore seed 43: val=0.7544 test=0.7479 d=+0.0655 CI[+0.0471,+0.0841] 230ms
+[23:46:32 +  2775s]     TS:compact16:granite_guardian_3_1_2b+qwen30_fast seed 17: val=0.7303 test=0.7198 d=+0.0170 CI[+0.0029,+0.0313] 255ms
+[23:46:54 +  2797s]     TS:compact16:granite_guardian_3_1_2b+qwen30_fast seed 29: val=0.7227 test=0.7213 d=+0.0209 CI[+0.0075,+0.0343] 252ms
+[23:47:17 +  2819s]     TS:compact16:granite_guardian_3_1_2b+qwen30_fast seed 43: val=0.7252 test=0.7136 d=+0.0161 CI[+0.0004,+0.0326] 256ms
+[23:47:29 +  2831s]     TS:dataset_id_only:granite_guardian_3_1_2b+qwen30_fast seed 17: val=0.7173 test=0.7218 d=+0.0105 CI[-0.0023,+0.0234] 276ms
+[23:47:41 +  2843s]     TS:dataset_id_only:granite_guardian_3_1_2b+qwen30_fast seed 29: val=0.7164 test=0.7174 d=+0.0122 CI[-0.0035,+0.0267] 284ms
+[23:47:52 +  2855s]     TS:dataset_id_only:granite_guardian_3_1_2b+qwen30_fast seed 43: val=0.7189 test=0.7153 d=+0.0151 CI[+0.0016,+0.0297] 282ms
+[23:48:24 +  2886s]     TS:compact16:lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore seed 17: val=0.7424 test=0.7369 d=+0.0605 CI[+0.0391,+0.0800] 266ms
+[23:48:55 +  2917s]     TS:compact16:lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore seed 29: val=0.7396 test=0.7395 d=+0.0631 CI[+0.0467,+0.0798] 259ms
+[23:49:26 +  2949s]     TS:compact16:lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore seed 43: val=0.7595 test=0.7480 d=+0.0668 CI[+0.0500,+0.0834] 303ms
+[23:49:42 +  2964s]     TS:dataset_id_only:lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore seed 17: val=0.7157 test=0.7248 d=+0.0484 CI[+0.0273,+0.0668] 271ms
+[23:49:58 +  2980s]     TS:dataset_id_only:lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore seed 29: val=0.7132 test=0.7134 d=+0.0453 CI[+0.0280,+0.0611] 213ms
+[23:50:14 +  2997s]     TS:dataset_id_only:lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore seed 43: val=0.7272 test=0.7175 d=+0.0469 CI[+0.0290,+0.0648] 286ms
+[23:50:36 +  3019s]     TS:compact16:wecheck+factcg seed 17: val=0.7506 test=0.7453 d=+0.0159 CI[+0.0032,+0.0277] 366ms
+[23:50:59 +  3041s]     TS:compact16:wecheck+factcg seed 29: val=0.7486 test=0.7404 d=+0.0100 CI[-0.0025,+0.0219] 368ms
+[23:51:21 +  3063s]     TS:compact16:wecheck+factcg seed 43: val=0.7447 test=0.7368 d=+0.0105 CI[-0.0030,+0.0238] 374ms
+[23:51:33 +  3075s]     TS:dataset_id_only:wecheck+factcg seed 17: val=0.7599 test=0.7567 d=+0.0186 CI[+0.0049,+0.0320] 330ms
+[23:51:45 +  3087s]     TS:dataset_id_only:wecheck+factcg seed 29: val=0.7566 test=0.7525 d=+0.0205 CI[+0.0081,+0.0334] 330ms
+[23:51:57 +  3099s]     TS:dataset_id_only:wecheck+factcg seed 43: val=0.7574 test=0.7531 d=+0.0181 CI[+0.0051,+0.0310] 330ms
+[23:52:29 +  3131s]     TS:compact16:wecheck+factcg+alignscore seed 17: val=0.7552 test=0.7470 d=+0.0188 CI[+0.0063,+0.0330] 369ms
+[23:53:01 +  3163s]     TS:compact16:wecheck+factcg+alignscore seed 29: val=0.7548 test=0.7532 d=+0.0193 CI[+0.0048,+0.0335] 421ms
+[23:53:33 +  3195s]     TS:compact16:wecheck+factcg+alignscore seed 43: val=0.7613 test=0.7535 d=+0.0194 CI[+0.0054,+0.0326] 438ms
+[23:53:48 +  3211s]     TS:dataset_id_only:wecheck+factcg+alignscore seed 17: val=0.7792 test=0.7764 d=+0.0382 CI[+0.0233,+0.0538] 337ms
+[23:54:04 +  3227s]     TS:dataset_id_only:wecheck+factcg+alignscore seed 29: val=0.7812 test=0.7758 d=+0.0378 CI[+0.0206,+0.0536] 339ms
+[23:54:21 +  3243s]     TS:dataset_id_only:wecheck+factcg+alignscore seed 43: val=0.7804 test=0.7734 d=+0.0373 CI[+0.0219,+0.0554] 343ms
+[23:54:43 +  3266s]     TS:compact16:factcg+alignscore seed 17: val=0.7671 test=0.7638 d=+0.0180 CI[+0.0052,+0.0319] 527ms
+[23:55:06 +  3288s]     TS:compact16:factcg+alignscore seed 29: val=0.7676 test=0.7624 d=+0.0156 CI[+0.0024,+0.0280] 524ms
+[23:55:29 +  3311s]     TS:compact16:factcg+alignscore seed 43: val=0.7731 test=0.7644 d=+0.0167 CI[+0.0042,+0.0296] 549ms
+[23:55:41 +  3324s]     TS:dataset_id_only:factcg+alignscore seed 17: val=0.7677 test=0.7676 d=+0.0192 CI[+0.0065,+0.0316] 462ms
+[23:55:53 +  3336s]     TS:dataset_id_only:factcg+alignscore seed 29: val=0.7708 test=0.7640 d=+0.0185 CI[+0.0063,+0.0307] 463ms
+[23:56:06 +  3348s]     TS:dataset_id_only:factcg+alignscore seed 43: val=0.7691 test=0.7597 d=+0.0146 CI[+0.0020,+0.0276] 478ms
+[23:56:37 +  3380s]     TS:compact16:factcg+granite_guardian_4_1_3b_factuality_lora+alignscore seed 17: val=0.7702 test=0.7626 d=+0.0201 CI[+0.0043,+0.0364] 511ms
+[23:57:09 +  3411s]     TS:compact16:factcg+granite_guardian_4_1_3b_factuality_lora+alignscore seed 29: val=0.7712 test=0.7625 d=+0.0224 CI[+0.0084,+0.0368] 502ms
+[23:57:40 +  3443s]     TS:compact16:factcg+granite_guardian_4_1_3b_factuality_lora+alignscore seed 43: val=0.7697 test=0.7607 d=+0.0201 CI[+0.0048,+0.0343] 499ms
+[23:57:56 +  3459s]     TS:dataset_id_only:factcg+granite_guardian_4_1_3b_factuality_lora+alignscore seed 17: val=0.7677 test=0.7676 d=+0.0199 CI[+0.0080,+0.0321] 462ms
+[23:58:13 +  3475s]     TS:dataset_id_only:factcg+granite_guardian_4_1_3b_factuality_lora+alignscore seed 29: val=0.7708 test=0.7640 d=+0.0176 CI[+0.0052,+0.0304] 463ms
+[23:58:29 +  3492s]     TS:dataset_id_only:factcg+granite_guardian_4_1_3b_factuality_lora+alignscore seed 43: val=0.7691 test=0.7597 d=+0.0132 CI[+0.0008,+0.0252] 478ms
+[23:58:29 +  3492s] anchors {'Q_floor': 0.605686546806157, 'cheapest': 'factkb', 'Q_ceil': 0.75836629650226, 'best_fixed': 'alignscore', 'C_min': 49.027240038757625, 'C_max': 1208.3943806279915}
+[23:58:29 +  3492s] Balance ranking (held-out AUROC over ten rotations, as R9):
+ rank                                                                            name         family  auroc       ms    val picked_by_budget is_paper_pool  balance
+    1                           factcc+lettuce_v2+granite_guardian_3_1_2b | compact16 R6_budget_pool 0.7239  77.9390 0.7325             True          True   0.8105
+    2                     factcc+lettuce_v2+granite_guardian_3_1_2b | dataset_id_only R6_budget_pool 0.7204  80.1787 0.7242             True          True   0.7933
+    3                 lettuce_v2+granite_guardian_3_1_2b+alignscore | dataset_id_only R6_budget_pool 0.7500 150.8590 0.7544             True         False   0.7490
+    4                lettuce_v2+granite_guardian_3_1_2b+qwen30_fast | dataset_id_only R6_budget_pool 0.7491 150.4401 0.7504             True         False   0.7489
+    5                            lettuce_v2+granite_guardian_3_1_2b | dataset_id_only R6_budget_pool 0.7332 136.5102 0.7363             True         False   0.7457
+    6                      lettuce_v2+granite_guardian_3_1_2b+qwen30_fast | compact16 R6_budget_pool 0.7264 135.4803 0.7309             True         False   0.7314
+    7                                  lettuce_v2+granite_guardian_3_1_2b | compact16 R6_budget_pool 0.7157 122.0079 0.7174             True         False   0.7180
+    8                       lettuce_v2+granite_guardian_3_1_2b+alignscore | compact16 R6_budget_pool 0.7324 157.7614 0.7400             True         False   0.7155
+    9                                 lettuce_v2+wecheck+alignscore | dataset_id_only R6_budget_pool 0.7476 225.3096 0.7494             True         False   0.6598
+   10                                                   factkb+lettuce_v2 | compact16 R6_budget_pool 0.6804  67.3201 0.6808             True         False   0.6323
+   11                                             factkb+lettuce_v2 | dataset_id_only R6_budget_pool 0.6804  67.6987 0.6823             True         False   0.6321
+   12                                            lettuce_v2+wecheck | dataset_id_only R6_budget_pool 0.7055 173.4559 0.7065             True         False   0.6291
+   13                                       lettuce_v2+wecheck+alignscore | compact16 R6_budget_pool 0.7365 249.0982 0.7396             True         False   0.6273
+   14       lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore | compact16 R6_budget_pool 0.7415 275.8205 0.7472             True         False   0.6109
+   15                                                  lettuce_v2+wecheck | compact16 R6_budget_pool 0.6969 169.2857 0.7004             True         False   0.6053
+   16                                 granite_guardian_3_1_2b+qwen30_fast | compact16 R6_budget_pool 0.7182 254.0562 0.7261             True         False   0.5922
+   17 lettuce_v2+granite_guardian_4_1_3b_factuality_lora+alignscore | dataset_id_only R6_budget_pool 0.7186 256.7448 0.7187             True         False   0.5908
+   18                                                wecheck+factcg | dataset_id_only R6_budget_pool 0.7541 330.0957 0.7580             True         False   0.5788
+   19                                                         granite_guardian_3_1_2b fixed_verifier 0.6963 205.2671    NaN              NaN           NaN   0.5728
+   20                                                                         wecheck fixed_verifier 0.7165 275.4733    NaN              NaN           NaN   0.5726
+[23:58:29 +  3492s] validation-only Balance, top 15:
+ rank  k                                                                       pool  val_auroc   val_ms  cheapest_member_ms  priciest_member_ms  cost_spread  balance
+    1  3                                                  factkb+lettuce_v2+wecheck     0.7079 106.4203             49.0272            275.4733       5.6188   0.7106
+    2  3                            lettuce_v2+granite_guardian_3_1_2b+qwen30_judge     0.7197 142.3488             81.0765            668.4229       8.2444   0.7043
+    3  3                              lettuce_v2+granite_guardian_3_1_2b+alignscore     0.7229 151.0028             81.0765            748.2229       9.2286   0.7023
+    4  3                             lettuce_v2+granite_guardian_3_1_2b+qwen30_fast     0.7206 148.9462             81.0765            311.1882       3.8382   0.6987
+    5  3      lettuce_v2+granite_guardian_3_1_2b+granite_guardian_3_2_8b_factuality     0.7088 126.8931             81.0765           1208.3944      14.9044   0.6889
+    6  2                                         lettuce_v2+granite_guardian_3_1_2b     0.7082 126.1573             81.0765            205.2671       2.5318   0.6879
+    7  3                           lettuce_v2+granite_guardian_3_1_2b+minicheck_ft5     0.7119 136.8736             81.0765            504.3571       6.2208   0.6875
+    8  3                                    lettuce_v2+hhem+granite_guardian_3_1_2b     0.7071 130.3755             81.0765            205.2671       2.5318   0.6790
+    9  3                          lettuce_v2+granite_guardian_3_1_2b+minicheck_dbta     0.7026 121.5605             81.0765            468.8476       5.7828   0.6733
+   10  3           lettuce_v2+granite_guardian_3_1_2b+granite_guardian_3_2_3b_a800m     0.7021 121.0761             81.0765            231.6805       2.8576   0.6720
+   11  3                                  factcc+lettuce_v2+granite_guardian_3_1_2b     0.6916  85.4097             49.3087            205.2671       4.1629   0.6674
+   12  3                                  lettuce_v2+granite_guardian_3_1_2b+factcg     0.7071 142.2507             81.0765            431.4293       5.3213   0.6658
+   13  3 lettuce_v2+granite_guardian_3_1_2b+granite_guardian_4_1_3b_factuality_lora     0.6995 119.2172             81.0765            493.0023       6.0807   0.6644
+   14  3                                 lettuce_v2+granite_guardian_3_1_2b+wecheck     0.7031 134.3873             81.0765            275.4733       3.3977   0.6608
+   15  3                                               factcc+lettuce_v2+alignscore     0.6985 120.1399             49.3087            748.2229      15.1743   0.6595
+[23:58:29 +  3492s] paper pool factcc+lettuce_v2+granite_guardian_3_1_2b: validation-Balance rank 11 of 550
+[23:58:29 +  3492s] COMPLETE

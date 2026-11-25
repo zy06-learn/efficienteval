@@ -268,6 +268,8 @@ needs no GPU, no model downloads, and no corpus access.
         ├── 07_data_contract/       the split and grouping rules
         ├── 08_routing_code/        stage 3: the routing experiments themselves
         ├── 09_live_and_controls/   stage 4: live re-run and the three controls, code and results
+        ├── 10_revision_experiments/  added during revision: per-corpus, transfer, mixtures, pool, ADR-v1, significance
+        ├── 11_rebuttal_x1/         rebuttal: router vs. a fixed verifier chosen with the same target labels
         └── cross_stage_contract/   the frozen configuration every stage reads
 ```
 

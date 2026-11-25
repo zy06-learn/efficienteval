@@ -1,0 +1,24 @@
+{
+  "replay_vs_E03": {
+    "A": {
+      "max_abs_diff_vs_E03": 9.71445146547012e-17,
+      "pass": true
+    },
+    "B": {
+      "max_abs_diff_vs_E03": 9.71445146547012e-17,
+      "pass": true
+    }
+  },
+  "matched_pick": {
+    "A": {
+      "ours_ms": 112.54141989185943,
+      "matched_variant": "b110",
+      "matched_ms": 108.88316170453606
+    },
+    "B": {
+      "ours_ms": 106.14368718536755,
+      "matched_variant": "b100",
+      "matched_ms": 107.90191943038023
+    }
+  }
+}

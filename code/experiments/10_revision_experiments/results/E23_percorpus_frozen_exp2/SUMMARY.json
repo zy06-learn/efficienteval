@@ -1,0 +1,29 @@
+{
+  "status": "COMPLETE",
+  "seeds": [
+    17,
+    29,
+    43,
+    7,
+    11,
+    23,
+    31,
+    37,
+    53,
+    61
+  ],
+  "draws": 2000,
+  "n_perm_per_seed": 500,
+  "rng_seed": 20260929,
+  "validation_selected_fixed": {
+    "factcg": 7,
+    "alignscore": 3
+  },
+  "one_class_redraws": {
+    "cogensumm_test": 0,
+    "frank_test": 0,
+    "ragtruth_test": 0,
+    "unisumeval_dev": 0
+  },
+  "seconds": 45.9
+}

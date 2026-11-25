@@ -1,0 +1,4 @@
+seed,winner_pool,features,balance,runner_up_pool,runner_up_balance
+17,factcc+granite_guardian_3_1_2b+lettuce_v2,six_features,0.8084573269297776,factcc+hhem+lettuce_v2,0.7795744833639536
+29,factcc+granite_guardian_3_1_2b+lettuce_v2,six_features,0.802509176519457,factcc+hhem+lettuce_v2,0.7736142081556254
+43,factcc+hhem+lettuce_v2,corpus_onehot,0.7968957722000415,factcc+granite_guardian_3_1_2b+lettuce_v2,0.7918291494639629

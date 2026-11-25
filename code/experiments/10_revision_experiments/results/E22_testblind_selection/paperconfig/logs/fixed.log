@@ -1,0 +1,17 @@
+[02:24:07 +     0s] ===== fixed [] | TRAIN 5276 rows | hp={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6} | smoke=False =====
+[02:24:07 +     1s]   fixed factcc: 0.51332 @ 49.3 ms
+[02:24:08 +     1s]   fixed factkb: 0.60033 @ 49.0 ms
+[02:24:08 +     2s]   fixed hhem: 0.58184 @ 104.5 ms
+[02:24:09 +     2s]   fixed wecheck: 0.70805 @ 275.5 ms
+[02:24:09 +     3s]   fixed factcg: 0.73853 @ 431.4 ms
+[02:24:10 +     3s]   fixed minicheck_dbta: 0.60907 @ 468.8 ms
+[02:24:10 +     4s]   fixed minicheck_ft5: 0.67098 @ 504.4 ms
+[02:24:11 +     4s]   fixed alignscore: 0.75161 @ 748.2 ms
+[02:24:11 +     5s]   fixed lettuce_v2: 0.62345 @ 81.1 ms
+[02:24:12 +     5s]   fixed granite_guardian_3_1_2b: 0.68917 @ 205.3 ms
+[02:24:12 +     6s]   fixed granite_guardian_3_2_3b_a800m: 0.60609 @ 231.7 ms
+[02:24:13 +     6s]   fixed granite_guardian_3_2_8b_factuality: 0.66878 @ 1208.4 ms
+[02:24:13 +     7s]   fixed granite_guardian_4_1_3b_factuality_lora: 0.66327 @ 493.0 ms
+[02:24:14 +     7s]   fixed qwen30_fast: 0.71043 @ 311.2 ms
+[02:24:14 +     8s]   fixed qwen30_judge: 0.72085 @ 668.4 ms
+[02:24:14 +     8s] ===== fixed done in 7s =====

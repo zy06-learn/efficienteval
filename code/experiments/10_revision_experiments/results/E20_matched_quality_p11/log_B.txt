@@ -1,0 +1,24 @@
+[02:51:24] ===== Protocol B =====
+[02:51:26]   seed 17: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:26]   seed 29: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:27]   seed 43: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 1.8e-15) (1s)
+[02:51:28]   seed 7: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:29]   seed 11: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:29]   seed 23: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:30]   seed 31: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:31]   seed 37: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:32]   seed 53: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:33]   seed 61: selected beta 0.1 reproduced (max d prob 0.0e+00, ms 0.0e+00) (1s)
+[02:51:33]   deployed replay vs published OURS row: max diff 0.0e+00
+  beta  auroc  auroc_sd  auprc_unsup   bacc  f1_unsup    mcc       ms  share__factcc  share__lettuce_v2  share__granite_guardian_3_1_2b
+0.0000 0.8090    0.0040       0.8301 0.7480    0.7092 0.5171 142.7411         0.0074             0.2947                          0.6978
+0.1000 0.8226    0.0047       0.8352 0.7415    0.7089 0.5061 106.1437         0.3434             0.3474                          0.3091
+0.2000 0.8038    0.0081       0.8174 0.7218    0.6593 0.4799  99.2318         0.4007             0.3613                          0.2379
+0.4000 0.7714    0.0076       0.7893 0.6919    0.5785 0.4510  92.5255         0.5273             0.2718                          0.2009
+0.6000 0.5695    0.0169       0.6309 0.6014    0.3469 0.3172  71.0725         0.7644             0.2241                          0.0116
+0.8000 0.5730    0.0087       0.6267 0.5898    0.3119 0.2989  69.5086         0.7994             0.2006                          0.0000
+1.2000 0.5719    0.0051       0.6089 0.5514    0.1922 0.2184  68.0626         0.9013             0.0987                          0.0000
+1.6000 0.5689    0.0060       0.5843 0.5271    0.2018 0.1295  67.2740         0.9626             0.0374                          0.0000
+2.4000 0.5699    0.0077       0.5668 0.5375    0.5189 0.0987  66.8333         0.9981             0.0019                          0.0000
+3.2000 0.5699    0.0077       0.5668 0.5375    0.5189 0.0987  66.8333         0.9981             0.0019                          0.0000
+[02:51:33] ===== B done in 9s =====

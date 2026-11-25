@@ -1,0 +1,10 @@
+{
+  "G1_thr_checked_splits": 10,
+  "G1_max_abs_diff": 0.0,
+  "G2_max_abs_diff": {
+    "auroc": 0.0,
+    "ms": 5.684341886080802e-14,
+    "calls": 6.661338147750939e-16
+  },
+  "configs": 550
+}

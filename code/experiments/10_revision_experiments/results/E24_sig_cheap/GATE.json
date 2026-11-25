@@ -1,0 +1,11 @@
+{
+  "A": {
+    "max_abs_diff_vs_E03": 9.71445146547012e-17,
+    "pass": true
+  },
+  "B": {
+    "max_abs_diff_vs_E03": 9.71445146547012e-17,
+    "pass": true
+  },
+  "marks_changed_at_m16": []
+}

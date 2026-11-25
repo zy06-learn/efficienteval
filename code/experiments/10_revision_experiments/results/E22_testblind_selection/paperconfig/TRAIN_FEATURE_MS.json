@@ -1,0 +1,6 @@
+{
+  "train_rows": 5276,
+  "feature_latency_ms": 10.357047303174214,
+  "compact16_feature_latency_ms": 26.50049434001455,
+  "pre_call_feature_ms": 36.85754164318877
+}

@@ -1,0 +1,6 @@
+corpus,split,rows,documents,supported,unsupported,supported_rate
+CoGenSumm,cogensumm_test,400,100,312,88,0.78
+FRANK,frank_test,1569,350,257,1312,0.16379859783301465
+RAGTruth,ragtruth_test,900,150,704,196,0.7822222222222223
+UniSumEval,unisumeval_dev,367,45,274,93,0.7465940054495913
+ALL,TEST,3236,645,1547,1689,0.4780593325092707

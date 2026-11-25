@@ -1,0 +1,25 @@
+{
+  "A": {
+    "best_auroc_share": {
+      "EfficientEval": 0.27,
+      "alignscore": 0.11,
+      "factcg": 0.195,
+      "factkb": 0.015,
+      "granite_guardian_3_1_2b": 0.005,
+      "qwen30_fast": 0.25,
+      "qwen30_judge": 0.155
+    },
+    "on_frontier": 0.975
+  },
+  "B": {
+    "best_auroc_share": {
+      "EfficientEval": 0.02,
+      "alignscore": 0.06,
+      "factcg": 0.13,
+      "factkb": 0.015,
+      "qwen30_fast": 0.44,
+      "qwen30_judge": 0.335
+    },
+    "on_frontier": 0.935
+  }
+}

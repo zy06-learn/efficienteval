@@ -1,0 +1,16 @@
+[02:29:40 +     0s] ===== screen ['29', '1', '2'] | TRAIN 5276 rows | hp={'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 0.5, 'max_depth': 6} | smoke=False =====
+[02:31:16 +    97s]   seed 29 shard 1/2: 20/280  1.6 min, eta 20.9 min
+[02:32:55 +   195s]   seed 29 shard 1/2: 40/280  3.3 min, eta 19.5 min
+[02:34:54 +   314s]   seed 29 shard 1/2: 60/280  5.2 min, eta 19.2 min
+[02:37:26 +   466s]   seed 29 shard 1/2: 80/280  7.8 min, eta 19.4 min
+[02:40:02 +   622s]   seed 29 shard 1/2: 100/280  10.4 min, eta 18.7 min
+[02:42:33 +   773s]   seed 29 shard 1/2: 120/280  12.9 min, eta 17.2 min
+[02:45:01 +   921s]   seed 29 shard 1/2: 140/280  15.4 min, eta 15.4 min
+[02:47:40 +  1080s]   seed 29 shard 1/2: 160/280  18.0 min, eta 13.5 min
+[02:50:12 +  1232s]   seed 29 shard 1/2: 180/280  20.5 min, eta 11.4 min
+[02:52:39 +  1379s]   seed 29 shard 1/2: 200/280  23.0 min, eta 9.2 min
+[02:55:24 +  1544s]   seed 29 shard 1/2: 220/280  25.7 min, eta 7.0 min
+[02:58:08 +  1709s]   seed 29 shard 1/2: 240/280  28.5 min, eta 4.7 min
+[03:00:53 +  1873s]   seed 29 shard 1/2: 260/280  31.2 min, eta 2.4 min
+[03:03:37 +  2037s]   seed 29 shard 1/2: 280/280  33.9 min, eta 0.0 min
+[03:03:37 +  2037s] ===== screen done in 2037s =====

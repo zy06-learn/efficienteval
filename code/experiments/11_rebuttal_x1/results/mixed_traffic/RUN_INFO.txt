@@ -1,0 +1,6 @@
+# launch time, host, working-tree commit; launch command; sha256 of the script that ran
+Wed Nov 25 09:03:25 AM EST 2026
+CSC-GW-Spark1
+1040b1da0da4250cd20ddf64b76c685ac8104224
+cmd: ./run_x1_mixed.sh /home/zeyu/projects/adaptive-faithfulness-router-v2/paper_v3/runs/x1_mixed_full_20261125
+fa5eee2475467af827c89bef0bcc3ea208ae2f32bb81e6fcb643f02e6732438b  x1_mixed_at_k.py

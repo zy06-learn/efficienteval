@@ -1,0 +1,169 @@
+#!/usr/bin/env python3
+"""§6.4 / Appendix I: corpus-mixture sensitivity on the Table-1 metric set.
+
+The published E7 mixture tables report AUROC only (plus an unweighted ms column under B).
+This reproduces every published number bit-for-bit from the same row-level predictions and the
+same resampling stream, then emits AUPRC / BAcc / F1 computed on the very same resampled index
+sets, so no metric is averaged across corpora as a stand-in for a mixture AUROC.
+
+Reproduced exactly (gate 1e-9): natural and equal AUROC for every system, the Dirichlet
+on-frontier share and the best-AUROC share.
+
+Added: auprc_unsup, bacc, f1_unsup under the same draws; ms_mixture, the latency re-weighted by
+the same mixture (the published ms column is the unweighted mean and does not move with the
+mixture, so it is reported unchanged alongside).
+"""
+import json
+import os
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics import roc_auc_score, average_precision_score, balanced_accuracy_score, f1_score
+
+HERE = Path(__file__).resolve().parent
+ART = HERE / 'artifacts'
+OUT = Path(os.environ['V3_RUN_DIR']).resolve()
+OUT.mkdir(parents=True, exist_ok=True)
+OLD = HERE / 'results_p0exp'
+CORPORA = ('cogensumm', 'frank', 'ragtruth', 'unisumeval')
+NDRAW, NREP = 200, 50
+GATE = 1e-9
+
+
+def au(y, p):
+    return float(roc_auc_score(y, p)) if len(set(np.asarray(y).tolist())) > 1 else float('nan')
+
+
+def quality(y, p, thr):
+    """AUROC/AUPRC ignore the threshold; BAcc/F1 use the system's own validation MCC threshold."""
+    y = np.asarray(y, int)
+    if len(set(y.tolist())) < 2:
+        return dict(auroc=np.nan, auprc_unsup=np.nan, bacc=np.nan, f1_unsup=np.nan)
+    d = (np.asarray(p, float) >= float(thr)).astype(int)
+    return dict(auroc=float(roc_auc_score(y, p)),
+                auprc_unsup=float(average_precision_score((y == 0).astype(int), 1.0 - p)),
+                bacc=float(balanced_accuracy_score(y, d)),
+                f1_unsup=float(f1_score((y == 0).astype(int), (d == 0).astype(int),
+                                        zero_division=0)))
+
+
+def load(protocol):
+    d = np.load(ART / 'part1c_main_full_v1' / '10_row_level' / f'probs_{protocol}.npz',
+                allow_pickle=True)
+    y = d['y']
+    fam = np.array([str(c).split('_')[0] for c in d['corpus']])
+    names, ms, thr = {'EfficientEval': d['prob__OURS']}, {}, {}
+    ms['EfficientEval'] = d['ms_full__OURS']
+    thr['EfficientEval'] = np.asarray(d['thr_mcc__OURS'], float).ravel()
+    for s in d['systems']:
+        s = str(s)
+        if s.startswith('fixed::'):
+            k = s.split('::', 1)[1]
+            names[k] = d[f'prob__fixed__{k}']
+            ms[k] = d[f'ms_full__fixed__{k}']
+            thr[k] = np.asarray(d[f'thr_mcc__fixed__{k}'], float).ravel()
+    return y, fam, names, ms, thr
+
+
+def run(protocol):
+    y, fam, names, ms, thr = load(protocol)
+    n_rows = len(y)
+    idx = {c: np.flatnonzero(fam == c) for c in CORPORA}
+    base = np.array([len(idx[c]) for c in CORPORA], float)
+    base /= base.sum()
+
+    def resample(w, r):
+        return np.concatenate([r.choice(idx[c], size=max(int(round(n_rows * wi)), 2), replace=True)
+                               for c, wi in zip(CORPORA, w)])
+
+    rows = []
+    for label, w in (('natural', base), ('equal', np.full(4, 0.25))):
+        # One shared generator consumed in system order, exactly as the published script did.
+        r = np.random.default_rng(1)
+        for name, P in names.items():
+            n_seeds = P.shape[1]
+            acc = {k: [] for k in ('auroc', 'auprc_unsup', 'bacc', 'f1_unsup')}
+            ms_mix = []
+            for _ in range(NREP):
+                ii = resample(w, r)
+                per = [quality(y[ii], P[ii, s], thr[name][s]) for s in range(n_seeds)]
+                for k in acc:
+                    acc[k].append(np.nanmean([q[k] for q in per]))
+                ms_mix.append(float(np.mean(ms[name][ii])))
+            rows.append({'protocol': protocol, 'mixture': label, 'system': name,
+                         **{k: float(np.mean(v)) for k, v in acc.items()},
+                         'ms': float(ms[name].mean()),
+                         'ms_mixture': float(np.mean(ms_mix))})
+
+    rng = np.random.default_rng(0)
+    draws = [rng.dirichlet(np.ones(4)) for _ in range(NDRAW)]
+    r = np.random.default_rng(2)
+    hits, wins = 0, {k: 0 for k in names}
+    for w in draws:
+        ii = resample(w, r)
+        a = {k: float(np.nanmean([au(y[ii], P[ii, s]) for s in range(P.shape[1])]))
+             for k, P in names.items()}
+        om = ms['EfficientEval'].mean()
+        hits += not any(a[k] > a['EfficientEval'] and ms[k].mean() < om
+                        for k in names if k != 'EfficientEval')
+        wins[max(a, key=a.get)] += 1
+    dirichlet = {'on_frontier': hits / NDRAW,
+                 'best_auroc_share': {k: v / NDRAW for k, v in wins.items() if v}}
+    return pd.DataFrame(rows), dirichlet
+
+
+def gate(protocol, table, dirichlet):
+    """Every published value must come back identical before a new metric is published."""
+    old = pd.read_csv(OLD / ('E7_mixture.csv' if protocol == 'B' else 'E7_mixture_A.csv'))
+    checks = []
+    for label in ('natural', 'equal'):
+        ref = old[old.mixture == label].iloc[0]
+        for _, row in table[table.mixture == label].iterrows():
+            for col, key in [('auroc', row.system)] + (
+                    [('ms', row.system + '__ms')] if protocol == 'B' else []):
+                if key not in old.columns or pd.isna(ref[key]):
+                    continue
+                diff = abs(float(row[col]) - float(ref[key]))
+                checks.append({'protocol': protocol, 'mixture': label, 'system': row.system,
+                               'metric': col, 'abs_diff': diff, 'pass': bool(diff <= GATE)})
+    fr = old[old.mixture.astype(str).str.contains('on frontier')]
+    if len(fr):
+        diff = abs(dirichlet['on_frontier'] - float(fr.iloc[0]['EfficientEval']))
+        checks.append({'protocol': protocol, 'mixture': 'dirichlet', 'system': 'EfficientEval',
+                       'metric': 'on_frontier', 'abs_diff': diff, 'pass': bool(diff <= GATE)})
+    sh = old[old.mixture.astype(str).str.contains('best-AUROC')]
+    if len(sh):
+        ref = sh.iloc[0]
+        for k, v in dirichlet['best_auroc_share'].items():
+            if k in old.columns and not pd.isna(ref[k]):
+                diff = abs(v - float(ref[k]))
+                checks.append({'protocol': protocol, 'mixture': 'dirichlet', 'system': k,
+                               'metric': 'best_auroc_share', 'abs_diff': diff,
+                               'pass': bool(diff <= GATE)})
+    return checks
+
+
+def main():
+    all_checks, frames, dirs = [], [], {}
+    for protocol in ('B', 'A'):
+        table, dirichlet = run(protocol)
+        all_checks += gate(protocol, table, dirichlet)
+        frames.append(table)
+        dirs[protocol] = dirichlet
+        print(f'{protocol}: {len(table)} rows', flush=True)
+    bad = [c for c in all_checks if not c['pass']]
+    (OUT / 'MIXTURE_GATE.json').write_text(json.dumps(
+        {'gate': GATE, 'pass': not bad, 'n_checks': len(all_checks), 'failures': bad},
+        indent=2, sort_keys=True, default=float))
+    (OUT / 'MIXTURE_DIRICHLET.json').write_text(json.dumps(dirs, indent=2, sort_keys=True,
+                                                           default=float))
+    assert not bad, f'mixture reproduction failed on {len(bad)} cells: {json.dumps(bad[:8])}'
+    pd.concat(frames, ignore_index=True).to_csv(OUT / 'MIXTURE_METRICS.csv', index=False)
+    (OUT / 'DONE.json').write_text(json.dumps({'status': 'complete',
+                                               'checks_passed': len(all_checks)}, indent=2))
+    print(f'gate passed on {len(all_checks)} published cells', flush=True)
+
+
+if __name__ == '__main__':
+    main()

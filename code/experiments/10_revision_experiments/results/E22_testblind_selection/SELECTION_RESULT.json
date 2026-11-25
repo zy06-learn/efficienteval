@@ -1,0 +1,28 @@
+{
+  "selected_pool": "factcc+lettuce_v2+granite_guardian_3_1_2b",
+  "selected_features_config": "compact16",
+  "heldout_auroc": 0.7239264556787588,
+  "ms": 77.93899621775755,
+  "balance": 0.8105210115990025,
+  "runner_up": {
+    "pool": "factcc+lettuce_v2+granite_guardian_3_1_2b",
+    "features": "dataset_id_only",
+    "heldout_auroc": 0.7203750726073151,
+    "ms": 80.17868042862975,
+    "balance": 0.7932695464393905
+  },
+  "historical_pool": "factcc+lettuce_v2+granite_guardian_3_1_2b",
+  "same_as_historical": true,
+  "seed_winner_counts": {
+    "factcc+lettuce_v2+granite_guardian_3_1_2b": 3
+  },
+  "anchors": {
+    "C_max": 1208.3943806279915,
+    "C_min": 49.027240038757625,
+    "Q_ceil": 0.75836629650226,
+    "Q_floor": 0.605686546806157,
+    "best_fixed": "alignscore",
+    "cheapest": "factkb"
+  },
+  "budget_picks_identical_to_run": true
+}

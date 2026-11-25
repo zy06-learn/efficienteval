@@ -1,0 +1,116 @@
+[02:02:27 +     9s] gate: seed-17 screen reproduced exactly on three pools
+[02:05:59 +   221s]   k=2 100
+[02:11:16 +   539s]   k=3 100
+[02:16:23 +   845s]   k=3 200
+[02:21:29 +  1152s]   k=3 300
+[02:26:31 +  1453s]   k=3 400
+[02:29:14 +  1617s] budget picks:
+ budget_ms  k                                                      pool  val_auroc   val_ms  margin_to_runner_up
+       100  2                            factcc+granite_guardian_3_1_2b     0.6577  97.9217               0.0010
+       100  3                 factkb+lettuce_v2+granite_guardian_3_1_2b     0.6960  94.1115               0.0028
+       150  2                        lettuce_v2+granite_guardian_3_1_2b     0.6985 117.4957               0.0031
+       150  3                                  factcc+lettuce_v2+factcg     0.7218 133.8671               0.0038
+       200  2                                             factkb+factcg     0.7053 184.9498               0.0068
+       200  3                 lettuce_v2+granite_guardian_3_1_2b+factcg     0.7313 177.5489               0.0095
+       250  2                                         lettuce_v2+factcg     0.7173 245.7400               0.0024
+       250  3                    granite_guardian_3_1_2b+wecheck+factcg     0.7439 243.6644               0.0119
+       300  2                            granite_guardian_3_1_2b+factcg     0.7478 287.0719               0.0119
+       300  3                granite_guardian_3_1_2b+qwen30_fast+factcg     0.7585 288.0631               0.0034
+       400  2                                        qwen30_fast+factcg     0.7600 342.0901               0.0075
+       400  3                                 wecheck+factcg+alignscore     0.7688 350.3509               0.0014
+       600  2                                         factcg+alignscore     0.7775 501.4983               0.0135
+       600  3 factcg+granite_guardian_4_1_3b_factuality_lora+alignscore     0.7777 439.1104               0.0024
+[02:29:36 +  1639s]     RS29:compact16:factcc+granite_guardian_3_1_2b seed 17: val=0.6150 test=0.5924 d=+0.0551 CI[+0.0367,+0.0739] 74ms
+[02:29:59 +  1661s]     RS29:compact16:factcc+granite_guardian_3_1_2b seed 29: val=0.6372 test=0.6271 d=+0.0497 CI[+0.0327,+0.0674] 94ms
+[02:30:21 +  1684s]     RS29:compact16:factcc+granite_guardian_3_1_2b seed 43: val=0.6108 test=0.5859 d=+0.0517 CI[+0.0341,+0.0689] 75ms
+[02:30:21 +  1684s]   confirmed factcc+granite_guardian_3_1_2b [compact16]
+[02:30:34 +  1696s]     RS29:dataset_id_only:factcc+granite_guardian_3_1_2b seed 17: val=0.5985 test=0.5819 d=+0.0384 CI[+0.0159,+0.0583] 77ms
+[02:30:47 +  1709s]     RS29:dataset_id_only:factcc+granite_guardian_3_1_2b seed 29: val=0.6020 test=0.5957 d=+0.0386 CI[+0.0212,+0.0562] 86ms
+[02:30:59 +  1722s]     RS29:dataset_id_only:factcc+granite_guardian_3_1_2b seed 43: val=0.5972 test=0.5791 d=+0.0416 CI[+0.0228,+0.0606] 77ms
+[02:30:59 +  1722s]   confirmed factcc+granite_guardian_3_1_2b [dataset_id_only]
+[02:31:31 +  1753s]     RS29:compact16:factkb+lettuce_v2+granite_guardian_3_1_2b seed 17: val=0.7103 test=0.7039 d=+0.0724 CI[+0.0528,+0.0919] 87ms
+[02:32:03 +  1785s]     RS29:compact16:factkb+lettuce_v2+granite_guardian_3_1_2b seed 29: val=0.7009 test=0.6999 d=+0.0802 CI[+0.0610,+0.1019] 76ms
+[02:32:34 +  1817s]     RS29:compact16:factkb+lettuce_v2+granite_guardian_3_1_2b seed 43: val=0.7126 test=0.7143 d=+0.0842 CI[+0.0658,+0.1024] 87ms
+[02:32:34 +  1817s]   confirmed factkb+lettuce_v2+granite_guardian_3_1_2b [compact16]
+[02:32:51 +  1834s]     RS29:dataset_id_only:factkb+lettuce_v2+granite_guardian_3_1_2b seed 17: val=0.7091 test=0.7024 d=+0.0697 CI[+0.0498,+0.0896] 95ms
+[02:33:08 +  1851s]     RS29:dataset_id_only:factkb+lettuce_v2+granite_guardian_3_1_2b seed 29: val=0.7040 test=0.7017 d=+0.0753 CI[+0.0565,+0.0936] 87ms
+[02:33:25 +  1868s]     RS29:dataset_id_only:factkb+lettuce_v2+granite_guardian_3_1_2b seed 43: val=0.7171 test=0.7166 d=+0.0845 CI[+0.0640,+0.1052] 96ms
+[02:33:25 +  1868s]   confirmed factkb+lettuce_v2+granite_guardian_3_1_2b [dataset_id_only]
+[02:33:57 +  1899s]     RS29:compact16:factcc+lettuce_v2+factcg seed 17: val=0.7205 test=0.7107 d=+0.0906 CI[+0.0721,+0.1094] 78ms
+[02:34:29 +  1931s]     RS29:compact16:factcc+lettuce_v2+factcg seed 29: val=0.7271 test=0.7127 d=+0.0936 CI[+0.0742,+0.1146] 78ms
+[02:35:00 +  1963s]     RS29:compact16:factcc+lettuce_v2+factcg seed 43: val=0.7252 test=0.7184 d=+0.0963 CI[+0.0710,+0.1173] 83ms
+[02:35:00 +  1963s]   confirmed factcc+lettuce_v2+factcg [compact16]
+[02:35:17 +  1980s]     RS29:dataset_id_only:factcc+lettuce_v2+factcg seed 17: val=0.7091 test=0.7085 d=+0.0904 CI[+0.0690,+0.1111] 74ms
+[02:35:34 +  1996s]     RS29:dataset_id_only:factcc+lettuce_v2+factcg seed 29: val=0.7180 test=0.7126 d=+0.0946 CI[+0.0725,+0.1180] 75ms
+[02:35:50 +  2013s]     RS29:dataset_id_only:factcc+lettuce_v2+factcg seed 43: val=0.7122 test=0.7085 d=+0.0946 CI[+0.0745,+0.1162] 75ms
+[02:35:50 +  2013s]   confirmed factcc+lettuce_v2+factcg [dataset_id_only]
+[02:36:13 +  2035s]     RS29:compact16:factkb+factcg seed 17: val=0.6979 test=0.7058 d=+0.0207 CI[+0.0091,+0.0328] 214ms
+[02:36:35 +  2058s]     RS29:compact16:factkb+factcg seed 29: val=0.7032 test=0.7050 d=+0.0222 CI[+0.0109,+0.0347] 210ms
+[02:36:58 +  2080s]     RS29:compact16:factkb+factcg seed 43: val=0.7037 test=0.7015 d=+0.0125 CI[-0.0003,+0.0254] 242ms
+[02:36:58 +  2080s]   confirmed factkb+factcg [compact16]
+[02:37:10 +  2093s]     RS29:dataset_id_only:factkb+factcg seed 17: val=0.7620 test=0.7602 d=+0.0227 CI[+0.0137,+0.0324] 429ms
+[02:37:23 +  2105s]     RS29:dataset_id_only:factkb+factcg seed 29: val=0.7114 test=0.7181 d=+0.0087 CI[+0.0021,+0.0154] 334ms
+[02:37:35 +  2118s]     RS29:dataset_id_only:factkb+factcg seed 43: val=0.7319 test=0.7288 d=+0.0139 CI[+0.0068,+0.0216] 342ms
+[02:37:35 +  2118s]   confirmed factkb+factcg [dataset_id_only]
+[02:38:07 +  2149s]     RS29:compact16:lettuce_v2+granite_guardian_3_1_2b+factcg seed 17: val=0.7247 test=0.7215 d=+0.0687 CI[+0.0510,+0.0868] 154ms
+[02:38:39 +  2181s]     RS29:compact16:lettuce_v2+granite_guardian_3_1_2b+factcg seed 29: val=0.7356 test=0.7265 d=+0.0608 CI[+0.0417,+0.0818] 177ms
+[02:39:11 +  2213s]     RS29:compact16:lettuce_v2+granite_guardian_3_1_2b+factcg seed 43: val=0.7203 test=0.7191 d=+0.0698 CI[+0.0525,+0.0886] 142ms
+[02:39:11 +  2213s]   confirmed lettuce_v2+granite_guardian_3_1_2b+factcg [compact16]
+[02:39:28 +  2230s]     RS29:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+factcg seed 17: val=0.7440 test=0.7471 d=+0.0837 CI[+0.0635,+0.1027] 145ms
+[02:39:44 +  2247s]     RS29:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+factcg seed 29: val=0.7482 test=0.7475 d=+0.0860 CI[+0.0668,+0.1066] 148ms
+[02:40:01 +  2263s]     RS29:dataset_id_only:lettuce_v2+granite_guardian_3_1_2b+factcg seed 43: val=0.7492 test=0.7471 d=+0.0856 CI[+0.0664,+0.1055] 148ms
+[02:40:01 +  2263s]   confirmed lettuce_v2+granite_guardian_3_1_2b+factcg [dataset_id_only]
+[02:40:23 +  2286s]     RS29:compact16:lettuce_v2+factcg seed 17: val=0.7036 test=0.7039 d=+0.0299 CI[+0.0130,+0.0474] 278ms
+[02:40:46 +  2308s]     RS29:compact16:lettuce_v2+factcg seed 29: val=0.6987 test=0.6874 d=+0.0197 CI[+0.0062,+0.0347] 228ms
+[02:41:08 +  2331s]     RS29:compact16:lettuce_v2+factcg seed 43: val=0.7063 test=0.7011 d=+0.0315 CI[+0.0161,+0.0484] 263ms
+[02:41:08 +  2331s]   confirmed lettuce_v2+factcg [compact16]
+[02:41:21 +  2343s]     RS29:dataset_id_only:lettuce_v2+factcg seed 17: val=0.6777 test=0.6734 d=+0.0104 CI[-0.0067,+0.0280] 167ms
+[02:41:33 +  2355s]     RS29:dataset_id_only:lettuce_v2+factcg seed 29: val=0.6942 test=0.6932 d=+0.0126 CI[-0.0012,+0.0266] 215ms
+[02:41:45 +  2368s]     RS29:dataset_id_only:lettuce_v2+factcg seed 43: val=0.6714 test=0.6703 d=+0.0174 CI[-0.0005,+0.0344] 155ms
+[02:41:45 +  2368s]   confirmed lettuce_v2+factcg [dataset_id_only]
+[02:42:17 +  2400s]     RS29:compact16:granite_guardian_3_1_2b+wecheck+factcg seed 17: val=0.7441 test=0.7383 d=+0.0224 CI[+0.0071,+0.0381] 305ms
+[02:42:49 +  2431s]     RS29:compact16:granite_guardian_3_1_2b+wecheck+factcg seed 29: val=0.7375 test=0.7389 d=+0.0214 CI[+0.0054,+0.0370] 304ms
+[02:43:21 +  2464s]     RS29:compact16:granite_guardian_3_1_2b+wecheck+factcg seed 43: val=0.7377 test=0.7333 d=+0.0223 CI[+0.0073,+0.0377] 286ms
+[02:43:21 +  2464s]   confirmed granite_guardian_3_1_2b+wecheck+factcg [compact16]
+[02:43:38 +  2481s]     RS29:dataset_id_only:granite_guardian_3_1_2b+wecheck+factcg seed 17: val=0.7752 test=0.7735 d=+0.0426 CI[+0.0267,+0.0577] 329ms
+[02:43:55 +  2498s]     RS29:dataset_id_only:granite_guardian_3_1_2b+wecheck+factcg seed 29: val=0.7720 test=0.7670 d=+0.0400 CI[+0.0261,+0.0545] 315ms
+[02:44:12 +  2515s]     RS29:dataset_id_only:granite_guardian_3_1_2b+wecheck+factcg seed 43: val=0.7778 test=0.7712 d=+0.0418 CI[+0.0248,+0.0576] 329ms
+[02:44:12 +  2515s]   confirmed granite_guardian_3_1_2b+wecheck+factcg [dataset_id_only]
+[02:44:35 +  2537s]     RS29:compact16:granite_guardian_3_1_2b+factcg seed 17: val=0.7426 test=0.7398 d=+0.0200 CI[+0.0038,+0.0349] 322ms
+[02:44:57 +  2560s]     RS29:compact16:granite_guardian_3_1_2b+factcg seed 29: val=0.7406 test=0.7421 d=+0.0224 CI[+0.0097,+0.0361] 329ms
+[02:45:20 +  2582s]     RS29:compact16:granite_guardian_3_1_2b+factcg seed 43: val=0.7390 test=0.7416 d=+0.0237 CI[+0.0095,+0.0380] 324ms
+[02:45:20 +  2582s]   confirmed granite_guardian_3_1_2b+factcg [compact16]
+[02:45:33 +  2595s]     RS29:dataset_id_only:granite_guardian_3_1_2b+factcg seed 17: val=0.7654 test=0.7688 d=+0.0340 CI[+0.0219,+0.0464] 395ms
+[02:45:45 +  2608s]     RS29:dataset_id_only:granite_guardian_3_1_2b+factcg seed 29: val=0.7693 test=0.7673 d=+0.0347 CI[+0.0230,+0.0481] 381ms
+[02:45:58 +  2620s]     RS29:dataset_id_only:granite_guardian_3_1_2b+factcg seed 43: val=0.7635 test=0.7590 d=+0.0280 CI[+0.0149,+0.0413] 376ms
+[02:45:58 +  2620s]   confirmed granite_guardian_3_1_2b+factcg [dataset_id_only]
+[02:46:30 +  2652s]     RS29:compact16:granite_guardian_3_1_2b+qwen30_fast+factcg seed 17: val=0.7494 test=0.7358 d=+0.0240 CI[+0.0087,+0.0400] 289ms
+[02:47:02 +  2684s]     RS29:compact16:granite_guardian_3_1_2b+qwen30_fast+factcg seed 29: val=0.7488 test=0.7413 d=+0.0290 CI[+0.0140,+0.0452] 292ms
+[02:47:34 +  2716s]     RS29:compact16:granite_guardian_3_1_2b+qwen30_fast+factcg seed 43: val=0.7493 test=0.7396 d=+0.0303 CI[+0.0137,+0.0482] 296ms
+[02:47:34 +  2716s]   confirmed granite_guardian_3_1_2b+qwen30_fast+factcg [compact16]
+[02:47:50 +  2733s]     RS29:dataset_id_only:granite_guardian_3_1_2b+qwen30_fast+factcg seed 17: val=0.7559 test=0.7602 d=+0.0328 CI[+0.0189,+0.0460] 334ms
+[02:48:07 +  2750s]     RS29:dataset_id_only:granite_guardian_3_1_2b+qwen30_fast+factcg seed 29: val=0.7717 test=0.7726 d=+0.0425 CI[+0.0286,+0.0580] 371ms
+[02:48:24 +  2767s]     RS29:dataset_id_only:granite_guardian_3_1_2b+qwen30_fast+factcg seed 43: val=0.7492 test=0.7517 d=+0.0323 CI[+0.0164,+0.0474] 290ms
+[02:48:24 +  2767s]   confirmed granite_guardian_3_1_2b+qwen30_fast+factcg [dataset_id_only]
+[02:48:47 +  2789s]     RS29:compact16:qwen30_fast+factcg seed 17: val=0.7470 test=0.7352 d=+0.0085 CI[-0.0056,+0.0218] 369ms
+[02:49:09 +  2812s]     RS29:compact16:qwen30_fast+factcg seed 29: val=0.7519 test=0.7447 d=+0.0194 CI[+0.0065,+0.0329] 380ms
+[02:49:32 +  2834s]     RS29:compact16:qwen30_fast+factcg seed 43: val=0.7481 test=0.7406 d=+0.0137 CI[-0.0002,+0.0280] 369ms
+[02:49:32 +  2834s]   confirmed qwen30_fast+factcg [compact16]
+[02:49:44 +  2847s]     RS29:dataset_id_only:qwen30_fast+factcg seed 17: val=0.7698 test=0.7703 d=+0.0288 CI[+0.0169,+0.0412] 425ms
+[02:49:57 +  2859s]     RS29:dataset_id_only:qwen30_fast+factcg seed 29: val=0.7689 test=0.7699 d=+0.0341 CI[+0.0222,+0.0475] 392ms
+[02:50:09 +  2872s]     RS29:dataset_id_only:qwen30_fast+factcg seed 43: val=0.7568 test=0.7597 d=+0.0236 CI[+0.0110,+0.0364] 375ms
+[02:50:09 +  2872s]   confirmed qwen30_fast+factcg [dataset_id_only]
+[02:50:09 +  2872s] finalists:
+                                      pool        features    val  heldout_auroc       ms  n_seeds  balance  k
+                  factcc+lettuce_v2+factcg       compact16 0.7243         0.7140  79.6065        3   0.7682  3
+                  factcc+lettuce_v2+factcg dataset_id_only 0.7131         0.7099  74.5744        3   0.7571  3
+ lettuce_v2+granite_guardian_3_1_2b+factcg dataset_id_only 0.7471         0.7472 146.9391        3   0.7523  3
+        lettuce_v2+granite_guardian_3_1_2b dataset_id_only 0.7363         0.7332 136.5102        3   0.7457  2
+ factkb+lettuce_v2+granite_guardian_3_1_2b       compact16 0.7079         0.7060  83.3693        3   0.7307  3
+ factkb+lettuce_v2+granite_guardian_3_1_2b dataset_id_only 0.7101         0.7069  93.0709        3   0.7228  3
+        lettuce_v2+granite_guardian_3_1_2b       compact16 0.7174         0.7157 122.0079        3   0.7180  2
+ lettuce_v2+granite_guardian_3_1_2b+factcg       compact16 0.7269         0.7224 157.8168        3   0.6929  3
+granite_guardian_3_1_2b+qwen30_fast+factcg       compact16 0.7492         0.7389 292.1132        3   0.5960  3
+    granite_guardian_3_1_2b+wecheck+factcg       compact16 0.7398         0.7368 298.4331        3   0.5892  3
+[02:50:09 +  2872s] RESULT {"selected_pool": "factcc+lettuce_v2+factcg", "balance": 0.7682242311811748, "same_as_paper_pool": false}
+[02:50:09 +  2872s] COMPLETE

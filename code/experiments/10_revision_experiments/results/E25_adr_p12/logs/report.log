@@ -1,0 +1,2 @@
+[11:15:56 +     0s] ===== stage report =====
+[11:15:58 +     2s] report written; G2 max |dAUROC| per corner: {"G2_B_factcc": 3.540150860181779e-05, "G2_B_lettuce_v2": 0.0, "G2_B_granite_guardian_3_1_2b": 0.0, "G2_A_factcc": 0.0003317727132799986, "G2_A_lettuce_v2": 0.0, "G2_A_granite_guardian_3_1_2b": 0.0}

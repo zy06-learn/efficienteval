@@ -1,0 +1,30 @@
+A {'protocol': 'A', 'variant': 'nobudget', 'source_variant': 'nobudget', 'd_auroc': 0.025946576953565892, 'ci95_lo': np.float64(0.016876098321771147), 'ci95_hi': np.float64(0.03523065251156827), 'sig95': True, 'bonf17_lo': np.float64(0.011546748252270981), 'bonf17_hi': np.float64(0.040863123049580195), 'sig_bonf_m17': True, 'replicates': 2000}
+A {'protocol': 'A', 'variant': 'matched', 'source_variant': 'b110', 'd_auroc': 0.045666496960512025, 'ci95_lo': np.float64(0.036141894113443644), 'ci95_hi': np.float64(0.055106671756211534), 'sig95': True, 'bonf17_lo': np.float64(0.03193696027327413), 'bonf17_hi': np.float64(0.05995074028239794), 'sig_bonf_m17': True, 'replicates': 2000}
+A {'protocol': 'A', 'variant': 'main', 'source_variant': 'main', 'd_auroc': 0.1207507524015394, 'ci95_lo': np.float64(0.11014259331347664), 'ci95_hi': np.float64(0.13100441233542812), 'sig95': True, 'bonf17_lo': np.float64(0.10500390514694467), 'bonf17_hi': np.float64(0.13656729033307138), 'sig_bonf_m17': True, 'replicates': 2000}
+B {'protocol': 'B', 'variant': 'nobudget', 'source_variant': 'nobudget', 'd_auroc': 0.02570913048919531, 'ci95_lo': np.float64(0.010895686486823328), 'ci95_hi': np.float64(0.04189080185798392), 'sig95': True, 'bonf17_lo': np.float64(0.002956334170404971), 'bonf17_hi': np.float64(0.05049738267322108), 'sig_bonf_m17': True, 'replicates': 2000}
+B {'protocol': 'B', 'variant': 'matched', 'source_variant': 'b100', 'd_auroc': 0.06389880450062249, 'ci95_lo': np.float64(0.04734303168587924), 'ci95_hi': np.float64(0.08188685940552527), 'sig95': True, 'bonf17_lo': np.float64(0.04053824617992667), 'bonf17_hi': np.float64(0.09035254389104413), 'sig_bonf_m17': True, 'replicates': 2000}
+B {'protocol': 'B', 'variant': 'main', 'source_variant': 'main', 'd_auroc': 0.10016083766475577, 'ci95_lo': np.float64(0.08382563721600787), 'ci95_hi': np.float64(0.11787313797084997), 'sig95': True, 'bonf17_lo': np.float64(0.07329174555715437), 'bonf17_hi': np.float64(0.1253927842827917), 'sig_bonf_m17': True, 'replicates': 2000}
+{
+  "gate": {
+    "A": {
+      "max_abs_diff_vs_E03": 9.71445146547012e-17,
+      "pass": true
+    },
+    "B": {
+      "max_abs_diff_vs_E03": 9.71445146547012e-17,
+      "pass": true
+    }
+  },
+  "picks": {
+    "A": {
+      "ours_ms": 112.54141989185943,
+      "matched_variant": "b110",
+      "matched_ms": 108.88316170453606
+    },
+    "B": {
+      "ours_ms": 106.14368718536755,
+      "matched_variant": "b100",
+      "matched_ms": 107.90191943038023
+    }
+  }
+}

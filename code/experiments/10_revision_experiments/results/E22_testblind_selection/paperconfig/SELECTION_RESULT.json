@@ -1,0 +1,45 @@
+{
+  "selected_pool": "factcc+granite_guardian_3_1_2b+lettuce_v2",
+  "selected_features_config": "six_features",
+  "heldout_auroc": 0.7495222131772858,
+  "ms": 120.30773658951836,
+  "balance": 0.8016895244075845,
+  "next_different_pool": {
+    "pool": "factcc+hhem+lettuce_v2",
+    "features": "corpus_onehot",
+    "auroc": 0.7182582441821567,
+    "ms": 96.80296642641527,
+    "balance": 0.7835946556500102
+  },
+  "paper_pool": "factcc+granite_guardian_3_1_2b+lettuce_v2",
+  "same_as_paper_pool": true,
+  "seed_winner_counts": {
+    "factcc+granite_guardian_3_1_2b+lettuce_v2": 2,
+    "factcc+hhem+lettuce_v2": 1
+  },
+  "paper_pool_screen_balance_rank": 1,
+  "n_screened_evaluable": 540,
+  "n_screened": {
+    "2": 105,
+    "3": 455
+  },
+  "n_evaluable": {
+    "2": 95,
+    "3": 445
+  },
+  "anchors": {
+    "Q_floor": 0.6003265268260948,
+    "cheapest": "factkb",
+    "Q_ceil": 0.7516083781894892,
+    "best_fixed": "alignscore",
+    "C_min": 49.027442814360256,
+    "C_max": 1208.3945814163842,
+    "priciest": "granite_guardian_3_2_8b_factuality"
+  },
+  "hyperparameters": {
+    "n_estimators": 200,
+    "min_samples_leaf": 10,
+    "max_features": 0.5,
+    "max_depth": 6
+  }
+}

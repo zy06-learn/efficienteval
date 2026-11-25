@@ -1,0 +1,9 @@
+{
+  "G1_sel": true,
+  "G2_prob_maxdiff": 0.0,
+  "G3_thr_maxdiff": 0.0,
+  "G4_main_maxdiff": 5.551115123125783e-17,
+  "live_calls": 32360,
+  "rows_changed": 10004,
+  "max_abs_dp1": 0.06687324627033031
+}

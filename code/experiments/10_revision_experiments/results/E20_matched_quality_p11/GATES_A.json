@@ -1,0 +1,19 @@
+{
+  "protocol": "A",
+  "tolerance": 1e-09,
+  "fits": 100,
+  "max_d_prob": 0.0,
+  "max_d_thr": 0.0,
+  "max_d_ms": 2.842170943040401e-14,
+  "sel_mismatches": 0,
+  "beta_mismatches": 0,
+  "deployed_vs_published": {
+    "auroc": 0.0,
+    "auprc_unsup": 0.0,
+    "bacc": 0.0,
+    "f1_unsup": 0.0,
+    "mcc": 0.0,
+    "ms": 0.0
+  },
+  "pass": true
+}

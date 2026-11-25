@@ -1,0 +1,15 @@
+{
+  "reference": {
+    "a_val_auroc": 0.752073532405141,
+    "a_val_ms": 93.27301667111873
+  },
+  "reproduced": {
+    "a_val_auroc": 0.752073532405141,
+    "a_val_ms": 93.27301667111871
+  },
+  "abs_diff": {
+    "a_val_auroc": 0.0,
+    "a_val_ms": 1.4210854715202004e-14
+  },
+  "pass": true
+}

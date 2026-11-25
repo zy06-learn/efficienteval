@@ -1,0 +1,43 @@
+09:03:29 15 verifiers; test mixture 3236 rows: {'frank_test': 1569, 'ragtruth_test': 900, 'cogensumm_test': 400, 'unisumeval_dev': 367}
+09:04:11 cogensumm frac=0.00 k=    0  MIXED router 0.8170/  88.3ms  all 0.8146/ 561.7ms  budget 0.6673/  51.8ms  pool 0.7993/ 131.8ms
+09:04:55 cogensumm frac=0.05 k=   27  MIXED router 0.8170/  84.6ms  all 0.8146/ 561.7ms  budget 0.6504/  54.2ms  pool 0.7993/ 131.8ms
+09:05:36 cogensumm frac=0.10 k=   54  MIXED router 0.8192/  83.3ms  all 0.8146/ 561.7ms  budget 0.6673/  51.8ms  pool 0.7993/ 131.8ms
+09:06:19 cogensumm frac=0.20 k=  107  MIXED router 0.8219/  85.8ms  all 0.8146/ 561.7ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:07:01 cogensumm frac=0.30 k=  160  MIXED router 0.8230/  87.4ms  all 0.8146/ 561.7ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:07:44 cogensumm frac=0.40 k=  214  MIXED router 0.8225/  87.8ms  all 0.8146/ 561.7ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:08:28 cogensumm frac=0.50 k=  268  MIXED router 0.8160/  85.0ms  all 0.8146/ 561.7ms  budget 0.6335/  56.7ms  pool 0.7993/ 131.8ms
+09:09:10 cogensumm frac=0.70 k=  374  MIXED router 0.8198/  89.5ms  all 0.8146/ 561.7ms  budget 0.6335/  56.7ms  pool 0.7993/ 131.8ms
+09:09:53 cogensumm frac=0.85 k=  455  MIXED router 0.8207/  90.8ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:10:35 cogensumm frac=1.00 k=  535  MIXED router 0.8225/  86.2ms  all 0.8146/ 561.7ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:11:18 frank frac=0.00 k=    0  MIXED router 0.8019/ 119.3ms  all 0.7817/ 427.5ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:12:03 frank frac=0.05 k=   33  MIXED router 0.8053/ 120.7ms  all 0.7817/ 427.5ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:12:49 frank frac=0.10 k=   67  MIXED router 0.7786/ 107.8ms  all 0.7817/ 427.5ms  budget 0.6335/  56.7ms  pool 0.7993/ 131.8ms
+09:13:33 frank frac=0.20 k=  134  MIXED router 0.8078/ 121.5ms  all 0.7817/ 427.5ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:14:17 frank frac=0.30 k=  201  MIXED router 0.8052/  97.2ms  all 0.7817/ 427.5ms  budget 0.6673/  51.8ms  pool 0.7993/ 131.8ms
+09:14:59 frank frac=0.40 k=  268  MIXED router 0.8080/ 109.0ms  all 0.7915/ 467.7ms  budget 0.6335/  56.7ms  pool 0.7993/ 131.8ms
+09:15:43 frank frac=0.50 k=  334  MIXED router 0.8085/ 106.3ms  all 0.8047/ 521.4ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:16:25 frank frac=0.70 k=  468  MIXED router 0.8158/  96.3ms  all 0.8146/ 561.7ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:17:08 frank frac=0.85 k=  569  MIXED router 0.8209/  94.2ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:17:53 frank frac=1.00 k=  669  MIXED router 0.8226/  86.2ms  all 0.8146/ 561.7ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:18:30 ragtruth frac=0.00 k=    0  MIXED router 0.7665/ 105.7ms  all 0.8345/ 211.6ms  budget 0.7717/  46.5ms  pool 0.7993/ 131.8ms
+09:19:05 ragtruth frac=0.05 k=  149  MIXED router 0.7928/ 111.1ms  all 0.8325/ 246.6ms  budget 0.7686/  37.0ms  pool 0.7993/ 131.8ms
+09:19:38 ragtruth frac=0.10 k=  298  MIXED router 0.7984/ 111.1ms  all 0.8166/ 526.7ms  budget 0.7747/  56.0ms  pool 0.7993/ 131.8ms
+09:20:15 ragtruth frac=0.20 k=  597  MIXED router 0.8049/ 107.5ms  all 0.8146/ 561.7ms  budget 0.7686/  37.0ms  pool 0.7993/ 131.8ms
+09:20:55 ragtruth frac=0.30 k=  895  MIXED router 0.8102/  90.3ms  all 0.8146/ 561.7ms  budget 0.7686/  37.0ms  pool 0.7993/ 131.8ms
+09:21:37 ragtruth frac=0.40 k= 1193  MIXED router 0.8182/  85.1ms  all 0.8146/ 561.7ms  budget 0.7686/  37.0ms  pool 0.7993/ 131.8ms
+09:22:17 ragtruth frac=0.50 k= 1492  MIXED router 0.8197/  85.2ms  all 0.8146/ 561.7ms  budget 0.7686/  37.0ms  pool 0.7993/ 131.8ms
+09:22:58 ragtruth frac=0.70 k= 2088  MIXED router 0.8219/  86.4ms  all 0.8146/ 561.7ms  budget 0.7517/  39.5ms  pool 0.7993/ 131.8ms
+09:23:42 ragtruth frac=0.85 k= 2536  MIXED router 0.8215/  86.4ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:24:26 ragtruth frac=1.00 k= 2983  MIXED router 0.8231/  86.7ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:25:07 unisumeval frac=0.00 k=    0  MIXED router 0.7543/  92.0ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:25:51 unisumeval frac=0.05 k=   54  MIXED router 0.7654/  86.4ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:26:36 unisumeval frac=0.10 k=  109  MIXED router 0.7788/  91.4ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:27:23 unisumeval frac=0.20 k=  218  MIXED router 0.7946/  81.2ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:28:12 unisumeval frac=0.30 k=  327  MIXED router 0.8014/  81.0ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:28:55 unisumeval frac=0.40 k=  436  MIXED router 0.8040/  80.5ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:29:38 unisumeval frac=0.50 k=  544  MIXED router 0.8150/  83.0ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:30:20 unisumeval frac=0.70 k=  762  MIXED router 0.8178/  88.1ms  all 0.8146/ 561.7ms  budget 0.6166/  59.1ms  pool 0.7993/ 131.8ms
+09:31:03 unisumeval frac=0.85 k=  926  MIXED router 0.8144/  87.6ms  all 0.8146/ 561.7ms  budget 0.6335/  56.7ms  pool 0.7993/ 131.8ms
+09:31:46 unisumeval frac=1.00 k= 1089  MIXED router 0.8220/  86.8ms  all 0.8146/ 561.7ms  budget 0.5997/  61.6ms  pool 0.7993/ 131.8ms
+09:31:46 gate passed on 80 router cells; wrote X1M_SUMMARY.csv and X1M_PICKS.csv
+EXIT=0
